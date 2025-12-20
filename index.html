@@ -4,167 +4,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Sravanth Potluri - Data Science Master's Student specializing in AI, Computer Vision, and Cloud Computing.">
     <title>Sravanth Potluri - Portfolio</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
+    <!-- HERO -->
     <header class="hero">
-        <div class="container">
+        <div class="hero-content">
             <h1>Sravanth Potluri</h1>
-            <p>Data Science Master's Student | AI & Computer Vision</p>
-            <div class="contact-links">
-                <a href="https://www.linkedin.com/in/sravanth-potluri" target="_blank">LinkedIn</a>
-                <a href="https://github.com/potlurisravanth-png" target="_blank">GitHub</a>
+            <p class="tagline">Data Science Master's Student | AI & Computer Vision</p>
+            <div class="hero-links">
+                <a href="https://www.linkedin.com/in/sravanth-potluri/" target="_blank" class="btn-primary">LinkedIn</a>
+                <a href="https://github.com/potlurisravanth-png" target="_blank" class="btn-outline">GitHub</a>
             </div>
         </div>
     </header>
 
-    <main class="container">
-
-        <section class="about">
-            <h2>About Me</h2>
-            <div class="about-content">
-                <p>Data Science Master’s candidate with 3 years of software development experience at Cognizant. Skilled
-                    in Python, AWS, and Machine Learning, with a proven track record of building secure web applications
-                    and AI models. Seeking to leverage expertise in cloud computing and data analytics to solve complex
-                    technical challenges.</p>
+    <main>
+        <!-- ABOUT -->
+        <section id="about">
+            <div class="container">
+                <h2 class="section-title">About</h2>
+                <p class="about-content">
+                    Data Science Master's candidate with 3 years of software development experience at Cognizant.
+                    Skilled in Python, AWS, and Machine Learning, with a proven track record of building secure
+                    web applications and AI models. Seeking to leverage expertise in cloud computing and data
+                    analytics to solve complex technical challenges.
+                </p>
             </div>
         </section>
 
-        <section class="experience">
-            <h2>Experience</h2>
-            <div class="timeline-item">
-                <span class="timeline-date">Oct 2021 – Aug 2024</span>
-                <h3 class="timeline-title">Associate - SharePoint & Power Platform Developer</h3>
-                <div class="timeline-subtitle">Cognizant Technology Solutions, Hyderabad</div>
-                <ul>
-                    <li>Developed and customized enterprise applications using Power Apps, Power Automate, and
-                        SharePoint Online.</li>
-                    <li>Led the migration of legacy SharePoint On-Premises sites to SharePoint Online.</li>
-                    <li>Provided L2/L3 support, resolving critical application issues.</li>
-                    <li>Mentored new team members and managed resources for timely delivery.</li>
-                </ul>
-            </div>
-        </section>
-
-        <section class="education">
-            <h2>Education</h2>
-            <div class="timeline-item">
-                <span class="timeline-date">2024 – Present</span>
-                <h3 class="timeline-title">Masters in Data Science</h3>
-                <div class="timeline-subtitle">University of Alabama at Birmingham (GPA: 3.88)</div>
-            </div>
-            <div class="timeline-item">
-                <span class="timeline-date">2017 – 2021</span>
-                <h3 class="timeline-title">B.Tech in Electronics and Communication Engineering</h3>
-                <div class="timeline-subtitle">B.V.Raju Institute of Technology (CGPA: 8.20)</div>
-            </div>
-        </section>
-
-        <section class="skills">
-            <h2>Technical Skills</h2>
-            <div class="skills-grid">
-                <span class="skill-pill">Python</span>
-                <span class="skill-pill">SQL</span>
-                <span class="skill-pill">PyTorch</span>
-                <span class="skill-pill">OpenCV</span>
-                <span class="skill-pill">FFmpeg</span>
-                <span class="skill-pill">Flask</span>
-                <span class="skill-pill">React</span>
-                <span class="skill-pill">Pandas</span>
-                <span class="skill-pill">NumPy</span>
-                <span class="skill-pill">Azure</span>
-                <span class="skill-pill">AWS</span>
-                <span class="skill-pill">Docker</span>
-                <span class="skill-pill">GitHub</span>
-                <span class="skill-pill">SharePoint Online</span>
-                <span class="skill-pill">Power Platform</span>
-            </div>
-        </section>
-
-        <section class="projects">
-            <h2>Projects</h2>
-            <div class="projects-grid">
-
-                <!-- Project 1: Deepfake Detection (Existing) -->
-                <article class="project-card">
-                    <div class="project-tags">
-                        <span class="project-tag">PyTorch</span>
-                        <span class="project-tag">OpenCV</span>
-                        <span class="project-tag">FFmpeg</span>
-                    </div>
-                    <h3>Multi-Modal Deepfake Detection</h3>
-                    <p>A state-of-the-art deepfake detection system using Multi-Modal Fusion (Video + Audio) on the
-                        LAV-DF dataset. Achieved 99.8% Test Accuracy using 3D ResNet and ResNet18.</p>
-                    <a href="Deepfake_Detection/docs/DeepFakeProject_Report.html" target="_blank" class="btn-view">View
-                        Report</a>
-                    <a href="Deepfake_Detection/notebooks/DeepFakeProject_Final.ipynb" target="_blank"
-                        class="btn-view">View Notebook</a>
-                    <a href="https://github.com/potlurisravanth-png/deepfake-detection-lav-df" target="_blank"
-                        class="btn-view">GitHub Repo</a>
-                </article>
-
-                <!-- Project 2: Secure File-Sharing (From Resume) -->
-                <article class="project-card">
-                    <div class="project-tags">
-                        <span class="project-tag">Python</span>
-                        <span class="project-tag">Flask</span>
-                        <span class="project-tag">AWS (EC2, S3, RDS, Lambda)</span>
-                    </div>
-                    <h3>Secure File-Sharing Web App</h3>
-                    <p>Architected a secure file-sharing web application on AWS using Python Flask. Implemented
-                        serverless notifications with AWS Lambda and SES, and ensured data integrity with S3 and RDS.
-                    </p>
-                    <a href="https://github.com/potlurisravanth-png/secure-file-sharing-webapp" target="_blank"
-                        class="btn-view">View Code</a>
-                </article>
-
-            </div>
-        </section>
-
-        <section class="certifications">
-            <h2>Certifications</h2>
-            <div class="cert-grid">
-                <div class="cert-card">
-                    <div class="cert-icon">☁️</div>
-                    <div>
-                        <h3 style="margin:0; font-size:1.1rem;">Azure AI Fundamentals</h3>
-                        <span style="color:var(--text-secondary); font-size:0.9rem;">AI-900</span>
-                    </div>
-                </div>
-                <div class="cert-card">
-                    <div class="cert-icon">💻</div>
-                    <div>
-                        <h3 style="margin:0; font-size:1.1rem;">Azure Fundamentals</h3>
-                        <span style="color:var(--text-secondary); font-size:0.9rem;">AZ-900</span>
-                    </div>
-                </div>
-                <div class="cert-card">
-                    <div class="cert-icon">📊</div>
-                    <div>
-                        <h3 style="margin:0; font-size:1.1rem;">Data Science Certification</h3>
-                        <span style="color:var(--text-secondary); font-size:0.9rem;">run by IBM (Coursera)</span>
+        <!-- EXPERIENCE -->
+        <section id="experience">
+            <div class="container">
+                <h2 class="section-title">Experience</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-date">Oct 2021 – Aug 2024</span>
+                        <h3 class="timeline-title">Associate - SharePoint & Power Platform Developer</h3>
+                        <p class="timeline-subtitle">Cognizant Technology Solutions, Hyderabad</p>
+                        <ul>
+                            <li>Developed enterprise applications using Power Apps, Power Automate, and SharePoint
+                                Online</li>
+                            <li>Led migration of legacy SharePoint On-Premises sites to SharePoint Online</li>
+                            <li>Provided L2/L3 support, resolving critical application issues</li>
+                            <li>Mentored new team members and managed resources for timely delivery</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="github-stats">
-            <h2>Coding Activity</h2>
-            <!-- Using public GitHub Readme Stats API with Radical Theme -->
-            <img src="https://github-readme-stats.vercel.app/api?username=potlurisravanth-png&show_icons=true&theme=radical&hide_border=true&bg_color=00000000"
-                alt="Sravanth's GitHub Stats">
-            <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=potlurisravanth-png&layout=compact&theme=radical&hide_border=true&bg_color=00000000"
-                alt="Top Languages">
+        <!-- EDUCATION -->
+        <section id="education">
+            <div class="container">
+                <h2 class="section-title">Education</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-date">2024 – Present</span>
+                        <h3 class="timeline-title">Masters in Data Science</h3>
+                        <p class="timeline-subtitle">University of Alabama at Birmingham • GPA: 3.88</p>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-date">2017 – 2021</span>
+                        <h3 class="timeline-title">B.Tech in Electronics and Communication Engineering</h3>
+                        <p class="timeline-subtitle">B.V.Raju Institute of Technology • CGPA: 8.20</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS -->
+        <section id="skills">
+            <div class="container">
+                <h2 class="section-title">Skills</h2>
+                <div class="skills-container">
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">SQL</span>
+                    <span class="skill-tag">PyTorch</span>
+                    <span class="skill-tag">OpenCV</span>
+                    <span class="skill-tag">FFmpeg</span>
+                    <span class="skill-tag">Flask</span>
+                    <span class="skill-tag">React</span>
+                    <span class="skill-tag">Pandas</span>
+                    <span class="skill-tag">NumPy</span>
+                    <span class="skill-tag">Azure</span>
+                    <span class="skill-tag">AWS</span>
+                    <span class="skill-tag">Docker</span>
+                    <span class="skill-tag">GitHub</span>
+                    <span class="skill-tag">SharePoint Online</span>
+                    <span class="skill-tag">Power Platform</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section id="projects">
+            <div class="container">
+                <h2 class="section-title">Projects</h2>
+                <div class="projects-grid">
+
+                    <article class="project-card">
+                        <div class="project-tags">
+                            <span class="project-tag">PyTorch</span>
+                            <span class="project-tag">OpenCV</span>
+                            <span class="project-tag">FFmpeg</span>
+                        </div>
+                        <h3>Multi-Modal Deepfake Detection</h3>
+                        <p>State-of-the-art deepfake detection system using Multi-Modal Fusion (Video + Audio) on the
+                            LAV-DF dataset. Achieved 99.8% Test Accuracy using 3D ResNet and ResNet18.</p>
+                        <div class="project-links">
+                            <a href="Deepfake_Detection/docs/DeepFakeProject_Report.html" target="_blank"
+                                class="project-link">📄 Report</a>
+                            <a href="https://github.com/potlurisravanth-png/deepfake-detection-lav-df" target="_blank"
+                                class="project-link">💻 GitHub</a>
+                        </div>
+                    </article>
+
+                    <article class="project-card">
+                        <div class="project-tags">
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">Flask</span>
+                            <span class="project-tag">AWS</span>
+                        </div>
+                        <h3>Secure File-Sharing Web App</h3>
+                        <p>Architected a secure file-sharing application on AWS using Python Flask. Implemented
+                            serverless notifications with AWS Lambda and SES, and ensured data integrity with S3 and
+                            RDS.</p>
+                        <div class="project-links">
+                            <a href="https://github.com/potlurisravanth-png/secure-file-sharing-webapp" target="_blank"
+                                class="project-link">💻 GitHub</a>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- CERTIFICATIONS -->
+        <section id="certifications">
+            <div class="container">
+                <h2 class="section-title">Certifications</h2>
+                <div class="cert-grid">
+                    <a href="#" class="cert-card" id="cert-ai900">
+                        <span class="cert-icon">☁️</span>
+                        <div class="cert-info">
+                            <h4>Azure AI Fundamentals</h4>
+                            <span>AI-900 • Microsoft</span>
+                        </div>
+                    </a>
+                    <a href="#" class="cert-card" id="cert-az900">
+                        <span class="cert-icon">💻</span>
+                        <div class="cert-info">
+                            <h4>Azure Fundamentals</h4>
+                            <span>AZ-900 • Microsoft</span>
+                        </div>
+                    </a>
+                    <a href="#" class="cert-card" id="cert-ibm">
+                        <span class="cert-icon">📊</span>
+                        <div class="cert-info">
+                            <h4>Data Science</h4>
+                            <span>IBM • Coursera</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- GITHUB STATS -->
+        <section id="stats" class="stats-section">
+            <div class="container">
+                <h2 class="section-title">GitHub Activity</h2>
+                <div class="stats-container">
+                    <img src="https://github-readme-stats.vercel.app/api?username=potlurisravanth-png&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0f0f0f&title_color=6366f1&icon_color=a855f7&text_color=a1a1aa"
+                        alt="GitHub Stats">
+                    <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=potlurisravanth-png&layout=compact&theme=tokyonight&hide_border=true&bg_color=0f0f0f&title_color=6366f1&text_color=a1a1aa"
+                        alt="Top Languages">
+                </div>
+            </div>
         </section>
     </main>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2025 Sravanth Potluri. Built with modern web standards.</p>
-        </div>
+        <p>&copy; 2025 Sravanth Potluri. All rights reserved.</p>
     </footer>
 
 </body>
