@@ -1,20 +1,36 @@
 :root {
-    --bg-color: #121212;
-    --card-bg: #1e1e1e;
-    --text-primary: #e0e0e0;
-    --text-secondary: #a0a0a0;
-    --accent: #bb86fc;
-    --accent-hover: #9955e8;
-    --font-main: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --bg-color: #0d1117;
+    --card-bg: rgba(30, 30, 30, 0.7);
+    /* Glassmorphism base */
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --accent: #58a6ff;
+    --accent-hover: #1f6feb;
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+    --gradient-bg: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
 }
 
 body {
-    background-color: var(--bg-color);
+    background: var(--gradient-bg);
+    background-image:
+        radial-gradient(circle at 15% 50%, rgba(88, 166, 255, 0.1) 0%, transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(187, 134, 252, 0.1) 0%, transparent 25%);
+    background-attachment: fixed;
     color: var(--text-primary);
     font-family: var(--font-main);
     margin: 0;
     padding: 0;
     line-height: 1.6;
+}
+
+/* Glassmorphism Card Effect */
+.project-card,
+.timeline-item,
+.cert-card,
+.skill-pill {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Typography */
