@@ -4,90 +4,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Potluri Sravanth | ML & Cloud Engineer</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-
-        header {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 2rem 0;
-        }
-
-        .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
-            padding: 2rem 0;
-        }
-
-        h1 {
-            margin: 0;
-        }
-
-        h2 {
-            border-bottom: 2px solid #333;
-            padding-bottom: 0.5rem;
-        }
-
-        .project {
-            background: #fff;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .project h3 {
-            margin-top: 0;
-        }
-
-        .project a {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.5rem 1rem;
-            background: #333;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 3px;
-        }
-
-        .project a:hover {
-            background: #555;
-        }
-    </style>
+    <title>Sravanth Potluri - Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <header>
+
+    <header class="hero">
         <div class="container">
-            <h1>Potluri Sravanth</h1>
-            <p>ML & Cloud Engineer | Showcasing my projects and code.</p>
-        </div>
-    </header>
-    <div class="container">
-        <h2>Projects</h2>
-        <div id="projects-list">
-            <div class="project">
-                <h3>Multi-Modal Deepfake Detection</h3>
-                <p>A state-of-the-art deepfake detection system using Multi-Modal Fusion (Video + Audio) on the LAV-DF
-                    dataset. Features a custom PyTorch implementation with 3D ResNet and ResNet18.</p>
-                <a href="../Deepfake_Detection/docs/DeepFakeProject_Report.html" target="_blank">View Report (Local)</a>
-                <a href="../Deepfake_Detection/notebooks/DeepFakeProject_Final.ipynb" target="_blank">View Notebook
-                    (Local)</a>
-                <a href="https://github.com/potlurisravanth-png/deepfake-detection-lav-df" target="_blank">View
-                    Repository
-                    (GitHub)</a>
+            <h1>Sravanth Potluri</h1>
+            <p>Data Science Master's Student | AI & Computer Vision</p>
+            <div class="contact-links">
+                <a href="https://linkedin.com/in/sravanth-potluri" target="_blank">LinkedIn</a>
+                <a href="https://github.com/potlurisravanth-png" target="_blank">GitHub</a>
             </div>
         </div>
-    </div>
+    </header>
+
+    <main class="container">
+
+        <section class="about">
+            <h2>About Me</h2>
+            <div class="about-content">
+                <p>Data Science Master’s candidate with 3 years of software development experience at Cognizant. Skilled
+                    in Python, AWS, and Machine Learning, with a proven track record of building secure web applications
+                    and AI models. Seeking to leverage expertise in cloud computing and data analytics to solve complex
+                    technical challenges.</p>
+            </div>
+        </section>
+
+        <section class="skills">
+            <h2>Technical Skills</h2>
+            <div class="skills-grid">
+                <span class="skill-pill">Python</span>
+                <span class="skill-pill">SQL</span>
+                <span class="skill-pill">PyTorch</span>
+                <span class="skill-pill">OpenCV</span>
+                <span class="skill-pill">FFmpeg</span>
+                <span class="skill-pill">Flask</span>
+                <span class="skill-pill">React</span>
+                <span class="skill-pill">Pandas</span>
+                <span class="skill-pill">NumPy</span>
+                <span class="skill-pill">Azure</span>
+                <span class="skill-pill">AWS</span>
+                <span class="skill-pill">Docker</span>
+                <span class="skill-pill">GitHub</span>
+                <span class="skill-pill">SharePoint Online</span>
+                <span class="skill-pill">Power Platform</span>
+            </div>
+        </section>
+
+        <section class="projects">
+            <h2>Projects</h2>
+            <div class="projects-grid">
+
+                <!-- Project 1: Deepfake Detection (Existing) -->
+                <article class="project-card">
+                    <div class="project-tags">
+                        <span class="project-tag">PyTorch</span>
+                        <span class="project-tag">OpenCV</span>
+                        <span class="project-tag">FFmpeg</span>
+                    </div>
+                    <h3>Multi-Modal Deepfake Detection</h3>
+                    <p>A state-of-the-art deepfake detection system using Multi-Modal Fusion (Video + Audio) on the
+                        LAV-DF dataset. Achieved 99.8% Test Accuracy using 3D ResNet and ResNet18.</p>
+                    <a href="Deepfake_Detection/docs/DeepFakeProject_Report.html" target="_blank" class="btn-view">View
+                        Report</a>
+                    <a href="Deepfake_Detection/notebooks/DeepFakeProject_Final.ipynb" target="_blank"
+                        class="btn-view">View Notebook</a>
+                    <a href="https://github.com/potlurisravanth-png/deepfake-detection-lav-df" target="_blank"
+                        class="btn-view">GitHub Repo</a>
+                </article>
+
+                <!-- Project 2: Secure File-Sharing (From Resume) -->
+                <article class="project-card">
+                    <div class="project-tags">
+                        <span class="project-tag">Python</span>
+                        <span class="project-tag">Flask</span>
+                        <span class="project-tag">AWS (EC2, S3, RDS, Lambda)</span>
+                    </div>
+                    <h3>Secure File-Sharing Web App</h3>
+                    <p>Architected a secure file-sharing web application on AWS using Python Flask. Implemented
+                        serverless notifications with AWS Lambda and SES, and ensured data integrity with S3 and RDS.
+                    </p>
+                    <a href="https://github.com/potlurisravanth-png" target="_blank" class="btn-view">View Code</a>
+                </article>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sravanth Potluri. Built with modern web standards.</p>
+        </div>
+    </footer>
+
 </body>
 
 </html>
