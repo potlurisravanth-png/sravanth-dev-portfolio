@@ -18,7 +18,9 @@ body {
 }
 
 /* Typography */
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     color: #fff;
     margin-top: 0;
 }
@@ -131,12 +133,90 @@ a:hover {
     background-color: var(--card-bg);
     padding: 1.5rem;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s;
 }
 
 .project-card:hover {
     transform: translateY(-5px);
+}
+
+/* Timeline (Experience & Education) */
+.timeline-item {
+    background-color: var(--card-bg);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--accent);
+    border-radius: 0 5px 5px 0;
+    position: relative;
+}
+
+.timeline-date {
+    font-size: 0.9rem;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.timeline-title {
+    font-size: 1.25rem;
+    color: #fff;
+    margin: 0 0 0.5rem 0;
+}
+
+.timeline-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+/* Certifications */
+.cert-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.cert-card {
+    background-color: var(--card-bg);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1 1 300px;
+}
+
+.cert-icon {
+    font-size: 2rem;
+    color: var(--accent);
+}
+
+/* GitHub Stats */
+.github-stats {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.github-stats img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.resume-btn {
+    background-color: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+}
+
+.resume-btn:hover {
+    background-color: var(--accent);
+    color: #121212;
 }
 
 .project-tags {
@@ -182,12 +262,24 @@ footer {
 
 /* Animations */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Responsive */
 @media (max-width: 600px) {
-    h1 { font-size: 2rem; }
-    .container { padding: 1rem; }
+    h1 {
+        font-size: 2rem;
+    }
+
+    .container {
+        padding: 1rem;
+    }
 }
