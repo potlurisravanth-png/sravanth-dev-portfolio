@@ -571,6 +571,17 @@ footer {
     background: rgba(102, 252, 241, 0.15);
 }
 
+/* Email link with accent styling */
+.nav-email {
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color) !important;
+}
+
+.nav-email:hover {
+    background: var(--accent-color);
+    color: var(--bg-color) !important;
+}
+
 /* ========== 3D HERO CANVAS ========== */
 #hero-canvas {
     position: absolute;
