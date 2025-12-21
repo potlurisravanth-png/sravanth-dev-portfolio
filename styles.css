@@ -56,30 +56,63 @@ body {
     min-height: 100vh;
     display: flex;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 2rem;
+    justify-content: flex-start;
+    text-align: left;
+    padding: 2rem 5%;
     position: relative;
     background: var(--bg-color);
 }
 
+/* Gradient mask to concentrate 3D effect on right side */
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, #0B0C10 0%, #0B0C10 40%, rgba(11, 12, 16, 0) 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Mobile: Vertical gradient for top readability */
+@media (max-width: 768px) {
+    .hero::before {
+        background: linear-gradient(180deg, #0B0C10 0%, #0B0C10 30%, rgba(11, 12, 16, 0) 100%);
+    }
+
+    .hero {
+        justify-content: center;
+        text-align: center;
+        padding: 2rem;
+    }
+}
+
 .hero-content {
-    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    max-width: 650px;
     transition: opacity 0.3s ease, transform 0.3s ease;
+    position: relative;
+    z-index: 2;
 }
 
 .hero h1 {
-    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-size: clamp(3rem, 10vw, 6rem);
     font-weight: 700;
     margin-bottom: 1rem;
     background: var(--gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    line-height: 1.1;
 }
 
 .hero .tagline {
-    font-size: clamp(1rem, 3vw, 1.5rem);
+    font-size: clamp(1.1rem, 3vw, 1.6rem);
     color: var(--text-gray);
     margin-bottom: 2rem;
     font-weight: 300;
@@ -88,8 +121,14 @@ body {
 .hero-links {
     display: flex;
     gap: 1rem;
-    justify-content: center;
+    justify-content: flex-start;
     flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .hero-links {
+        justify-content: center;
+    }
 }
 
 .hero-links a {
@@ -463,30 +502,37 @@ footer {
 }
 
 /* ========== STICKY NAVIGATION BAR ========== */
-/* Glassmorphism dark navbar */
+/* Default: Transparent, morphs on scroll (NO transform) */
 .navbar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
+    width: 100%;
     z-index: 1000;
     padding: 0.75rem 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(11, 12, 16, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(102, 252, 241, 0.1);
-    transform: scaleY(0);
-    transform-origin: top center;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: 1px solid transparent;
+    box-shadow: none;
     opacity: 0;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    transition: background 0.4s ease-in-out, border-bottom 0.4s ease-in-out, backdrop-filter 0.4s ease-in-out, opacity 0.3s ease;
 }
 
 .navbar.visible {
-    transform: scaleY(1);
     opacity: 1;
+}
+
+/* Morphed state when scrolled past 200px */
+.navbar.nav-scrolled {
+    background: rgba(11, 12, 16, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid #66FCF1;
 }
 
 .nav-brand {

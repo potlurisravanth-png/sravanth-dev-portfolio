@@ -11,25 +11,28 @@ const scrollIndicator = document.getElementById('scrollIndicator');
 const navLinks = document.querySelectorAll('.nav-link');
 const sections = document.querySelectorAll('section[id]');
 
-// ========== HERO-TO-NAVBAR TRANSFORMATION ==========
-// Instead of sliding from top, navbar "emerges" from hero position
+// ========== SCROLL-REVEAL NAVIGATION ==========
+// Navbar materializes with background when user scrolls past 200px
 function handleNavbarTransform() {
-    const heroRect = hero.getBoundingClientRect();
-    const heroBottom = heroRect.bottom;
     const scrollY = window.scrollY;
-    const heroHeight = hero.offsetHeight;
 
-    // Calculate transition progress (0 = hero visible, 1 = hero scrolled away)
-    const progress = Math.min(1, Math.max(0, scrollY / (heroHeight * 0.7)));
-
-    if (scrollY > heroHeight - 150) {
+    // Show/hide navbar based on scroll
+    if (scrollY > 100) {
         navbar.classList.add('visible');
     } else {
         navbar.classList.remove('visible');
     }
 
+    // Add scrolled class for materializing background effect
+    if (scrollY > 200) {
+        navbar.classList.add('nav-scrolled');
+    } else {
+        navbar.classList.remove('nav-scrolled');
+    }
+
     // Fade out hero content as we scroll
     if (heroContent) {
+        const heroHeight = hero.offsetHeight;
         const fadeProgress = Math.min(1, scrollY / (heroHeight * 0.5));
         heroContent.style.opacity = 1 - fadeProgress;
         heroContent.style.transform = `translateY(${fadeProgress * -30}px)`;
