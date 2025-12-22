@@ -394,6 +394,23 @@ section {
     background: rgba(102, 252, 241, 0.1);
 }
 
+/* Project Impact Bullets */
+.project-impact {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+}
+
+.project-impact li {
+    color: var(--accent-color);
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+    border-left: 2px solid var(--accent-color);
+    padding-left: 1rem;
+    background: rgba(102, 252, 241, 0.05);
+    border-radius: 0 6px 6px 0;
+}
+
 /* ========== CERTIFICATIONS ========== */
 .cert-grid {
     display: grid;
@@ -438,6 +455,32 @@ section {
 .cert-info span {
     font-size: 0.85rem;
     color: var(--text-muted);
+}
+
+/* In-Progress Certification */
+.cert-in-progress {
+    border-color: rgba(255, 183, 77, 0.4);
+    position: relative;
+    cursor: default;
+}
+
+.cert-in-progress:hover {
+    border-color: #FFB74D;
+    box-shadow: 0 0 15px rgba(255, 183, 77, 0.25);
+}
+
+.cert-badge {
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    background: linear-gradient(135deg, #FFB74D 0%, #FF9800 100%);
+    color: #0B0C10;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 /* ========== GITHUB STATS ========== */

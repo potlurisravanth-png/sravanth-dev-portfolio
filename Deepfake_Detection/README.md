@@ -3,6 +3,19 @@
 ## Abstract
 This project implements a state-of-the-art (SOTA) deepfake detection system capable of identifying highly specific "content-driven" manipulations (e.g., changing a single word in a sentence). Unlike traditional detectors that focus on visual artifacts, this model utilizes **Multi-Modal Fusion**, analyzing both **Video (Spatial-Temporal)** and **Audio (Spectral)** features simultaneously to detect lip-sync errors and modality mismatches.
 
+## 🏗️ System Architecture
+
+```mermaid
+graph LR
+A[Input Video] --> B(Face Extraction);
+A --> C(Audio Extraction);
+B --> D[Visual CNN Stream];
+C --> E[Audio ResNet Stream];
+D --> F{Fusion Layer};
+E --> F;
+F --> G[Probability Score];
+```
+
 ## Methodology
 To detect sophisticated deepfakes, we employ a **Late Fusion** strategy:
 1.  **Video Branch:** Uses **R3D-18 (3D ResNet)**, pre-trained on Kinetics-400. This model understands *motion* and *time*, allowing it to detect unnatural lip movements.

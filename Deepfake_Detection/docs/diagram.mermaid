@@ -1,0 +1,8 @@
+graph LR
+A[Input Video] --> B(Face Extraction);
+A --> C(Audio Extraction);
+B --> D[Visual CNN Stream];
+C --> E[Audio ResNet Stream];
+D --> F{Fusion Layer};
+E --> F;
+F --> G[Probability Score];
