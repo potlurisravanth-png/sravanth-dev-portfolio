@@ -333,6 +333,7 @@ section {
     border-color: var(--accent-color);
     transform: translateY(-5px);
     box-shadow: 0 0 15px rgba(102, 252, 241, 0.3);
+    cursor: pointer;
 }
 
 .project-card:hover::before {
@@ -409,6 +410,32 @@ section {
     padding-left: 1rem;
     background: rgba(102, 252, 241, 0.05);
     border-radius: 0 6px 6px 0;
+}
+
+/* Featured Project Card (Newest Project) */
+.project-card.featured {
+    border: 2px solid var(--accent-color);
+    background: linear-gradient(135deg, rgba(102, 252, 241, 0.08) 0%, var(--bg-color) 100%);
+    position: relative;
+}
+
+.project-card.featured::after {
+    content: 'NEW';
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--gradient);
+    color: var(--bg-color);
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.project-card.featured::before {
+    opacity: 1;
 }
 
 /* ========== CERTIFICATIONS ========== */

@@ -198,4 +198,20 @@ document.addEventListener('DOMContentLoaded', () => {
     initSectionAnimations();
     handleNavbarTransform();
     handleScrollIndicator();
+
+    // ========== CLICKABLE PROJECT CARDS ==========
+    // Makes entire project card clickable to open GitHub repo
+    const projectCards = document.querySelectorAll('.project-card[data-href]');
+    projectCards.forEach(card => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', (e) => {
+            // Don't trigger if clicking on an actual link inside the card
+            if (e.target.closest('a')) return;
+
+            const url = card.getAttribute('data-href');
+            if (url) {
+                window.open(url, '_blank');
+            }
+        });
+    });
 });
