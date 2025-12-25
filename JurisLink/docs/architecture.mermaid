@@ -1,0 +1,8 @@
+graph TD
+    A[👤 User Query] --> B(🎤 Intake Agent);
+    B --> C(🔍 Research Agent);
+    C --> D(📊 Strategy Agent);
+    D --> E(✍️ Assistant Agent);
+    E --> F[📄 Legal Document];
+    C -.->|Tavily API| G[(🌐 Legal Research)];
+    B -.->|Case Context| H[(💾 Memory Store)];

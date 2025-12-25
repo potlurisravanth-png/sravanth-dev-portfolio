@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="JurisLink: AI-Powered Legal Assistant - A multi-agent system for employment law cases using LangGraph, GPT-4o, and React.">
+    <title>JurisLink: AI Legal Assistant | Case Study</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0B0C10;
+            --card-bg: #1F2833;
+            --text-primary: #C5C6C7;
+            --text-highlight: #FFFFFF;
+            --accent-color: #66FCF1;
+            --accent-dark: #45A29E;
+            --gradient: linear-gradient(135deg, #66FCF1 0%, #45A29E 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, rgba(102, 252, 241, 0.05) 0%, var(--bg-color) 100%);
+            border-bottom: 1px solid rgba(102, 252, 241, 0.2);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .hero .tagline {
+            font-size: 1.25rem;
+            color: var(--text-highlight);
+            margin-bottom: 0.5rem;
+        }
+
+        .hero .subtitle {
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tech-tag {
+            padding: 0.35rem 0.75rem;
+            background: rgba(102, 252, 241, 0.1);
+            border: 1px solid rgba(102, 252, 241, 0.3);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--accent-color);
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            background: var(--gradient);
+            color: var(--bg-color);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 252, 241, 0.3);
+        }
+
+        /* Sections */
+        section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-highlight);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 30px;
+            height: 3px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(102, 252, 241, 0.15);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h3 {
+            color: var(--text-highlight);
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Agent Grid */
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .agent-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(102, 252, 241, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .agent-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-5px);
+        }
+
+        .agent-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .agent-card h4 {
+            color: var(--text-highlight);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .agent-card p {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        /* Architecture Diagram */
+        .diagram-container {
+            background: var(--card-bg);
+            border: 1px solid rgba(102, 252, 241, 0.15);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Feature List */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            border-bottom: 1px solid rgba(102, 252, 241, 0.1);
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        /* Impact Section */
+        .impact-box {
+            background: linear-gradient(135deg, rgba(102, 252, 241, 0.1) 0%, var(--card-bg) 100%);
+            border: 2px solid var(--accent-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .impact-box h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(102, 252, 241, 0.1);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                min-height: auto;
+                padding: 3rem 1.5rem;
+            }
+
+            section {
+                padding: 3rem 0;
+            }
+
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Hero -->
+    <header class="hero">
+        <div class="container">
+            <h1>⚖️ JurisLink</h1>
+            <p class="tagline">AI-Powered Legal Assistant for Employment Law</p>
+            <p class="subtitle">A multi-agent system that streamlines legal research, case analysis, and document
+                generation.</p>
+            <div class="tech-stack">
+                <span class="tech-tag">LangGraph</span>
+                <span class="tech-tag">GPT-4o</span>
+                <span class="tech-tag">Tavily API</span>
+                <span class="tech-tag">Azure Functions</span>
+                <span class="tech-tag">React</span>
+                <span class="tech-tag">Python</span>
+            </div>
+            <a href="https://github.com/potlurisravanth-png/JurisLink" target="_blank" class="btn-primary">
+                💻 View on GitHub
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Problem Statement -->
+        <section>
+            <div class="container">
+                <h2 class="section-title">The Problem</h2>
+                <p>Employment law cases involve complex research across federal regulations, state statutes, and case
+                    precedents. Traditional legal workflows are:</p>
+                <ul class="feature-list">
+                    <li><strong>Time-consuming:</strong> Hours spent on manual legal research across multiple databases
+                    </li>
+                    <li><strong>Error-prone:</strong> Risk of missing critical precedents or recent regulatory changes
+                    </li>
+                    <li><strong>Expensive:</strong> High billable hours for routine case analysis and document drafting
+                    </li>
+                    <li><strong>Inconsistent:</strong> Quality varies based on individual attorney experience</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Solution Overview -->
+        <section style="background: var(--card-bg);">
+            <div class="container">
+                <h2 class="section-title">The Solution</h2>
+                <p>JurisLink is a <strong>multi-agent AI system</strong> that orchestrates specialized agents to handle
+                    different aspects of legal case analysis. Built on <strong>LangGraph</strong>, it provides a
+                    structured, repeatable workflow for employment law cases.</p>
+
+                <div class="agent-grid">
+                    <div class="agent-card">
+                        <div class="icon">🎤</div>
+                        <h4>Intake Agent</h4>
+                        <p>Gathers case details through guided conversation</p>
+                    </div>
+                    <div class="agent-card">
+                        <div class="icon">🔍</div>
+                        <h4>Research Agent</h4>
+                        <p>Searches legal databases via Tavily API</p>
+                    </div>
+                    <div class="agent-card">
+                        <div class="icon">📊</div>
+                        <h4>Strategy Agent</h4>
+                        <p>Analyzes findings and recommends approaches</p>
+                    </div>
+                    <div class="agent-card">
+                        <div class="icon">✍️</div>
+                        <h4>Assistant Agent</h4>
+                        <p>Generates professional legal documents</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture -->
+        <section>
+            <div class="container">
+                <h2 class="section-title">System Architecture</h2>
+                <p>The agents communicate through a shared state graph, passing context and findings between stages.
+                    LangGraph ensures proper sequencing and error handling.</p>
+
+                <div class="diagram-container">
+                    <div class="mermaid">
+                        graph TD
+                        A[👤 User Query] --> B(🎤 Intake Agent)
+                        B --> C(🔍 Research Agent)
+                        C --> D(📊 Strategy Agent)
+                        D --> E(✍️ Assistant Agent)
+                        E --> F[📄 Legal Document]
+                        C -.->|Tavily API| G[(🌐 Legal Research)]
+                        B -.->|Case Context| H[(💾 Memory Store)]
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Features -->
+        <section style="background: var(--card-bg);">
+            <div class="container">
+                <h2 class="section-title">Key Features</h2>
+                <div class="card">
+                    <div class="card-icon">🌐</div>
+                    <h3>Real-Time Legal Research</h3>
+                    <p>Integrates Tavily API for up-to-date legal research, pulling from court databases, regulatory
+                        sites, and legal journals.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📝</div>
+                    <h3>Professional Document Generation</h3>
+                    <p>Outputs formatted legal letters, case summaries, and strategy memos using templated document
+                        generation.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">💬</div>
+                    <h3>Conversational Interface</h3>
+                    <p>React-based frontend provides an intuitive chat interface with case history tracking and document
+                        downloads.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">☁️</div>
+                    <h3>Serverless Deployment</h3>
+                    <p>Runs on Azure Functions for scalable, cost-effective operation with automatic scaling based on
+                        demand.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Impact -->
+        <section>
+            <div class="container">
+                <h2 class="section-title">Impact & Results</h2>
+                <div class="impact-box">
+                    <h3>⚡ Efficiency Gains</h3>
+                    <ul class="feature-list">
+                        <li>Reduces initial case research time from hours to minutes</li>
+                        <li>Generates consistent, well-structured legal documents</li>
+                        <li>Provides citations and references for all recommendations</li>
+                        <li>Enables legal professionals to focus on high-value strategic work</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack -->
+        <section style="background: var(--card-bg);">
+            <div class="container">
+                <h2 class="section-title">Technology Stack</h2>
+                <div class="agent-grid">
+                    <div class="agent-card">
+                        <div class="icon">🔗</div>
+                        <h4>LangGraph</h4>
+                        <p>Agent orchestration & state management</p>
+                    </div>
+                    <div class="agent-card">
+                        <div class="icon">🧠</div>
+                        <h4>GPT-4o</h4>
+                        <p>Natural language understanding & generation</p>
+                    </div>
+                    <div class="agent-card">
+                        <div class="icon">🔎</div>
+                        <h4>Tavily API</h4>
+                        <p>Real-time legal web search</p>
+                    </div>
+                    <div class="agent-card">
+                        <div class="icon">⚡</div>
+                        <h4>Azure Functions</h4>
+                        <p>Serverless backend hosting</p>
+                    </div>
+                    <div class="agent-card">
+                        <div class="icon">⚛️</div>
+                        <h4>React</h4>
+                        <p>Modern frontend UI</p>
+                    </div>
+                    <div class="agent-card">
+                        <div class="icon">🐍</div>
+                        <h4>Python</h4>
+                        <p>Core agent logic</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Built by <a href="https://potlurisravanth-png.github.io/sravanth-dev-portfolio/">Sravanth Potluri</a> | <a
+                href="https://github.com/potlurisravanth-png/JurisLink">View Source Code</a></p>
+    </footer>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1F2833',
+                primaryTextColor: '#C5C6C7',
+                primaryBorderColor: '#66FCF1',
+                lineColor: '#66FCF1',
+                secondaryColor: '#0B0C10',
+                tertiaryColor: '#1F2833'
+            }
+        });
+    </script>
+</body>
+
+</html>
