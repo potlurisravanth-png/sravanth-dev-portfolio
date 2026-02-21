@@ -3,7 +3,7 @@
 ## Abstract
 This project implements a state-of-the-art (SOTA) deepfake detection system capable of identifying highly specific "content-driven" manipulations (e.g., changing a single word in a sentence). Unlike traditional detectors that focus on visual artifacts, this model utilizes **Multi-Modal Fusion**, analyzing both **Video (Spatial-Temporal)** and **Audio (Spectral)** features simultaneously to detect lip-sync errors and modality mismatches.
 
-## 🏗️ System Architecture
+##  System Architecture
 
 ```mermaid
 graph LR
@@ -50,7 +50,7 @@ The **LAV-DF** dataset contains videos that are mostly real, with only small seg
 *   `notebooks/`: The original Jupyter Notebook used for research.
 *   `docs/`: Project reports and detailed documentation.
 
-## ⚖️ License & Acknowledgements
+##  License & Acknowledgements
 This project utilizes the **LAV-DF Dataset** for training and validation.
 * **License:** Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0).
 * **Usage:** This repository is for educational and portfolio demonstration purposes only.

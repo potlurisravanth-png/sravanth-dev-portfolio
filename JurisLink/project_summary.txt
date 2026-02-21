@@ -1,0 +1,2 @@
+JurisLink: AI-Powered Legal Assistant for Employment Law
+A comprehensive multi-agent AI system built on LangGraph, integrating GPT-4o and the Tavily API for real-time legal research. The system orchestrates specialized agents (Intake, Research, Strategy, Assistant) to conduct case analysis, formulate strategies based on federal/state precedents, and generate professional legal documents. Hosted on a serverless Azure Functions backend with a React conversational interface frontend.

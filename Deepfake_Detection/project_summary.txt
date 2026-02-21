@@ -1,0 +1,2 @@
+Deepfake Defender: Multi-Modal Detection System
+A multi-modal deep learning system utilizing CNN and ResNet architectures to analyze both visual facial features and audio artifacts simultaneously. Engineered to detect AI-generated media (deepfakes) with high confidence on the LAV-DF dataset. Implemented in Python using PyTorch, OpenCV, and FFmpeg for real-time video and audio stream processing and fusion layer analysis.
