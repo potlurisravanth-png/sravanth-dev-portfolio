@@ -214,4 +214,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // ========== MORE PROJECTS TOGGLE ==========
+    const moreProjectsBtn = document.getElementById('moreProjectsBtn');
+    if (moreProjectsBtn) {
+        moreProjectsBtn.addEventListener('click', () => {
+            const hiddenProjects = document.querySelectorAll('.hidden-project');
+            const isExpanded = moreProjectsBtn.getAttribute('aria-expanded') === 'true';
+
+            hiddenProjects.forEach(project => {
+                if (isExpanded) {
+                    project.style.display = 'none';
+                } else {
+                    project.style.display = 'block';
+                    // Re-trigger animation
+                    project.classList.remove('animate-in');
+                    setTimeout(() => project.classList.add('animate-in'), 50);
+                }
+            });
+
+            moreProjectsBtn.setAttribute('aria-expanded', !isExpanded);
+            moreProjectsBtn.innerHTML = isExpanded
+                ? 'More Projects <span class="arrow-down-small"></span>'
+                : 'Show Less <span class="arrow-up-small"></span>';
+        });
+    }
 });

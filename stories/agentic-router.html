@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Agentic Router SDK: A professional architectural showcase of an intelligent, multi-tier Large Language Model (LLM) routing system with Map-Reduce.">
+    <title>Agentic Router SDK | Case Study</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0B0C10;
+            --card-bg: #1F2833;
+            --text-primary: #C5C6C7;
+            --text-highlight: #FFFFFF;
+            --accent-color: #66FCF1;
+            --accent-dark: #45A29E;
+            --gradient: linear-gradient(135deg, #66FCF1 0%, #45A29E 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, rgba(102, 252, 241, 0.05) 0%, var(--bg-color) 100%);
+            border-bottom: 1px solid rgba(102, 252, 241, 0.2);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .hero .tagline {
+            font-size: 1.25rem;
+            color: var(--text-highlight);
+            margin-bottom: 0.5rem;
+        }
+
+        .hero .subtitle {
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tech-tag {
+            padding: 0.35rem 0.75rem;
+            background: rgba(102, 252, 241, 0.1);
+            border: 1px solid rgba(102, 252, 241, 0.3);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--accent-color);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            background: var(--gradient);
+            color: var(--bg-color);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 252, 241, 0.3);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            background: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(102, 252, 241, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Sections */
+        section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-highlight);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 30px;
+            height: 3px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(102, 252, 241, 0.15);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h3 {
+            color: var(--text-highlight);
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Component Grid */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .component-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(102, 252, 241, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .component-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-5px);
+        }
+
+        .component-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .component-card h4 {
+            color: var(--text-highlight);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .component-card p {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        /* Architecture Diagram */
+        .diagram-container {
+            background: var(--card-bg);
+            border: 1px solid rgba(102, 252, 241, 0.15);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Feature List */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            border-bottom: 1px solid rgba(102, 252, 241, 0.1);
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        /* Impact Section */
+        .impact-box {
+            background: linear-gradient(135deg, rgba(102, 252, 241, 0.1) 0%, var(--card-bg) 100%);
+            border: 2px solid var(--accent-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .impact-box h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(102, 252, 241, 0.1);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                min-height: auto;
+                padding: 3rem 1.5rem;
+            }
+
+            section {
+                padding: 3rem 0;
+            }
+
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Hero -->
+    <header class="hero">
+        <div class="container">
+            <h1>Agentic Router SDK</h1>
+            <p class="tagline">Multi-Tier LLM Router with Dynamic Cost Optimization</p>
+            <p class="subtitle">An intelligent routing system that dynamically assigns prompts to cost-effective models
+                and decomposes complex tasks securely.</p>
+            <div class="tech-stack">
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">OpenAI</span>
+                <span class="tech-tag">LangGraph</span>
+                <span class="tech-tag">Map-Reduce</span>
+                <span class="tech-tag">AI-102 Practical Lab</span>
+            </div>
+            <div class="btn-group">
+                <a href="https://github.com/potlurisravanth-png/AgenticRouter_Portfolio" target="_blank"
+                    class="btn-primary">
+                    View on GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Problem Statement -->
+        <section>
+            <div class="container">
+                <h2 class="section-title">The Challenge</h2>
+                <p>Enterprise AI deployments face rapidly inflating API costs because complex foundational models (e.g.,
+                    GPT-4) are frequently invoked for low-complexity tasks. Conversely, relying solely on cheaper models
+                    jeopardizes response quality and accuracy for difficult prompts.</p>
+                <ul class="feature-list">
+                    <li><strong>Inefficiency:</strong> Wasting top-tier model resources on simple data extraction or
+                        formatting requests.</li>
+                    <li><strong>Brittle Handling:</strong> Complex multi-part prompts often break single-shot context
+                        limits and reduce answer precision.</li>
+                    <li><strong>Cost Opacity:</strong> Lack of granular insight into token expenditure per session.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Solution Overview -->
+        <section style="background: var(--card-bg);">
+            <div class="container">
+                <h2 class="section-title">The Solution & Architecture</h2>
+                <p>The <strong>Agentic Router SDK</strong> provides a professional architectural solution. It actively
+                    ranks models and intelligently diverts prompts based on their calculated complexity score, relying
+                    on a <strong>Map-Reduce agentic pattern</strong> for large-scale requests.</p>
+
+                <div class="component-grid">
+                    <div class="component-card">
+                        <div class="icon"></div>
+                        <h4>Complexity Classifier</h4>
+                        <p>Matrix factor scoring to determine whether a prompt is simple (Tier 1), moderate (Tier 2), or
+                            highly complex (> 0.85).</p>
+                    </div>
+                    <div class="component-card">
+                        <div class="icon"></div>
+                        <h4>Map-Reduce Workers</h4>
+                        <p>Complex tasks are intelligently split by a Master model, executed in parallel by Workers, and
+                            re-synthesized.</p>
+                    </div>
+                    <div class="component-card">
+                        <div class="icon"></div>
+                        <h4>Dual Ranking System</h4>
+                        <p>Automated cost-saving suggestions based on active models and global benchmarks.</p>
+                    </div>
+                    <div class="component-card">
+                        <div class="icon"></div>
+                        <h4>Self-Tuning Thresholds</h4>
+                        <p>Statistical feedback loops autonomously tune the system's routing thresholds over time.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Diagram -->
+        <section>
+            <div class="container">
+                <h2 class="section-title">Routing Decision Matrix Workflow</h2>
+                <p>The system evaluates incoming prompts and securely routes them through an optimized validation
+                    pipeline, triggering the Map-Reduce flow directly when complexity thresholds are breached.</p>
+
+                <div class="diagram-container">
+                    <div class="mermaid">
+                        graph TD
+                        A[User Prompt] --> B(Complexity Classifier)
+                        B --> C{Score Evaluation}
+                        C -->|< 0.5| D[Tier 1 Direct] C -->|0.5 - 0.85| E[Tier 2 Direct]
+                            C -->|> 0.85| F{Token Budget Pre-Check}
+                            F --> G[Master Splitter]
+                            G --> H[Parallel Workers]
+                            H --> I[Synthesizer]
+                            D --> J[Cost Analytics & Telemetry]
+                            E --> J
+                            I --> J
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Features -->
+        <section style="background: var(--card-bg);">
+            <div class="container">
+                <h2 class="section-title">Technical Deep Dive Features</h2>
+                <div class="card">
+                    <div class="card-icon"></div>
+                    <h3>Dynamic Tiering</h3>
+                    <p>Models are ranked dynamically by capability, avoiding rigid, hardcoded lists that quickly become
+                        obsolete as new models launch.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"></div>
+                    <h3>Circuit Breaker Pattern</h3>
+                    <p>Enterprise-grade failover and proactive rate-limit management ensures constant uptime and
+                        fallback routes.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"></div>
+                    <h3>Granular Telemetry</h3>
+                    <p>Calculates hypothetical costs and validates its ROI at the end of every task to display exact
+                        percentage savings.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"></div>
+                    <h3>Proprietary Logic Separation</h3>
+                    <p>Security-first architecture where core algorithms and systems are cleanly separated and secured.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Impact -->
+        <section>
+            <div class="container">
+                <h2 class="section-title">Impact & Cost Savings</h2>
+                <div class="impact-box">
+                    <h3> Measurable Efficiency</h3>
+                    <ul class="feature-list">
+                        <li>Demonstrated simulated cost reductions upwards of <strong>80-85%</strong> for typical
+                            multi-threaded chat flows compared to a monolithic GPT-4 fallback.</li>
+                        <li>Eliminates out-of-memory/context exceptions for large text blocks through automatic parallel
+                            worker decomposition.</li>
+                        <li>Allows enterprises to deploy complex LLM workflows safely without uncontained exponential
+                            cost scaling.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Built by <a href="https://potlurisravanth-png.github.io/sravanth-dev-portfolio/">Sravanth Potluri</a> | <a
+                href="https://github.com/potlurisravanth-png/AgenticRouter_Portfolio">View Source Code</a></p>
+    </footer>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1F2833',
+                primaryTextColor: '#C5C6C7',
+                primaryBorderColor: '#66FCF1',
+                lineColor: '#66FCF1',
+                secondaryColor: '#0B0C10',
+                tertiaryColor: '#1F2833'
+            }
+        });
+    </script>
+</body>
+
+</html>
