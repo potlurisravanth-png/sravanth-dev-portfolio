@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Secure File-Sharing Web App: A robust cloud-based file management system featuring end-to-end encryption on AWS.">
+    <title>Secure File-Sharing Web App | Case Study</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0B0C10;
+            --card-bg: #1F2833;
+            --text-primary: #C5C6C7;
+            --text-highlight: #FFFFFF;
+            --accent-color: #66FCF1;
+            --accent-dark: #45A29E;
+            --gradient: linear-gradient(135deg, #66FCF1 0%, #45A29E 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, rgba(102, 252, 241, 0.05) 0%, var(--bg-color) 100%);
+            border-bottom: 1px solid rgba(102, 252, 241, 0.2);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .hero .tagline {
+            font-size: 1.25rem;
+            color: var(--text-highlight);
+            margin-bottom: 0.5rem;
+        }
+
+        .hero .subtitle {
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tech-tag {
+            padding: 0.35rem 0.75rem;
+            background: rgba(102, 252, 241, 0.1);
+            border: 1px solid rgba(102, 252, 241, 0.3);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--accent-color);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            background: var(--gradient);
+            color: var(--bg-color);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 252, 241, 0.3);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            background: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(102, 252, 241, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Sections */
+        section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-highlight);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 30px;
+            height: 3px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+
+        p {
+            margin-bottom: 1.25rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(102, 252, 241, 0.15);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h3 {
+            color: var(--text-highlight);
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Component Grid */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .component-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(102, 252, 241, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .component-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-5px);
+        }
+
+        .component-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .component-card h4 {
+            color: var(--text-highlight);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .component-card p {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        /* Architecture Diagram */
+        .diagram-container {
+            background: var(--card-bg);
+            border: 1px solid rgba(102, 252, 241, 0.15);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Feature List */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            border-bottom: 1px solid rgba(102, 252, 241, 0.1);
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        /* Impact Section */
+        .impact-box {
+            background: linear-gradient(135deg, rgba(102, 252, 241, 0.1) 0%, var(--card-bg) 100%);
+            border: 2px solid var(--accent-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .impact-box h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(102, 252, 241, 0.1);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                min-height: auto;
+                padding: 3rem 1.5rem;
+            }
+
+            section {
+                padding: 3rem 0;
+            }
+
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Hero -->
+    <header class="hero">
+        <div class="container">
+            <h1>Secure File-Sharing Web App</h1>
+            <p class="tagline">Secure, Scalable, and Serverless File Management</p>
+            <p class="subtitle">A robust cloud-based file management system featuring secure file uploads, encrypted
+                storage, and robust user access control.</p>
+            <div class="tech-stack">
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">Flask</span>
+                <span class="tech-tag">AWS EC2</span>
+                <span class="tech-tag">AWS S3</span>
+                <span class="tech-tag">AWS RDS</span>
+                <span class="tech-tag">AWS Lambda</span>
+                <span class="tech-tag">AWS SES</span>
+            </div>
+            <div class="btn-group">
+                <a href="https://github.com/potlurisravanth-png/secure-file-sharing-webapp" target="_blank"
+                    class="btn-primary">
+                    View on GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Problem Statement -->
+        <section>
+            <div class="container">
+                <h2 class="section-title">The Problem</h2>
+                <p>Organizations constantly struggle with securely sharing large files without compromising on data
+                    integrity, availability, and access control. Traditional methods involve:</p>
+                <ul class="feature-list">
+                    <li><strong>Lack of Encryption:</strong> Files sent via email or standard FTP are often intercepted
+                        or exposed.</li>
+                    <li><strong>Scalability Limits:</strong> On-premise storage servers run out of space rapidly.</li>
+                    <li><strong>Data Redundancy:</strong> Need to ensure that uploaded objects are safe and consistently
+                        accessible.</li>
+                    <li><strong>Tracking:</strong> Difficulty monitoring who uploaded what, when it was sent, and to
+                        whom.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Solution Overview -->
+        <section style="background: var(--card-bg);">
+            <div class="container">
+                <h2 class="section-title">The Architecture & Solution</h2>
+                <p>The <strong>Secure File-Sharing Web App</strong> tackles these challenges by shifting the entire
+                    architecture onto AWS. Implementing a microservice-like serverless approach, components are
+                    decoupled for supreme resilience and scalability.</p>
+
+                <div class="component-grid">
+                    <div class="component-card">
+                        <div class="icon"></div>
+                        <h4>Web Server</h4>
+                        <p>Python Flask running on EC2 instances for resilient computing.</p>
+                    </div>
+                    <div class="component-card">
+                        <div class="icon"></div>
+                        <h4>Storage</h4>
+                        <p>AWS S3 stores objects with generated presigned URLs for secure temporary access.</p>
+                    </div>
+                    <div class="component-card">
+                        <div class="icon"></div>
+                        <h4>Database</h4>
+                        <p>AWS RDS (MySQL) logs metadata: file ID, generated S3 key, presigned URL, and recipient email
+                            list.</p>
+                    </div>
+                    <div class="component-card">
+                        <div class="icon"></div>
+                        <h4>Notifications</h4>
+                        <p>AWS Lambda triggered via API to send tracking emails leveraging AWS Simple Email Service
+                            (SES).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Diagram -->
+        <section>
+            <div class="container">
+                <h2 class="section-title">System Workflow</h2>
+                <p>The system utilizes a Python Flask orchestrator to manage the flow of uploaded objects securely into
+                    AWS S3, tracking state in MySQL, and invoking Event-driven serverless Lambda functions.</p>
+
+                <div class="diagram-container">
+                    <div class="mermaid">
+                        graph TD
+                        A[User Uploads File & Emails] --> B(Flask Web App)
+                        B -->|Upload Object| C[(AWS S3 Bucket)]
+                        C -.->|Presigned URL| B
+                        B -->|Log Meta| D[(AWS RDS MySQL)]
+                        B -->|Invoke Event| E[AWS Lambda]
+                        E -->|Dispatch| F(AWS SES)
+                        F -->|Email with Link| G[Recipient Users]
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Features -->
+        <section style="background: var(--card-bg);">
+            <div class="container">
+                <h2 class="section-title">Key Features</h2>
+                <div class="card">
+                    <div class="card-icon"></div>
+                    <h3>Serverless Notifications</h3>
+                    <p>Decoupled architecture utilizing AWS Lambda and SES ensures smooth, non-blocking asynchronous
+                        email delivery.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"></div>
+                    <h3>Secure Storage via S3</h3>
+                    <p>Instead of passing raw files, the system generates time-bound Presigned URLs for S3 objects,
+                        dramatically increasing data safety.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"></div>
+                    <h3>Scalable Compute</h3>
+                    <p>Hosted on AWS EC2, capable of sitting behind an Application Load Balancer with Auto Scaling
+                        potential.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"></div>
+                    <h3>Relational Tracking</h3>
+                    <p>Fully managed AWS RDS (MySQL) handles relational database tracking of every uploaded item,
+                        enabling auditing.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Impact -->
+        <section>
+            <div class="container">
+                <h2 class="section-title">Impact & Results</h2>
+                <div class="impact-box">
+                    <h3> Security & Scalability Achieved</h3>
+                    <ul class="feature-list">
+                        <li>Decoupled file uploads from email dispatch entirely, minimizing wait times.</li>
+                        <li>Implemented IAM Roles/Security Groups using the principle of least privilege.</li>
+                        <li>Reduced risk of data interception via presigned temporary URL access.</li>
+                        <li>Created a highly extensible boilerplate for secure enterprise cloud applications.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Built by <a href="https://potlurisravanth-png.github.io/sravanth-dev-portfolio/">Sravanth Potluri</a> | <a
+                href="https://github.com/potlurisravanth-png/secure-file-sharing-webapp">View Source Code</a></p>
+    </footer>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1F2833',
+                primaryTextColor: '#C5C6C7',
+                primaryBorderColor: '#66FCF1',
+                lineColor: '#66FCF1',
+                secondaryColor: '#0B0C10',
+                tertiaryColor: '#1F2833'
+            }
+        });
+    </script>
+</body>
+
+</html>

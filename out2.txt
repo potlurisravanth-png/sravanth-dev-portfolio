@@ -1,0 +1,5 @@
+﻿76a4fe8 refactor: enforce strict professional tone and remove all emojis
+feea4df refactor: reorganize stories to stories/ folder per LEAN protocol
+d06a656 feat: add dedicated Deepfake story page with link from portfolio
+ae6ccfe style: change projects to single-column rows and rename Deepfake button to Case Study
+52d3183 fix: update JurisLink repo URL to JurisLink_Portfolio
