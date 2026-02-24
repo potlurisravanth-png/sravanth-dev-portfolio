@@ -384,19 +384,8 @@
                     pipeline, triggering the Map-Reduce flow directly when complexity thresholds are breached.</p>
 
                 <div class="diagram-container">
-                    <div class="mermaid">
-                        graph TD
-                        A[User Prompt] --> B(Complexity Classifier)
-                        B --> C{Score Evaluation}
-                        C -->|< 0.5| D[Tier 1 Direct] C -->|0.5 - 0.85| E[Tier 2 Direct]
-                            C -->|> 0.85| F{Token Budget Pre-Check}
-                            F --> G[Master Splitter]
-                            G --> H[Parallel Workers]
-                            H --> I[Synthesizer]
-                            D --> J[Cost Analytics & Telemetry]
-                            E --> J
-                            I --> J
-                    </div>
+                    <img src="assets/agentic_router_arch_1771905509966.png" alt="Agentic Router Architecture"
+                        style="max-width: 100%; height: auto; border-radius: 8px;">
                 </div>
             </div>
         </section>

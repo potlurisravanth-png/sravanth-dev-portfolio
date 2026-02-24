@@ -387,16 +387,8 @@
                     AWS S3, tracking state in MySQL, and invoking Event-driven serverless Lambda functions.</p>
 
                 <div class="diagram-container">
-                    <div class="mermaid">
-                        graph TD
-                        A[User Uploads File & Emails] --> B(Flask Web App)
-                        B -->|Upload Object| C[(AWS S3 Bucket)]
-                        C -.->|Presigned URL| B
-                        B -->|Log Meta| D[(AWS RDS MySQL)]
-                        B -->|Invoke Event| E[AWS Lambda]
-                        E -->|Dispatch| F(AWS SES)
-                        F -->|Email with Link| G[Recipient Users]
-                    </div>
+                    <img src="assets/secure_share_arch_1771905559879.png" alt="Secure File Sharing Architecture"
+                        style="max-width: 100%; height: auto; border-radius: 8px;">
                 </div>
             </div>
         </section>

@@ -5,16 +5,7 @@ This project implements a state-of-the-art (SOTA) deepfake detection system capa
 
 ##  System Architecture
 
-```mermaid
-graph LR
-A[Input Video] --> B(Face Extraction);
-A --> C(Audio Extraction);
-B --> D[Visual CNN Stream];
-C --> E[Audio ResNet Stream];
-D --> F{Fusion Layer};
-E --> F;
-F --> G[Probability Score];
-```
+![System Architecture](https://raw.githubusercontent.com/potlurisravanth-png/sravanth-dev-portfolio/main/stories/assets/deepfake_arch_1771905543604.png)
 
 ## Methodology
 To detect sophisticated deepfakes, we employ a **Late Fusion** strategy:
