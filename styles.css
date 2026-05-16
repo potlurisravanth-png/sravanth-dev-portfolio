@@ -10,6 +10,13 @@
    site is migrated to semantic tokens. Components below should prefer
    --fg-1 / --fg-2 / --bg / --accent / --border etc. */
 :root {
+    /* Production override: the design system's muted #5a5a5a measures
+       ~2.8:1 against the cyberpunk #0a0a0a canvas, below WCAG AA Large.
+       Lift to a cool gray that hits ~7.8:1 so captions, subtitles, and
+       the hero slogan stay readable. Bone theme re-sets this itself. */
+    --sp-muted: #9ca3af;
+    --fg-3:     #9ca3af;
+
     --bg-color:       var(--bg);
     --card-bg:        var(--bg-elevated);
     --text-primary:   var(--fg-2);
@@ -103,12 +110,11 @@ a { color: inherit; }
 
 .hero-description {
     font-size: clamp(1rem, 2.5vw, 1.25rem);
-    color: var(--fg-3);
+    color: var(--fg-2);
     margin-bottom: 0.5rem;
     font-weight: 400;
     font-style: italic;
     letter-spacing: 0.02em;
-    opacity: 0.9;
 }
 
 .hero-links {
