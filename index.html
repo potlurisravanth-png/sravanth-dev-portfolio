@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="cyberpunk">
 
 <head>
     <meta charset="UTF-8">
@@ -15,6 +15,12 @@
 
 <body>
 
+    <!-- THEME SWITCHER (Night = cyberpunk default, Day = bone editorial) -->
+    <div class="theme-switch" role="group" aria-label="Theme">
+        <button data-theme="cyberpunk" aria-pressed="true">Night</button>
+        <button data-theme="bone" aria-pressed="false">Day</button>
+    </div>
+
     <!-- NAVIGATION BAR (appears on scroll) -->
     <nav class="navbar" id="navbar">
         <a href="#" class="nav-brand">SP</a>
@@ -24,28 +30,26 @@
             <li><a href="#skills" class="nav-link">Skills</a></li>
             <li><a href="#projects" class="nav-link">Projects</a></li>
             <li><a href="#certifications" class="nav-link">Certifications</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
         </ul>
     </nav>
 
     <!-- HERO -->
     <header class="hero" id="hero">
-        <!-- 3D Particle Canvas Background -->
         <canvas id="hero-canvas"></canvas>
 
         <div class="hero-content">
             <h1 class="typewriter" id="heroName">Sravanth Potluri</h1>
-            <p class="hero-description">Curious mind turning ideas into AI-powered solutions—exploring cloud & emerging
-                tech</p>
-            <p class="tagline">Data Science Master's Student | AI & Computer Vision</p>
+            <p class="hero-description">Curious mind turning ideas into AI-powered solutions &mdash; exploring cloud &amp; emerging tech.</p>
+            <p class="tagline">Data Science Master's Student | AI &amp; Computer Vision</p>
             <div class="hero-links">
                 <a href="https://www.linkedin.com/in/sravanth-potluri-001522193/" target="_blank"
                     class="btn-primary">LinkedIn</a>
                 <a href="https://github.com/potlurisravanth-png" target="_blank" class="btn-outline">GitHub</a>
-                <a href="mailto:potlurisravanth2@gmail.com" class="btn-outline">Email</a>
+                <a href="mailto:potlurisravanth@gmail.com" class="btn-outline">Email</a>
             </div>
         </div>
 
-        <!-- Scroll Down Indicator -->
         <div class="scroll-indicator" id="scrollIndicator">
             <span>Scroll</span>
             <div class="arrow-down"></div>
@@ -58,10 +62,10 @@
             <div class="container">
                 <h2 class="section-title">About</h2>
                 <p class="about-content">
-                    Data Science Master's candidate with 3 years of software development experience at Cognizant.
-                    Skilled in Python, AWS, and Machine Learning, with a proven track record of building secure
-                    web applications and AI models. Seeking to leverage expertise in cloud computing and data
-                    analytics to solve complex technical challenges.
+                    Data Science M.S. candidate at UAB with three years of enterprise software development at Cognizant.
+                    Works across the stack &mdash; PyTorch model training, multi-agent LLM orchestration, and AWS/Azure
+                    deployment &mdash; building production systems that earn measurable wins, not demos. Current focus:
+                    cost-aware agentic AI, multi-modal forensics, and serverless cloud architecture.
                 </p>
             </div>
         </section>
@@ -72,15 +76,14 @@
                 <h2 class="section-title">Experience</h2>
                 <div class="timeline">
                     <div class="timeline-item">
-                        <span class="timeline-date">Oct 2021 – Aug 2024</span>
-                        <h3 class="timeline-title">Associate - SharePoint & Power Platform Developer</h3>
+                        <span class="timeline-date">Oct 2021 &ndash; Aug 2024</span>
+                        <h3 class="timeline-title">Associate &mdash; SharePoint &amp; Power Platform Developer</h3>
                         <p class="timeline-subtitle">Cognizant Technology Solutions, Hyderabad</p>
                         <ul>
-                            <li>Developed enterprise applications using Power Apps, Power Automate, and SharePoint
-                                Online</li>
-                            <li>Led migration of legacy SharePoint On-Premises sites to SharePoint Online</li>
-                            <li>Provided L2/L3 support, resolving critical application issues</li>
-                            <li>Mentored new team members and managed resources for timely delivery</li>
+                            <li>Developed customized enterprise applications for a major pharma client, significantly automating and streamlining business processes.</li>
+                            <li>Led the end-to-end cloud migration of legacy enterprise systems, ensuring data integrity and minimal downtime.</li>
+                            <li>Provided advanced technical support and resolved complex application issues to improve overall system stability and user experience.</li>
+                            <li>Mentored new team members and coordinated with cross-functional teams to ensure timely and successful project deliveries.</li>
                         </ul>
                     </div>
                 </div>
@@ -93,40 +96,77 @@
                 <h2 class="section-title">Education</h2>
                 <div class="timeline">
                     <div class="timeline-item">
-                        <span class="timeline-date">2024 – Present</span>
+                        <span class="timeline-date">2024 &ndash; Present</span>
                         <h3 class="timeline-title">Masters in Data Science</h3>
-                        <p class="timeline-subtitle">University of Alabama at Birmingham • GPA: 3.88</p>
+                        <p class="timeline-subtitle">University of Alabama at Birmingham &middot; GPA: 3.88</p>
+                        <ul>
+                            <li>Deeply engaged in advanced coursework covering Machine Learning, Deep Learning, Computer Vision (CV), and Natural Language Processing (NLP).</li>
+                            <li>Architected the <em>Deepfake Defender</em> (a multi-modal detection system using PyTorch and OpenCV), the <em>Agentic Router SDK</em>, and a <em>Secure File-Sharing Web App</em> on AWS.</li>
+                            <li>Bridging academic theory with practical application by building high-throughput data pipelines, training complex neural networks, and deploying cloud architecture.</li>
+                        </ul>
                     </div>
                     <div class="timeline-item">
-                        <span class="timeline-date">2017 – 2021</span>
+                        <span class="timeline-date">2017 &ndash; 2021</span>
                         <h3 class="timeline-title">B.Tech in Electronics and Communication Engineering</h3>
-                        <p class="timeline-subtitle">B.V.Raju Institute of Technology • CGPA: 8.20</p>
+                        <p class="timeline-subtitle">B.V.Raju Institute of Technology &middot; CGPA: 8.20</p>
+                        <ul>
+                            <li>Gained a strong foundation in hardware-software integration through coursework in Embedded Systems, VLSI Design, and Microprocessors.</li>
+                            <li>Studied advanced analytical subjects including Digital Signal Processing and Communication Systems, developing rigorous mathematical problem-solving skills.</li>
+                            <li>Built foundational programming and technical skills that enabled a seamless transition into enterprise software development and artificial intelligence.</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SKILLS -->
+        <!-- SKILLS (Grouped by category) -->
         <section id="skills">
             <div class="container">
                 <h2 class="section-title">Skills</h2>
-                <div class="skills-container">
-                    <span class="skill-tag">Python</span>
-                    <span class="skill-tag">SQL</span>
-                    <span class="skill-tag">PyTorch</span>
-                    <span class="skill-tag">OpenCV</span>
-                    <span class="skill-tag">FFmpeg</span>
-                    <span class="skill-tag">Flask</span>
-                    <span class="skill-tag">React</span>
-                    <span class="skill-tag">Pandas</span>
-                    <span class="skill-tag">NumPy</span>
-                    <span class="skill-tag">Azure</span>
-                    <span class="skill-tag">AWS</span>
-                    <span class="skill-tag">LangGraph</span>
-                    <span class="skill-tag">Docker</span>
-                    <span class="skill-tag">GitHub</span>
-                    <span class="skill-tag">SharePoint Online</span>
-                    <span class="skill-tag">Power Platform</span>
+                <div class="skills-grouped">
+                    <div class="skill-row">
+                        <div class="skill-row-label">Languages</div>
+                        <div class="skill-row-chips">
+                            <span class="skill-chip">Python</span>
+                            <span class="skill-chip">SQL</span>
+                        </div>
+                    </div>
+                    <div class="skill-row">
+                        <div class="skill-row-label">ML / AI</div>
+                        <div class="skill-row-chips">
+                            <span class="skill-chip">PyTorch</span>
+                            <span class="skill-chip">OpenCV</span>
+                            <span class="skill-chip">FFmpeg</span>
+                            <span class="skill-chip">LangGraph</span>
+                            <span class="skill-chip">GPT-4o</span>
+                        </div>
+                    </div>
+                    <div class="skill-row">
+                        <div class="skill-row-label">Cloud</div>
+                        <div class="skill-row-chips">
+                            <span class="skill-chip">AWS</span>
+                            <span class="skill-chip">Azure</span>
+                            <span class="skill-chip">Docker</span>
+                        </div>
+                    </div>
+                    <div class="skill-row">
+                        <div class="skill-row-label">Frameworks</div>
+                        <div class="skill-row-chips">
+                            <span class="skill-chip">Flask</span>
+                            <span class="skill-chip">React</span>
+                            <span class="skill-chip">Pandas</span>
+                            <span class="skill-chip">NumPy</span>
+                            <span class="skill-chip">Three.js</span>
+                        </div>
+                    </div>
+                    <div class="skill-row">
+                        <div class="skill-row-label">Tools</div>
+                        <div class="skill-row-chips">
+                            <span class="skill-chip">GitHub</span>
+                            <span class="skill-chip">SharePoint Online</span>
+                            <span class="skill-chip">Power Platform</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -146,15 +186,15 @@
                             <span class="project-tag">Map-Reduce</span>
                         </div>
                         <h3>Agentic Router SDK</h3>
-                        <p>Multi-Tier LLM Router with dynamic cost optimization. Features a dual ranking system and
-                            Map-Reduce decomposition for complex prompt routing.</p>
+                        <p>Multi-tier LLM router with dynamic complexity scoring, dual-ranking model selection, and a
+                            Map-Reduce agentic pattern that decomposes complex prompts into parallel worker tasks.</p>
                         <ul class="project-impact">
-                            <li> Reduces API costs significantly while maintaining output quality.</li>
+                            <li>Demonstrated 80&ndash;85% cost reduction versus a single-model GPT-4 baseline in benchmark runs.</li>
                         </ul>
                         <div class="project-links">
-                            <a href="stories/agentic-router.html" target="_blank" class="project-link"> Case Study</a>
+                            <a href="stories/agentic-router.html" target="_blank" class="project-link">Case Study</a>
                             <a href="https://github.com/potlurisravanth-png/AgenticRouter_Portfolio" target="_blank"
-                                class="project-link"> GitHub</a>
+                                class="project-link">GitHub</a>
                         </div>
                     </article>
 
@@ -167,18 +207,18 @@
                             <span class="project-tag">Azure</span>
                         </div>
                         <h3>JurisLink: AI Legal Assistant</h3>
-                        <p>Multi-agent AI system for employment law cases. Features intake, research, and strategy
-                            agents orchestrated via LangGraph with real-time legal search using Tavily API.</p>
+                        <p>Multi-agent system for employment law: Intake, Research, Strategy, and Assistant agents
+                            orchestrated via LangGraph, with live legal search through the Tavily API and a React
+                            conversational frontend on Azure Functions.</p>
                         <ul class="project-impact">
-                            <li> Generates professional legal documents with case-specific strategy recommendations.
-                            </li>
+                            <li>Compresses hours of manual case research into minutes and outputs cited, formatted legal documents.</li>
                         </ul>
                         <div class="project-links">
-                            <a href="stories/jurislink.html" target="_blank" class="project-link"> Case Study</a>
+                            <a href="stories/jurislink.html" target="_blank" class="project-link">Case Study</a>
                             <a href="https://ambitious-sand-078aabe0f.4.azurestaticapps.net" target="_blank"
-                                class="project-link"> Live Demo</a>
+                                class="project-link">Live Demo</a>
                             <a href="https://github.com/potlurisravanth-png/JurisLink_Portfolio" target="_blank"
-                                class="project-link"> GitHub</a>
+                                class="project-link">GitHub</a>
                         </div>
                     </article>
 
@@ -190,16 +230,16 @@
                             <span class="project-tag">FFmpeg</span>
                         </div>
                         <h3>Deepfake Defender: Multi-Modal Detection System</h3>
-                        <p>Combines audio and visual forensic models (CNN + ResNet) to detect AI-generated media with
-                            high accuracy on the LAV-DF dataset.</p>
+                        <p>Late-fusion architecture combining a 3D ResNet (R3D-18) for spatial-temporal video features
+                            with a ResNet-18 audio branch operating on Mel-spectrograms &mdash; trained against LAV-DF,
+                            the content-driven deepfake dataset.</p>
                         <ul class="project-impact">
-                            <li> Designed to combat misinformation by flagging manipulated media in real-time.</li>
+                            <li>99.81% validation accuracy in 3 epochs after a 50&times; data-pipeline throughput optimization (FFmpeg pre-caching, threaded OpenCV).</li>
                         </ul>
                         <div class="project-links">
-                            <a href="stories/deepfake-defender.html" target="_blank" class="project-link"> Case
-                                Study</a>
+                            <a href="stories/deepfake-defender.html" target="_blank" class="project-link">Case Study</a>
                             <a href="https://github.com/potlurisravanth-png/deepfake-detection-lav-df" target="_blank"
-                                class="project-link"> GitHub</a>
+                                class="project-link">GitHub</a>
                         </div>
                     </article>
 
@@ -211,14 +251,16 @@
                             <span class="project-tag">AWS</span>
                         </div>
                         <h3>Secure File-Sharing Web App</h3>
-                        <p>Architected a secure file-sharing application on AWS using Python Flask. Implemented
-                            serverless notifications with AWS Lambda and SES, and ensured data integrity with S3 and
-                            RDS.</p>
+                        <p>Flask backend on EC2, S3 object storage, RDS (MySQL) for metadata, and a decoupled
+                            serverless notification layer using S3 events &rarr; Lambda &rarr; SES &mdash; all
+                            scoped with IAM least-privilege roles.</p>
+                        <ul class="project-impact">
+                            <li>Cleanly separates compute, storage, data, and notifications across managed AWS services.</li>
+                        </ul>
                         <div class="project-links">
-                            <a href="stories/secure-file-sharing.html" target="_blank" class="project-link"> Case
-                                Study</a>
+                            <a href="stories/secure-file-sharing.html" target="_blank" class="project-link">Case Study</a>
                             <a href="https://github.com/potlurisravanth-png/secure-file-sharing-webapp" target="_blank"
-                                class="project-link"> GitHub</a>
+                                class="project-link">GitHub</a>
                         </div>
                     </article>
 
@@ -238,33 +280,33 @@
                 <div class="cert-grid">
                     <a href="https://learn.microsoft.com/api/credentials/share/en-us/sravanthpotluri-5244/87955E698D1A90B9?sharingId=93D3FAC02A6145A4"
                         target="_blank" class="cert-card" id="cert-ai900">
-                        <span class="cert-icon"></span>
+                        <span class="cert-icon" data-icon="award"></span>
                         <div class="cert-info">
                             <h4>Azure AI Fundamentals</h4>
-                            <span>AI-900 • Microsoft</span>
+                            <span>AI-900 &middot; Microsoft</span>
                         </div>
                     </a>
                     <a href="https://learn.microsoft.com/api/credentials/share/en-us/sravanthpotluri-5244/C42B5CE47432FD79?sharingId=93D3FAC02A6145A4"
                         target="_blank" class="cert-card" id="cert-az900">
-                        <span class="cert-icon"></span>
+                        <span class="cert-icon" data-icon="award"></span>
                         <div class="cert-info">
                             <h4>Azure Fundamentals</h4>
-                            <span>AZ-900 • Microsoft</span>
+                            <span>AZ-900 &middot; Microsoft</span>
                         </div>
                     </a>
                     <a href="https://www.coursera.org/account/accomplishments/certificate/CSJALJKWWRY3" target="_blank"
                         class="cert-card" id="cert-python">
-                        <span class="cert-icon"></span>
+                        <span class="cert-icon" data-icon="award"></span>
                         <div class="cert-info">
                             <h4>Python for Everybody</h4>
-                            <span>University of Michigan • Coursera</span>
+                            <span>University of Michigan &middot; Coursera</span>
                         </div>
                     </a>
                     <div class="cert-card cert-in-progress" id="cert-ai102">
-                        <span class="cert-icon"></span>
+                        <span class="cert-icon" data-icon="award"></span>
                         <div class="cert-info">
                             <h4>Azure AI Engineer Associate</h4>
-                            <span>AI-102 • In Progress</span>
+                            <span>AI-102 &middot; In Progress</span>
                         </div>
                         <span class="cert-badge">Preparing</span>
                     </div>
@@ -272,36 +314,67 @@
             </div>
         </section>
 
+        <!-- CONTACT -->
+        <section id="contact" data-tone="obsidian">
+            <div class="container">
+                <h2 class="section-title">Get in touch</h2>
+                <p class="contact-intro">
+                    Looking for an AI/ML engineer for a role? Want to talk about a project, a collaboration,
+                    or just one of the case studies above? Three ways to reach me &mdash; pick whichever's easiest.
+                </p>
+                <div class="contact-grid">
+                    <a href="mailto:potlurisravanth@gmail.com" class="contact-card">
+                        <span class="channel-icon" data-icon="mail"></span>
+                        <div class="channel-meta">
+                            <div class="channel-label">Email</div>
+                            <div class="channel-value">potlurisravanth@gmail.com</div>
+                        </div>
+                    </a>
+                    <a href="https://www.linkedin.com/in/sravanth-potluri-001522193/" target="_blank" rel="noopener noreferrer" class="contact-card">
+                        <span class="channel-icon" data-icon="linkedin"></span>
+                        <div class="channel-meta">
+                            <div class="channel-label">LinkedIn</div>
+                            <div class="channel-value">@sravanth-potluri</div>
+                        </div>
+                    </a>
+                    <a href="https://github.com/potlurisravanth-png" target="_blank" rel="noopener noreferrer" class="contact-card">
+                        <span class="channel-icon" data-icon="github"></span>
+                        <div class="channel-meta">
+                            <div class="channel-label">GitHub</div>
+                            <div class="channel-value">@potlurisravanth-png</div>
+                        </div>
+                    </a>
+                </div>
+
+                <form class="contact-form" id="contactForm" novalidate>
+                    <label>
+                        <span class="field-label">Your name</span>
+                        <input type="text" id="cf-name" placeholder="Jane Recruiter" autocomplete="name">
+                    </label>
+                    <label>
+                        <span class="field-label">Your email</span>
+                        <input type="email" id="cf-email" placeholder="jane@acme.com" autocomplete="email" required>
+                    </label>
+                    <label class="full">
+                        <span class="field-label">What's the role?</span>
+                        <textarea id="cf-body" placeholder="Senior ML engineer at &hellip; &mdash; would love to chat about your Agentic Router work."></textarea>
+                    </label>
+                    <div class="contact-submit-row">
+                        <button type="submit" class="contact-submit">Send via email</button>
+                        <span class="contact-submit-note">Opens your mail client &mdash; no form data is sent or stored.</span>
+                    </div>
+                </form>
+            </div>
+        </section>
+
     </main>
 
     <footer>
-        <p>&copy; 2025 Sravanth Potluri. All rights reserved.</p>
+        <p>&copy; 2026 Sravanth Potluri. All rights reserved.</p>
     </footer>
 
     <!-- Scripts -->
     <script src="main.js"></script>
-    <script>
-        // Initialize Vanta.js Neural Network Background
-        document.addEventListener('DOMContentLoaded', function () {
-            if (typeof VANTA !== 'undefined') {
-                VANTA.NET({
-                    el: "#hero",
-                    mouseControls: false,
-                    touchControls: false,
-                    gyroControls: false,
-                    minHeight: 200.00,
-                    minWidth: 200.00,
-                    scale: 1.00,
-                    scaleMobile: 1.00,
-                    color: 0x66fcf1,
-                    backgroundColor: 0x0b0c10,
-                    points: 10.0,
-                    maxDistance: 25.0,
-                    spacing: 18.0
-                });
-            }
-        });
-    </script>
 
 </body>
 

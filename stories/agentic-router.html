@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="cyberpunk">
 
 <head>
     <meta charset="UTF-8">
@@ -9,15 +9,17 @@
     <title>Agentic Router SDK | Case Study</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../tokens.css">
     <style>
         :root {
-            --bg-color: #0B0C10;
-            --card-bg: #1F2833;
-            --text-primary: #C5C6C7;
-            --text-highlight: #FFFFFF;
-            --accent-color: #66FCF1;
-            --accent-dark: #45A29E;
-            --gradient: linear-gradient(135deg, #66FCF1 0%, #45A29E 100%);
+            /* Legacy aliases - semantic tokens live in ../tokens.css and
+               track the active [data-theme] on <html>. */
+            --bg-color:       var(--bg);
+            --card-bg:        var(--bg-elevated);
+            --text-primary:   var(--fg-2);
+            --text-highlight: var(--fg-1);
+            --accent-color:   var(--accent);
+            --accent-dark:    var(--accent-dim);
         }
 
         * {
@@ -46,8 +48,8 @@
             flex-direction: column;
             justify-content: center;
             padding: 4rem 2rem;
-            background: linear-gradient(135deg, rgba(102, 252, 241, 0.05) 0%, var(--bg-color) 100%);
-            border-bottom: 1px solid rgba(102, 252, 241, 0.2);
+            background: linear-gradient(135deg, var(--sp-cyan-05) 0%, var(--bg-color) 100%);
+            border-bottom: 1px solid var(--sp-cyan-20);
         }
 
         .hero h1 {
@@ -81,8 +83,8 @@
 
         .tech-tag {
             padding: 0.35rem 0.75rem;
-            background: rgba(102, 252, 241, 0.1);
-            border: 1px solid rgba(102, 252, 241, 0.3);
+            background: var(--sp-cyan-10);
+            border: 1px solid var(--sp-cyan-30);
             border-radius: 4px;
             font-size: 0.8rem;
             color: var(--accent-color);
@@ -109,7 +111,7 @@
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 252, 241, 0.3);
+            box-shadow: 0 10px 30px var(--sp-cyan-30);
         }
 
         .btn-secondary {
@@ -127,7 +129,7 @@
         }
 
         .btn-secondary:hover {
-            background: rgba(102, 252, 241, 0.1);
+            background: var(--sp-cyan-10);
             transform: translateY(-2px);
         }
 
@@ -161,7 +163,7 @@
         /* Cards */
         .card {
             background: var(--card-bg);
-            border: 1px solid rgba(102, 252, 241, 0.15);
+            border: 1px solid var(--sp-cyan-15);
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
@@ -188,7 +190,7 @@
 
         .component-card {
             background: var(--card-bg);
-            border: 1px solid rgba(102, 252, 241, 0.2);
+            border: 1px solid var(--sp-cyan-20);
             border-radius: 12px;
             padding: 1.5rem;
             text-align: center;
@@ -220,7 +222,7 @@
         /* Architecture Diagram */
         .diagram-container {
             background: var(--card-bg);
-            border: 1px solid rgba(102, 252, 241, 0.15);
+            border: 1px solid var(--sp-cyan-15);
             border-radius: 12px;
             padding: 2rem;
             margin: 2rem 0;
@@ -242,7 +244,7 @@
             padding: 0.75rem 0;
             padding-left: 2rem;
             position: relative;
-            border-bottom: 1px solid rgba(102, 252, 241, 0.1);
+            border-bottom: 1px solid var(--sp-cyan-10);
         }
 
         .feature-list li::before {
@@ -255,7 +257,7 @@
 
         /* Impact Section */
         .impact-box {
-            background: linear-gradient(135deg, rgba(102, 252, 241, 0.1) 0%, var(--card-bg) 100%);
+            background: linear-gradient(135deg, var(--sp-cyan-10) 0%, var(--card-bg) 100%);
             border: 2px solid var(--accent-color);
             border-radius: 12px;
             padding: 2rem;
@@ -271,7 +273,7 @@
         footer {
             text-align: center;
             padding: 3rem 2rem;
-            border-top: 1px solid rgba(102, 252, 241, 0.1);
+            border-top: 1px solid var(--sp-cyan-10);
             color: var(--text-primary);
             font-size: 0.9rem;
         }
@@ -296,6 +298,42 @@
                 padding: 0 1.5rem;
             }
         }
+
+        /* Theme switcher (Night / Day) */
+        .theme-switch {
+            position: fixed; bottom: 18px; right: 18px;
+            z-index: 1100;
+            display: flex; gap: 4px;
+            padding: 4px;
+            background: var(--bg);
+            border: 1px solid var(--sp-cyan-30);
+            border-radius: 9999px;
+            box-shadow: var(--glow-sm);
+        }
+        .theme-switch button {
+            appearance: none; border: 0; background: transparent;
+            color: var(--fg-2);
+            font: 500 11px/1 var(--font-sans, 'Inter', sans-serif);
+            letter-spacing: 0.04em;
+            padding: 8px 14px;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .theme-switch button[aria-pressed="true"] {
+            background: var(--gradient);
+            color: var(--bg);
+            font-weight: 600;
+        }
+        .theme-switch button:not([aria-pressed="true"]):hover {
+            color: var(--accent);
+            background: var(--sp-cyan-10);
+        }
+        @media (max-width: 640px) {
+            .theme-switch { bottom: 12px; right: 12px; }
+            .theme-switch button { padding: 7px 11px; font-size: 10px; }
+        }
+
     </style>
 </head>
 
@@ -426,7 +464,7 @@
             <div class="container">
                 <h2 class="section-title">Impact & Cost Savings</h2>
                 <div class="impact-box">
-                    <h3> Measurable Efficiency</h3>
+                    <h3>Measurable Efficiency</h3>
                     <ul class="feature-list">
                         <li>Demonstrated simulated cost reductions upwards of <strong>80-85%</strong> for typical
                             multi-threaded chat flows compared to a monolithic GPT-4 fallback.</li>
@@ -446,18 +484,69 @@
     </footer>
 
     <script>
-        mermaid.initialize({
-            startOnLoad: true,
-            theme: 'dark',
-            themeVariables: {
-                primaryColor: '#1F2833',
-                primaryTextColor: '#C5C6C7',
-                primaryBorderColor: '#66FCF1',
-                lineColor: '#66FCF1',
-                secondaryColor: '#0B0C10',
-                tertiaryColor: '#1F2833'
+        function spCssVar(name, fallback) {
+            var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+            return v || fallback;
+        }
+        function spInitMermaid() {
+            var isLight = document.documentElement.getAttribute('data-theme') === 'bone';
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: isLight ? 'default' : 'dark',
+                themeVariables: {
+                    primaryColor:       spCssVar('--bg-elevated', '#141414'),
+                    primaryTextColor:   spCssVar('--fg-2',        '#b3b3b3'),
+                    primaryBorderColor: spCssVar('--accent',      '#fcee0a'),
+                    lineColor:          spCssVar('--accent',      '#fcee0a'),
+                    secondaryColor:     spCssVar('--bg',          '#0a0a0a'),
+                    tertiaryColor:      spCssVar('--bg-elevated', '#141414')
+                }
+            });
+        }
+        spInitMermaid();
+    </script>
+    <!-- THEME SWITCHER (Night = cyberpunk default, Day = bone editorial) -->
+    <div class="theme-switch" role="group" aria-label="Theme">
+        <button data-theme="cyberpunk" aria-pressed="true">Night</button>
+        <button data-theme="bone" aria-pressed="false">Day</button>
+    </div>
+    <script>
+    (function () {
+        var THEMES = ['cyberpunk', 'bone'];
+        var saved = 'cyberpunk';
+        try {
+            var raw = localStorage.getItem('sp-theme');
+            saved = (raw === 'bone') ? 'bone' : 'cyberpunk';
+        } catch (e) {}
+        function apply(theme) {
+            if (THEMES.indexOf(theme) === -1) return;
+            document.documentElement.setAttribute('data-theme', theme);
+            try { localStorage.setItem('sp-theme', theme); } catch (e) {}
+            document.querySelectorAll('.theme-switch button').forEach(function (b) {
+                b.setAttribute('aria-pressed', b.dataset.theme === theme ? 'true' : 'false');
+            });
+            if (typeof spInitMermaid === 'function' && typeof mermaid !== 'undefined') {
+                document.querySelectorAll('.mermaid').forEach(function (el) {
+                    if (el.getAttribute('data-processed') === 'true') {
+                        if (el.dataset.source) {
+                            el.removeAttribute('data-processed');
+                            el.innerHTML = el.dataset.source;
+                        }
+                    } else if (!el.dataset.source) {
+                        el.dataset.source = el.textContent;
+                    }
+                });
+                spInitMermaid();
+                if (mermaid.run) {
+                    try { mermaid.run({ querySelector: '.mermaid' }); } catch (e) {}
+                }
             }
+        }
+        apply(saved);
+        document.querySelectorAll('.theme-switch button').forEach(function (btn) {
+            btn.addEventListener('click', function () { apply(btn.dataset.theme); });
         });
+    })();
     </script>
 </body>
 

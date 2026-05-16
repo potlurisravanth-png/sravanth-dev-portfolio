@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="cyberpunk">
 
 <head>
     <meta charset="UTF-8">
@@ -9,15 +9,17 @@
     <title>Deepfake Defender: Multi-Modal Detection | Case Study</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="../tokens.css">
     <style>
         :root {
-            --bg-color: #0B0C10;
-            --card-bg: #1F2833;
-            --text-primary: #C5C6C7;
-            --text-highlight: #FFFFFF;
-            --accent-color: #66FCF1;
-            --accent-dark: #45A29E;
-            --gradient: linear-gradient(135deg, #66FCF1 0%, #45A29E 100%);
+            /* Legacy aliases - semantic tokens live in ../tokens.css and
+               track the active [data-theme] on <html>. */
+            --bg-color:       var(--bg);
+            --card-bg:        var(--bg-elevated);
+            --text-primary:   var(--fg-2);
+            --text-highlight: var(--fg-1);
+            --accent-color:   var(--accent);
+            --accent-dark:    var(--accent-dim);
         }
 
         * {
@@ -46,8 +48,8 @@
             flex-direction: column;
             justify-content: center;
             padding: 4rem 2rem;
-            background: linear-gradient(135deg, rgba(102, 252, 241, 0.05) 0%, var(--bg-color) 100%);
-            border-bottom: 1px solid rgba(102, 252, 241, 0.2);
+            background: linear-gradient(135deg, var(--sp-cyan-05) 0%, var(--bg-color) 100%);
+            border-bottom: 1px solid var(--sp-cyan-20);
         }
 
         .hero h1 {
@@ -81,8 +83,8 @@
 
         .tech-tag {
             padding: 0.35rem 0.75rem;
-            background: rgba(102, 252, 241, 0.1);
-            border: 1px solid rgba(102, 252, 241, 0.3);
+            background: var(--sp-cyan-10);
+            border: 1px solid var(--sp-cyan-30);
             border-radius: 4px;
             font-size: 0.8rem;
             color: var(--accent-color);
@@ -109,7 +111,7 @@
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 252, 241, 0.3);
+            box-shadow: 0 10px 30px var(--sp-cyan-30);
         }
 
         .btn-secondary {
@@ -127,7 +129,7 @@
         }
 
         .btn-secondary:hover {
-            background: rgba(102, 252, 241, 0.1);
+            background: var(--sp-cyan-10);
             transform: translateY(-2px);
         }
 
@@ -161,7 +163,7 @@
         /* Cards */
         .card {
             background: var(--card-bg);
-            border: 1px solid rgba(102, 252, 241, 0.15);
+            border: 1px solid var(--sp-cyan-15);
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
@@ -188,7 +190,7 @@
 
         .component-card {
             background: var(--card-bg);
-            border: 1px solid rgba(102, 252, 241, 0.2);
+            border: 1px solid var(--sp-cyan-20);
             border-radius: 12px;
             padding: 1.5rem;
             text-align: center;
@@ -220,7 +222,7 @@
         /* Architecture Diagram */
         .diagram-container {
             background: var(--card-bg);
-            border: 1px solid rgba(102, 252, 241, 0.15);
+            border: 1px solid var(--sp-cyan-15);
             border-radius: 12px;
             padding: 2rem;
             margin: 2rem 0;
@@ -242,7 +244,7 @@
             padding: 0.75rem 0;
             padding-left: 2rem;
             position: relative;
-            border-bottom: 1px solid rgba(102, 252, 241, 0.1);
+            border-bottom: 1px solid var(--sp-cyan-10);
         }
 
         .feature-list li::before {
@@ -255,7 +257,7 @@
 
         /* Impact Section */
         .impact-box {
-            background: linear-gradient(135deg, rgba(102, 252, 241, 0.1) 0%, var(--card-bg) 100%);
+            background: linear-gradient(135deg, var(--sp-cyan-10) 0%, var(--card-bg) 100%);
             border: 2px solid var(--accent-color);
             border-radius: 12px;
             padding: 2rem;
@@ -271,7 +273,7 @@
         footer {
             text-align: center;
             padding: 3rem 2rem;
-            border-top: 1px solid rgba(102, 252, 241, 0.1);
+            border-top: 1px solid var(--sp-cyan-10);
             color: var(--text-primary);
             font-size: 0.9rem;
         }
@@ -296,6 +298,42 @@
                 padding: 0 1.5rem;
             }
         }
+
+        /* Theme switcher (Night / Day) */
+        .theme-switch {
+            position: fixed; bottom: 18px; right: 18px;
+            z-index: 1100;
+            display: flex; gap: 4px;
+            padding: 4px;
+            background: var(--bg);
+            border: 1px solid var(--sp-cyan-30);
+            border-radius: 9999px;
+            box-shadow: var(--glow-sm);
+        }
+        .theme-switch button {
+            appearance: none; border: 0; background: transparent;
+            color: var(--fg-2);
+            font: 500 11px/1 var(--font-sans, 'Inter', sans-serif);
+            letter-spacing: 0.04em;
+            padding: 8px 14px;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .theme-switch button[aria-pressed="true"] {
+            background: var(--gradient);
+            color: var(--bg);
+            font-weight: 600;
+        }
+        .theme-switch button:not([aria-pressed="true"]):hover {
+            color: var(--accent);
+            background: var(--sp-cyan-10);
+        }
+        @media (max-width: 640px) {
+            .theme-switch { bottom: 12px; right: 12px; }
+            .theme-switch button { padding: 7px 11px; font-size: 10px; }
+        }
+
     </style>
 </head>
 
@@ -303,17 +341,17 @@
     <!-- Hero -->
     <header class="hero">
         <div class="container">
-            <h1> Deepfake Defender</h1>
+            <h1>Deepfake Defender</h1>
             <p class="tagline">Multi-Modal Detection System for AI-Generated Media</p>
-            <p class="subtitle">Combining audio and visual forensic models to combat misinformation and detect
-                manipulated content.</p>
+            <p class="subtitle">Late-fusion deep learning model trained to detect content-driven manipulations
+                &mdash; the kind where only a single word in a sentence is faked &mdash; on the LAV-DF dataset.</p>
             <div class="tech-stack">
                 <span class="tech-tag">PyTorch</span>
+                <span class="tech-tag">R3D-18 (3D ResNet)</span>
+                <span class="tech-tag">ResNet-18</span>
                 <span class="tech-tag">OpenCV</span>
                 <span class="tech-tag">FFmpeg</span>
-                <span class="tech-tag">CNN</span>
-                <span class="tech-tag">ResNet</span>
-                <span class="tech-tag">Python</span>
+                <span class="tech-tag">LAV-DF</span>
             </div>
             <div class="btn-group">
                 <a href="https://github.com/potlurisravanth-png/deepfake-detection-lav-df" target="_blank"
@@ -350,30 +388,31 @@
         <section style="background: var(--card-bg);">
             <div class="container">
                 <h2 class="section-title">The Solution</h2>
-                <p><strong>Deepfake Defender</strong> uses a <strong>multi-modal approach</strong> that analyzes both
-                    visual and audio streams simultaneously. By combining two specialized neural networks, it achieves
-                    higher accuracy than single-modal systems.</p>
+                <p><strong>Deepfake Defender</strong> takes a <strong>late-fusion multi-modal approach</strong>:
+                    two specialized networks process video and audio in parallel, then concatenate their feature
+                    vectors through a fully connected fusion head. Each branch is pre-trained on a large general
+                    corpus before being fine-tuned on LAV-DF.</p>
 
                 <div class="component-grid">
                     <div class="component-card">
                         <div class="icon"></div>
-                        <h4>Visual Stream</h4>
-                        <p>CNN analyzes facial features and micro-expressions</p>
+                        <h4>Video Branch &mdash; R3D-18</h4>
+                        <p>3D ResNet pre-trained on Kinetics-400; learns motion and time to catch unnatural lip movements.</p>
                     </div>
                     <div class="component-card">
                         <div class="icon"></div>
-                        <h4>Audio Stream</h4>
-                        <p>ResNet detects synthetic voice artifacts</p>
+                        <h4>Audio Branch &mdash; ResNet-18</h4>
+                        <p>ImageNet-pretrained ResNet treats the Mel-spectrogram as an image and looks for frequency-domain artifacts.</p>
                     </div>
                     <div class="component-card">
                         <div class="icon"></div>
-                        <h4>Fusion Layer</h4>
-                        <p>Combines both streams for final prediction</p>
+                        <h4>Late Fusion Head</h4>
+                        <p>Concatenates 512-dim feature vectors from both streams through a fully connected network for final classification.</p>
                     </div>
                     <div class="component-card">
                         <div class="icon"></div>
-                        <h4>Probability Score</h4>
-                        <p>Confidence rating (0-100%) for detection</p>
+                        <h4>Metadata-Guided Sampling</h4>
+                        <p>Custom dataset class reads <code>fake_periods</code> metadata to extract only the manipulated frame/audio segments &mdash; preventing label noise from training on unaltered regions.</p>
                     </div>
                 </div>
             </div>
@@ -411,9 +450,9 @@
                 </div>
                 <div class="card">
                     <div class="card-icon"></div>
-                    <h3>Real-Time Processing</h3>
-                    <p>Optimized inference pipeline enables near real-time analysis of video content for rapid
-                        verification.</p>
+                    <h3>50&times; Pipeline Throughput</h3>
+                    <p>Offline audio pre-caching with FFmpeg and threaded OpenCV loading sped up data throughput by
+                        roughly 50&times;, making the training loop GPU-bound instead of I/O-bound.</p>
                 </div>
                 <div class="card">
                     <div class="card-icon"></div>
@@ -429,12 +468,12 @@
             <div class="container">
                 <h2 class="section-title">Impact & Results</h2>
                 <div class="impact-box">
-                    <h3> Detection Capabilities</h3>
+                    <h3>Detection Capabilities</h3>
                     <ul class="feature-list">
-                        <li>Identifies face-swap deepfakes with high accuracy</li>
-                        <li>Detects synthetic voice and lip-sync inconsistencies</li>
-                        <li>Flags manipulated content for further review</li>
-                        <li>Provides explainable results showing which modality triggered detection</li>
+                        <li><strong>99.81% validation accuracy</strong> on LAV-DF in 3 epochs after the metadata-guided sampling fix</li>
+                        <li><strong>50&times; data-throughput speedup</strong> from offline FFmpeg pre-caching and threaded OpenCV decoding</li>
+                        <li>Catches content-driven manipulations that visual-only detectors typically miss</li>
+                        <li>Explainable by design &mdash; the late-fusion architecture surfaces which modality drove the decision</li>
                     </ul>
                 </div>
             </div>
@@ -487,18 +526,69 @@
     </footer>
 
     <script>
-        mermaid.initialize({
-            startOnLoad: true,
-            theme: 'dark',
-            themeVariables: {
-                primaryColor: '#1F2833',
-                primaryTextColor: '#C5C6C7',
-                primaryBorderColor: '#66FCF1',
-                lineColor: '#66FCF1',
-                secondaryColor: '#0B0C10',
-                tertiaryColor: '#1F2833'
+        function spCssVar(name, fallback) {
+            var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+            return v || fallback;
+        }
+        function spInitMermaid() {
+            var isLight = document.documentElement.getAttribute('data-theme') === 'bone';
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: isLight ? 'default' : 'dark',
+                themeVariables: {
+                    primaryColor:       spCssVar('--bg-elevated', '#141414'),
+                    primaryTextColor:   spCssVar('--fg-2',        '#b3b3b3'),
+                    primaryBorderColor: spCssVar('--accent',      '#fcee0a'),
+                    lineColor:          spCssVar('--accent',      '#fcee0a'),
+                    secondaryColor:     spCssVar('--bg',          '#0a0a0a'),
+                    tertiaryColor:      spCssVar('--bg-elevated', '#141414')
+                }
+            });
+        }
+        spInitMermaid();
+    </script>
+    <!-- THEME SWITCHER (Night = cyberpunk default, Day = bone editorial) -->
+    <div class="theme-switch" role="group" aria-label="Theme">
+        <button data-theme="cyberpunk" aria-pressed="true">Night</button>
+        <button data-theme="bone" aria-pressed="false">Day</button>
+    </div>
+    <script>
+    (function () {
+        var THEMES = ['cyberpunk', 'bone'];
+        var saved = 'cyberpunk';
+        try {
+            var raw = localStorage.getItem('sp-theme');
+            saved = (raw === 'bone') ? 'bone' : 'cyberpunk';
+        } catch (e) {}
+        function apply(theme) {
+            if (THEMES.indexOf(theme) === -1) return;
+            document.documentElement.setAttribute('data-theme', theme);
+            try { localStorage.setItem('sp-theme', theme); } catch (e) {}
+            document.querySelectorAll('.theme-switch button').forEach(function (b) {
+                b.setAttribute('aria-pressed', b.dataset.theme === theme ? 'true' : 'false');
+            });
+            if (typeof spInitMermaid === 'function' && typeof mermaid !== 'undefined') {
+                document.querySelectorAll('.mermaid').forEach(function (el) {
+                    if (el.getAttribute('data-processed') === 'true') {
+                        if (el.dataset.source) {
+                            el.removeAttribute('data-processed');
+                            el.innerHTML = el.dataset.source;
+                        }
+                    } else if (!el.dataset.source) {
+                        el.dataset.source = el.textContent;
+                    }
+                });
+                spInitMermaid();
+                if (mermaid.run) {
+                    try { mermaid.run({ querySelector: '.mermaid' }); } catch (e) {}
+                }
             }
+        }
+        apply(saved);
+        document.querySelectorAll('.theme-switch button').forEach(function (btn) {
+            btn.addEventListener('click', function () { apply(btn.dataset.theme); });
         });
+    })();
     </script>
 </body>
 
