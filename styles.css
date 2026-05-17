@@ -189,20 +189,6 @@ section[data-tone="obsidian"] { background: var(--bg); }
     gap: 1.25rem;
     color: var(--fg-1);
 }
-/* Oversized serif-italic section number (e.g. "01") that sits before the title */
-.section-number {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-variation-settings: "opsz" 144;
-    font-weight: 500;
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
-    letter-spacing: -0.03em;
-    line-height: 1;
-    color: var(--accent);
-    opacity: 0.85;
-    flex-shrink: 0;
-    margin-right: 0.2em;
-}
 
 /* ========== ABOUT ========== */
 .about-content {
