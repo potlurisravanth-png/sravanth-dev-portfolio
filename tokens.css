@@ -4,22 +4,23 @@
    Source: github.com/potlurisravanth-png/sravanth-dev-portfolio
    ============================================================ */
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
 
 :root {
-  /* ---------- Brand colors: Cyberpunk (default · night mode) ----------
-     Cyberpunk 2077 flavor — pure black canvas, signature cyberpunk
-     yellow as the workhorse accent, hazard red as the gradient
-     partner. Body text is cool gray so the yellow gets to be loud.
+  /* ---------- Brand colors: Premium AI Lab (default · night mode) ----------
+     Anthropic-influenced direction — warm charcoal canvas, terracotta
+     accent (the same warm rust Anthropic uses), single-hue gradient
+     into deep rust. Reads "engineer with taste" — bold but credible
+     for AI-lab and enterprise recruiters alike.
      These raw swatches don't change between themes — only which
      token they fill changes (see [data-theme="bone"] for day mode). */
-  --sp-obsidian: #0a0a0a;       /* Pure black — page / hero background */
-  --sp-gunmetal: #141414;       /* Carbon — cards, section bg */
-  --sp-silver:   #b3b3b3;       /* Cool gray — body text */
+  --sp-obsidian: #141414;       /* Warm charcoal — page / hero background */
+  --sp-gunmetal: #1c1c1a;       /* Warm carbon — cards, section bg */
+  --sp-silver:   #d6cfc1;       /* Warm cream-gray — body text */
   --sp-white:    #ffffff;       /* Pure white — headings */
-  --sp-cyan:     #fcee0a;       /* Cyberpunk yellow — primary accent (workhorse) */
-  --sp-cyan-dim: #ff1744;       /* Hazard red — gradient partner, badge fill */
-  --sp-muted:    #5a5a5a;       /* Carbon gray — captions, hints */
+  --sp-cyan:     #d97757;       /* Terracotta — primary accent (Anthropic-influenced) */
+  --sp-cyan-dim: #a3340a;       /* Deep rust — gradient partner, single-hue */
+  --sp-muted:    #8a8175;       /* Warm muted — captions, hints */
 
   /* In-progress / warning (used on certifications) */
   --sp-amber:      #ffb74d;
@@ -28,12 +29,12 @@
 
   /* ---------- Cyan transparency ladder ----------
      Used everywhere for borders, surfaces, glows. */
-  --sp-cyan-05: rgba(252, 238, 10, 0.05);
-  --sp-cyan-10: rgba(252, 238, 10, 0.10);
-  --sp-cyan-15: rgba(252, 238, 10, 0.15);
-  --sp-cyan-20: rgba(252, 238, 10, 0.20);
-  --sp-cyan-30: rgba(252, 238, 10, 0.30);
-  --sp-cyan-40: rgba(252, 238, 10, 0.40);
+  --sp-cyan-05: rgba(217, 119, 87, 0.05);
+  --sp-cyan-10: rgba(217, 119, 87, 0.10);
+  --sp-cyan-15: rgba(217, 119, 87, 0.15);
+  --sp-cyan-20: rgba(217, 119, 87, 0.20);
+  --sp-cyan-30: rgba(217, 119, 87, 0.30);
+  --sp-cyan-40: rgba(217, 119, 87, 0.40);
 
   /* ---------- Semantic surfaces ---------- */
   --bg:            var(--sp-obsidian);
@@ -53,17 +54,19 @@
   /* ---------- Signature gradient ----------
      The single gradient the brand uses — for hero title (text-clip),
      section-title bars, primary buttons, brand mark. */
-  --gradient: linear-gradient(135deg, #fcee0a 0%, #ff1744 100%);
-  --gradient-soft: linear-gradient(135deg, rgba(252, 238, 10, 0.08) 0%, var(--sp-obsidian) 100%);
+  --gradient: linear-gradient(135deg, #d97757 0%, #a3340a 100%);
+  --gradient-soft: linear-gradient(135deg, rgba(217, 119, 87, 0.08) 0%, var(--sp-obsidian) 100%);
   --gradient-amber: linear-gradient(135deg, #ffb74d 0%, #ff9800 100%);
 
   /* ---------- Glow / shadow system ----------
      Shadows here are CYAN, not black — they read as light bleeding
      from the surface, not depth from above. */
-  --glow-sm:  0 0 10px rgba(252, 238, 10, 0.20);
-  --glow-md:  0 0 15px rgba(252, 238, 10, 0.30);
-  --glow-lg:  0 10px 40px rgba(252, 238, 10, 0.30);
-  --glow-amber: 0 0 15px rgba(255, 183, 77, 0.25);
+  /* Refined premium shadows — drops, not neon halos.
+     Inner hairlines + soft black give "card lifted" without glow. */
+  --glow-sm:  0 1px 2px rgba(0, 0, 0, 0.40);
+  --glow-md:  0 6px 20px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --glow-lg:  0 18px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(217, 119, 87, 0.18);
+  --glow-amber: 0 4px 14px rgba(255, 183, 77, 0.18);
 
   /* ---------- Radii ----------
      Three steps. Pills are 9999px. No rounded squares larger than 16px. */
@@ -88,8 +91,9 @@
 
   /* ---------- Type ----------
      Inter for everything UI. JetBrains Mono for code/keys/file paths. */
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  --font-display: "Fraunces", "Source Serif Pro", Georgia, serif;  /* h1, h2 only */
+  --font-sans:    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono:    "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
 
   /* Display — gradient-clipped hero name, fluid */
   --display-size: clamp(3rem, 10vw, 6rem);
@@ -144,11 +148,11 @@
      5 stops of canvas so depth reads without drop shadows or 3D.
      depth-0 is the page; depth-4 is the highest-elevation surface
      (hover state on a stacked card). Each theme overrides these. */
-  --depth-0: #0a0a0a;   /* page background */
-  --depth-1: #0f0f0f;   /* one step up — sticky nav scrim */
-  --depth-2: #141414;   /* card / section ("carbon") */
-  --depth-3: #1c1c1c;   /* elevated card / popover */
-  --depth-4: #262626;   /* highest — hovered card on hovered surface */
+  --depth-0: #141414;   /* page background */
+  --depth-1: #181816;   /* one step up — sticky nav scrim */
+  --depth-2: #1c1c1a;   /* card / section ("carbon") */
+  --depth-3: #232220;   /* elevated card / popover */
+  --depth-4: #2a2926;   /* highest — hovered card on hovered surface */
 
   /* ---------- Modular type scale (1.25 ratio · 16px base) ----------
      Named so components don't reach for raw rem values. */
@@ -212,8 +216,8 @@
      real drop shadows. Each theme override re-defines these. */
   --elev-0: none;
   --elev-1: 0 1px 2px rgba(0, 0, 0, 0.35);
-  --elev-2: 0 4px 14px rgba(0, 0, 0, 0.40), 0 0 12px rgba(252, 238, 10, 0.10);
-  --elev-3: 0 14px 40px rgba(0, 0, 0, 0.50), 0 0 24px rgba(252, 238, 10, 0.18);
+  --elev-2: 0 6px 20px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --elev-3: 0 18px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(217, 119, 87, 0.14);
 
   /* Border opacities — three steps. Components only reference these. */
   --border-faint:  var(--sp-cyan-10);
@@ -235,9 +239,9 @@
   --state-danger-bg: rgba(248, 113, 113, 0.10);
   --state-danger-bd: rgba(248, 113, 113, 0.35);
 
-  --state-info-fg: #fcee0a;
-  --state-info-bg: rgba(252, 238, 10, 0.10);
-  --state-info-bd: rgba(252, 238, 10, 0.35);
+  --state-info-fg: #d97757;
+  --state-info-bg: rgba(217, 119, 87, 0.10);
+  --state-info-bd: rgba(217, 119, 87, 0.35);
 }
 
 /* ============================================================
@@ -256,16 +260,13 @@
 
 /* Hero / display name — uses the signature gradient text clip */
 .sp-display {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: var(--display-size);
-  font-weight: var(--display-weight);
+  font-weight: 600;
+  font-variation-settings: "opsz" 144;
   line-height: var(--display-leading);
-  letter-spacing: var(--display-tracking);
-  background: var(--gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  letter-spacing: -0.025em;
+  color: var(--fg-1);
 }
 
 /* Hero tagline */
@@ -285,12 +286,14 @@
 
 /* Section heading w/ gradient bar prefix */
 .sp-h2 {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: var(--h2-size);
-  font-weight: var(--h2-weight);
+  font-weight: 600;
+  font-variation-settings: "opsz" 96;
+  letter-spacing: -0.015em;
   color: var(--fg-1);
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: var(--space-4);
   line-height: var(--h2-leading);
 }
@@ -346,6 +349,21 @@
   border: 1px solid var(--sp-cyan-20);
 }
 
+/* Oversized serif-italic section number — sits next to .sp-h2 */
+.sp-section-number {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-variation-settings: "opsz" 144;
+  font-weight: 500;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.85;
+  flex-shrink: 0;
+  margin-right: 0.4em;
+}
+
 /* ============================================================
    THEMES — two modes, one component library
    ------------------------------------------------------------
@@ -362,12 +380,13 @@
    ============================================================ */
 
 /* ─────────────────────────────────────────────────────────
-   Theme 1 · CYBERPUNK  — night mode (default)
-   Cyberpunk 2077 flavor: pure-black canvas, signature yellow
-   (#FCEE0A) as the workhorse accent, hazard red (#FF1744) as
-   the gradient partner on hero text-clip + primary CTAs. :root
-   above already IS this theme — the explicit block below is a
-   no-op so data-theme="cyberpunk" works as a reset from "bone".
+   Theme 1 · PREMIUM AI LAB  — night mode (default)
+   Warm charcoal canvas, terracotta accent (#D97757), single-hue
+   gradient into deep rust (#A3340A). Refined drop shadows replace
+   neon glow. Fraunces serif for display (h1, h2); Inter for body;
+   JetBrains Mono for code. :root above already IS this theme —
+   the block below is a no-op so data-theme="cyberpunk" works as
+   a reset from "bone".
    ───────────────────────────────────────────────────────── */
 [data-theme="cyberpunk"] {
   /* inherits everything from :root */
@@ -381,50 +400,50 @@
    ───────────────────────────────────────────────────────── */
 [data-theme="bone"] {
   /* swap raw swatches so component bg refs stay consistent */
-  --sp-obsidian: #f6f2eb;   /* warm bone — page background */
+  --sp-obsidian: #faf6ee;   /* warm cream — page background */
   --sp-gunmetal: #ffffff;   /* pure paper — cards, sections */
-  --sp-silver:   #3f3a33;   /* dark coffee — body */
-  --sp-white:    #161412;   /* ink — headings */
-  --sp-cyan:     #c5402b;   /* ember — primary accent (AA on bone) */
-  --sp-cyan-dim: #8c2b1b;   /* deep ember — gradient stop, secondary */
+  --sp-silver:   #2a2724;   /* deep coffee — body */
+  --sp-white:    #141414;   /* charcoal — headings */
+  --sp-cyan:     #c2410c;   /* saturated terracotta — primary accent */
+  --sp-cyan-dim: #7c2d12;   /* deep rust — gradient stop */
   --sp-muted:    #807767;   /* mid taupe — captions */
-  --sp-amber:    #c5402b;   /* same ember reused for "in progress" */
-  --sp-amber-dim:#8c2b1b;
+  --sp-amber:    #c2410c;   /* same ember reused for "in progress" */
+  --sp-amber-dim:#7c2d12;
 
   /* semantic surfaces */
   --bg:            #f6f2eb;
   --bg-elevated:   #ffffff;
   --bg-card:       #ffffff;
-  --border:        rgba(197, 64, 43, 0.22);
-  --border-strong: rgba(197, 64, 43, 0.40);
-  --border-vivid:  #c5402b;
+  --border:        rgba(194, 65, 12, 0.22);
+  --border-strong: rgba(194, 65, 12, 0.40);
+  --border-vivid:  #c2410c;
 
   --fg:   #161412;
   --fg-1: #161412;
   --fg-2: #3f3a33;
   --fg-3: #807767;
-  --accent:     #c5402b;
-  --accent-dim: #8c2b1b;
+  --accent:     #c2410c;
+  --accent-dim: #7c2d12;
 
   /* accent-alpha ladder (re-uses the cyan-XX names so components
      don't need to know which theme is active) */
-  --sp-cyan-05: rgba(197, 64, 43, 0.05);
-  --sp-cyan-10: rgba(197, 64, 43, 0.10);
-  --sp-cyan-15: rgba(197, 64, 43, 0.15);
-  --sp-cyan-20: rgba(197, 64, 43, 0.20);
-  --sp-cyan-30: rgba(197, 64, 43, 0.30);
-  --sp-cyan-40: rgba(197, 64, 43, 0.40);
+  --sp-cyan-05: rgba(194, 65, 12, 0.05);
+  --sp-cyan-10: rgba(194, 65, 12, 0.10);
+  --sp-cyan-15: rgba(194, 65, 12, 0.15);
+  --sp-cyan-20: rgba(194, 65, 12, 0.20);
+  --sp-cyan-30: rgba(194, 65, 12, 0.30);
+  --sp-cyan-40: rgba(194, 65, 12, 0.40);
 
   /* gradient — warm ember dusk */
-  --gradient:        linear-gradient(135deg, #c5402b 0%, #8c2b1b 100%);
-  --gradient-soft:   linear-gradient(135deg, rgba(197,64,43,0.06) 0%, #f6f2eb 100%);
-  --gradient-amber:  linear-gradient(135deg, #c5402b 0%, #8c2b1b 100%);
+  --gradient:        linear-gradient(135deg, #c2410c 0%, #7c2d12 100%);
+  --gradient-soft:   linear-gradient(135deg, rgba(194,65,12,0.06) 0%, #faf6ee 100%);
+  --gradient-amber:  linear-gradient(135deg, #c2410c 0%, #7c2d12 100%);
 
   /* shadows — real subtle drop on light, not glow */
   --glow-sm:    0 1px 2px rgba(22, 20, 18, 0.06);
   --glow-md:    0 4px 14px rgba(22, 20, 18, 0.10);
-  --glow-lg:    0 14px 40px rgba(197, 64, 43, 0.18);
-  --glow-amber: 0 4px 14px rgba(197, 64, 43, 0.20);
+  --glow-lg:    0 14px 40px rgba(194, 65, 12, 0.18);
+  --glow-amber: 0 4px 14px rgba(194, 65, 12, 0.20);
 
   /* depth layers — bone canvas with progressively whiter paper */
   --depth-0: #f6f2eb;  /* page */
@@ -449,9 +468,9 @@
   --state-danger-fg:  #b91c1c;
   --state-danger-bg:  rgba(185, 28, 28, 0.08);
   --state-danger-bd:  rgba(185, 28, 28, 0.35);
-  --state-info-fg:    #c5402b;
-  --state-info-bg:    rgba(197, 64, 43, 0.08);
-  --state-info-bd:    rgba(197, 64, 43, 0.35);
+  --state-info-fg:    #c2410c;
+  --state-info-bg:    rgba(194, 65, 12, 0.08);
+  --state-info-bd:    rgba(194, 65, 12, 0.35);
 }
 
 /* ─────────────────────────────────────────────────────────

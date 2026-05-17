@@ -192,10 +192,10 @@ function initSectionAnimations() {
         card.classList.add('fade-up');
         observer.observe(card);
     });
-    document.querySelectorAll('.skill-row').forEach((row, i) => {
-        row.style.transitionDelay = `${i * 0.06}s`;
-        row.classList.add('fade-up');
-        observer.observe(row);
+    document.querySelectorAll('.bento-tile').forEach((tile, i) => {
+        tile.style.transitionDelay = `${i * 0.06}s`;
+        tile.classList.add('fade-up');
+        observer.observe(tile);
     });
 }
 
