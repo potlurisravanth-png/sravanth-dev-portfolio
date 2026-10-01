@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Deepfake Defender · Sravanth Potluri</title>
+<meta name="description" content="A multi-modal deepfake detector trained on LAV-DF: one stream watches the video, one listens to the audio, and a fusion head flags where they stop agreeing. 99.81% validation accuracy in three epochs.">
+<meta name="theme-color" content="#0A0E10">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='26' height='26' rx='2' fill='%23F9FAFA' stroke='%2314181D' stroke-width='2'/%3E%3Ccircle cx='11' cy='11' r='3.5' fill='none' stroke='%23D2381C' stroke-width='2'/%3E%3Cpath d='M11 14.5V27' stroke='%23D2381C' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preload" href="../../assets/fonts/archivo-wdth.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/scrollcraft.css">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/project.css">
+<style>
+  /* A forensics lab at night: a lightbox, a strip of film, one teal that
+     means "found". Everything else stays in the dark. */
+  :root {
+    --sc-canvas: #0A0E10;
+    --sc-surface: #121A1D;
+    --sc-ink: #E6EFEE;
+    --sc-ink-soft: #94A7A6;
+    --sc-accent: #2EC4B6;
+    --sc-accent-ink: #04201D;
+    --sc-shadow-color: 195 40% 2%;
+    --sc-gutter: clamp(1.25rem, 5vw, 5rem);
+    --line: rgb(230 239 238 / 0.14);
+  }
+  body.deepfake { background: var(--sc-canvas); }
+  .deepfake .sc-grain { opacity: 0.06; }
+  /* light type on dark gets a touch more air */
+  .deepfake .p-body { line-height: 1.68; letter-spacing: 0.003em; }
+
+  /* ----------------------------------------------------------------- hero */
+  .hero { position: relative; min-height: 112svh; overflow: clip; }
+  .hero__scene { position: absolute; inset: 0; pointer-events: none; }
+  .hero__grid {
+    position: absolute; inset: -10% -5%;
+    background-image:
+      linear-gradient(to right, rgb(46 196 182 / 0.07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(46 196 182 / 0.07) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 70% 60% at 60% 40%, #000 30%, transparent 75%);
+  }
+  .hero__glow { position: absolute; inset: 0; background: radial-gradient(ellipse 55% 45% at 62% 36%, rgb(214 236 233 / 0.07), transparent 70%); }
+  .hero__strip { position: absolute; left: -6%; width: 116%; top: 13%; rotate: -4deg; filter: drop-shadow(0 30px 40px rgb(0 0 0 / 0.55)); }
+  .strip { display: block; width: 100%; height: auto; }
+  .strip__body { fill: #11171A; stroke: rgb(230 239 238 / 0.08); }
+  .strip__hole { fill: #05080A; }
+  .strip__pane { fill: #182225; stroke: rgb(230 239 238 / 0.12); }
+  .strip__scan { stroke: rgb(230 239 238 / 0.035); stroke-width: 1; }
+  .strip__roi { fill: none; stroke: rgb(230 239 238 / 0.45); stroke-width: 2; }
+  .strip__tc { font-family: var(--sc-font-display); font-stretch: 78%; font-weight: 600; font-size: 15px; letter-spacing: 0.08em; fill: rgb(230 239 238 / 0.6); }
+  .strip__frame--hit .strip__pane { stroke: var(--sc-accent); stroke-width: 2.5; }
+  .strip__frame--hit .strip__roi { stroke: var(--sc-accent); }
+  .strip__flag { font-family: var(--sc-font-display); font-stretch: 78%; font-weight: 700; font-size: 16px; letter-spacing: 0.1em; fill: var(--sc-accent); }
+  .hero__wave { position: absolute; left: -2%; width: 104%; top: 54%; height: 120px; overflow: visible; }
+  .hero__wave path { fill: none; stroke: var(--sc-accent); stroke-width: 1.6; vector-effect: non-scaling-stroke; opacity: 0.85; }
+  .hero__copy { position: relative; z-index: 2; min-height: 100svh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 var(--sc-gutter) clamp(48px, 10vh, 110px); max-width: 860px; }
+  .hero__copy .p-lede { max-width: 26ch; }
+  .hero__copy .p-meta { margin-bottom: var(--sc-5); }
+
+  /* ------------------------------------------------- where to look (bespoke) */
+  .look { --k: clamp(0, calc((var(--sc-p, 0) - 0.46) / 0.3), 1); --meta: clamp(0, calc((var(--sc-p, 0) - 0.4) / 0.08), 1); }
+  .look__stage { height: 100svh; display: grid; grid-template-rows: auto auto auto; align-content: center; gap: var(--sc-6); padding: 76px var(--sc-gutter) 32px; }
+  .look__head { position: relative; display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--sc-7); align-items: start; max-width: var(--sc-maxw); width: 100%; margin: 0 auto; }
+  .look__caps { position: relative; min-height: 8.5em; }
+  .look__cap { position: absolute; inset: 0 auto auto 0; margin: 0; max-width: 54ch; }
+  .look__cap b { display: block; margin-bottom: 6px; font-family: var(--sc-font-display); font-stretch: 80%; font-weight: 680; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sc-ink); }
+  .clip { position: relative; max-width: var(--sc-maxw); width: 100%; margin: 0 auto; container-type: inline-size; }
+  .ruler { position: relative; height: 26px; border-bottom: 1px solid var(--line); margin-left: 76px; }
+  .ruler span { position: absolute; bottom: 6px; translate: -50% 0; white-space: nowrap; font-family: var(--sc-font-display); font-stretch: 78%; font-weight: 560; font-size: 12px; letter-spacing: 0.06em; color: var(--sc-ink-soft); font-variant-numeric: tabular-nums; }
+  .ruler span:first-child { translate: 0 0; }
+  .ruler span:last-child { translate: -100% 0; }
+  .track { position: relative; display: grid; grid-template-columns: 76px minmax(0, 1fr); align-items: center; height: 74px; border-bottom: 1px solid var(--line); }
+  .track__label { font-family: var(--sc-font-display); font-stretch: 78%; font-weight: 640; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sc-ink-soft); }
+  .track__body { position: relative; height: 46px; }
+  .track--video .track__body { background: repeating-linear-gradient(to right, rgb(230 239 238 / 0.22) 0 1px, transparent 1px 100%) 0 0 / calc(100% / 50) 100%; border-radius: 2px; }
+  .track--audio svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .track--audio path { fill: none; stroke: rgb(230 239 238 / 0.55); stroke-width: 1.3; vector-effect: non-scaling-stroke; }
+  .lane { position: absolute; left: 76px; right: 0; top: 26px; bottom: 0; container-type: inline-size; pointer-events: none; }
+  .fake {
+    position: absolute; top: -8px; bottom: -8px;
+    left: calc(62% - 1px); width: calc(5% + 2px);
+    border: 1.5px solid var(--sc-accent); border-radius: 3px;
+    background: rgb(46 196 182 / 0.14);
+    opacity: var(--meta);
+  }
+  .fake span { position: absolute; left: 50%; bottom: calc(100% + 6px); translate: -50% 0; white-space: nowrap; font-family: var(--sc-font-display); font-stretch: 78%; font-weight: 700; font-size: 12px; letter-spacing: 0.08em; color: var(--sc-accent); }
+  .s {
+    --x: calc(var(--r) + (var(--t) - var(--r)) * var(--k));
+    position: absolute; top: 4px; bottom: 4px; left: 0; width: 0.8cqw; min-width: 4px;
+    translate: calc(var(--x) * 100cqw - 0.4cqw) 0;
+    border: 1px solid rgb(230 239 238 / 0.75);
+    background: rgb(230 239 238 / 0.16);
+  }
+  .s::after { content: ""; position: absolute; inset: -1px; border: 1px solid var(--sc-accent); background: rgb(46 196 182 / 0.35); opacity: var(--k); }
+  .look__cap code { font-family: var(--sc-font-display); font-stretch: 84%; font-weight: 640; font-size: 0.95em; letter-spacing: 0.02em; color: var(--sc-accent); }
+  .look__note { margin: 0; max-width: var(--sc-maxw); width: 100%; margin: 0 auto; align-self: start; font-size: var(--sc-t-sm); color: var(--sc-ink-soft); }
+
+  /* ------------------------------------------------- architecture + results */
+  .arch { padding: var(--sc-section) var(--sc-gutter); }
+  .arch__wrap { max-width: var(--sc-maxw); margin: 0 auto; }
+  .arch__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--sc-7); align-items: end; margin-bottom: var(--sc-7); }
+  .net { width: 100%; height: auto; margin-bottom: var(--sc-9); }
+  .net .bx { fill: #121A1D; stroke: rgb(230 239 238 / 0.55); stroke-width: 1.4; }
+  .net .bx--ac { stroke: var(--sc-accent); }
+  .net .ln { fill: none; stroke: rgb(230 239 238 / 0.55); stroke-width: 1.4; }
+  .net .ac { fill: none; stroke: var(--sc-accent); stroke-width: 2; }
+  .net text { font-family: var(--sc-font-display); font-stretch: 80%; font-weight: 640; font-size: 16px; letter-spacing: 0.06em; fill: var(--sc-ink); }
+  .net .t2 { font-weight: 520; font-size: 13.5px; fill: var(--sc-ink-soft); letter-spacing: 0.04em; }
+  .net-list { display: none; }
+  .figs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sc-7); padding-top: var(--sc-6); border-top: 1px solid var(--line); margin-bottom: var(--sc-8); }
+  .figs b { display: block; font-family: var(--sc-font-display); font-stretch: 76%; font-weight: 760; font-size: clamp(4rem, 2.4rem + 5vw, 8rem); line-height: 0.86; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; }
+  .figs b em { font-style: normal; color: var(--sc-accent); }
+  .figs p { margin-top: var(--sc-4); max-width: 40ch; }
+  .licence { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: var(--sc-5); align-items: start; padding: var(--sc-5) 0 0; border-top: 1px solid var(--line); }
+  .licence .p-meta { padding-top: 4px; }
+
+  .close { background: radial-gradient(ellipse 50% 40% at 20% 35%, rgb(46 196 182 / 0.07), transparent 70%); }
+
+  @media (max-width: 860px) {
+    .hero__strip { width: 190%; left: -18%; top: 12%; }
+    .hero__wave { top: 44%; }
+    .look__head { grid-template-columns: minmax(0, 1fr); gap: var(--sc-4); }
+    .look__caps { min-height: 11.5em; }
+    .ruler, .lane { margin-left: 0; left: 0; }
+    .track { grid-template-columns: minmax(0, 1fr); height: 62px; }
+    .track__label { position: absolute; left: 0; top: 4px; font-size: 10.5px; }
+    .track__body { height: 30px; margin-top: 18px; }
+    .lane { top: 26px; }
+    .arch__head { grid-template-columns: minmax(0, 1fr); gap: var(--sc-4); }
+    .net { display: none; }
+    .net-list { display: grid; list-style: none; margin: 0 0 var(--sc-8); padding: 0; gap: var(--sc-4); }
+    .net-list li { padding: var(--sc-4); border: 1px solid var(--line); border-radius: var(--r-2); background: #10171A; }
+    .net-list b { display: block; font-family: var(--sc-font-display); font-stretch: 84%; font-weight: 680; font-size: 1.1rem; }
+    .net-list span { color: var(--sc-ink-soft); }
+    .figs { grid-template-columns: minmax(0, 1fr); gap: var(--sc-6); }
+    .licence { grid-template-columns: minmax(0, 1fr); gap: var(--sc-2); }
+  }
+</style>
+</head>
+<body class="project deepfake">
+<a class="skip" href="#close">Skip to the end</a>
+<div class="sc-grain" aria-hidden="true"></div>
+<a class="tab tab--back" href="../../index.html#routes"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>Back to the drawing <small>Routes</small></a>
+<a class="tab tab--cta" href="../../index.html#contact">Get in touch</a>
+
+<main>
+  <!-- 1. the lightbox: grid, film and a voice track at three depths -->
+  <section class="hero" data-sc-act="flow" data-sc-drift="#0A0E10" aria-labelledby="df-h">
+    <div class="hero__scene" aria-hidden="true">
+      <div class="hero__grid" data-sc-parallax="0.12"></div>
+      <div class="hero__glow"></div>
+      <div class="hero__strip" data-sc-parallax="-0.1"><svg class="strip" viewBox="0 0 1680 300" aria-hidden="true" focusable="false"><rect x="0" y="0" width="1680" height="300" rx="6" class="strip__body"/><rect x="18" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="18" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="62" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="62" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="106" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="106" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="150" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="150" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="194" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="194" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="238" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="238" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="282" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="282" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="326" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="326" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="370" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="370" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="414" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="414" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="458" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="458" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="502" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="502" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="546" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="546" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="590" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="590" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="634" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="634" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="678" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="678" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="722" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="722" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="766" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="766" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="810" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="810" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="854" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="854" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="898" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="898" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="942" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="942" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="986" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="986" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="1030" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="1030" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="1074" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="1074" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="1118" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="1118" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="1162" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="1162" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="1206" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="1206" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="1250" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="1250" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="1294" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="1294" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="1338" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="1338" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="1382" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="1382" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="1426" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="1426" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="1470" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="1470" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="1514" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="1514" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="1558" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="1558" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="1602" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="1602" y="270" width="22" height="16" rx="3" class="strip__hole"/><rect x="1646" y="14" width="22" height="16" rx="3" class="strip__hole"/><rect x="1646" y="270" width="22" height="16" rx="3" class="strip__hole"/><g class="strip__frame"><rect x="24" y="44" width="220" height="212" rx="3" class="strip__pane"/><line x1="30" y1="52" x2="238" y2="52" class="strip__scan"/><line x1="30" y1="58" x2="238" y2="58" class="strip__scan"/><line x1="30" y1="64" x2="238" y2="64" class="strip__scan"/><line x1="30" y1="70" x2="238" y2="70" class="strip__scan"/><line x1="30" y1="76" x2="238" y2="76" class="strip__scan"/><line x1="30" y1="82" x2="238" y2="82" class="strip__scan"/><line x1="30" y1="88" x2="238" y2="88" class="strip__scan"/><line x1="30" y1="94" x2="238" y2="94" class="strip__scan"/><line x1="30" y1="100" x2="238" y2="100" class="strip__scan"/><line x1="30" y1="106" x2="238" y2="106" class="strip__scan"/><line x1="30" y1="112" x2="238" y2="112" class="strip__scan"/><line x1="30" y1="118" x2="238" y2="118" class="strip__scan"/><line x1="30" y1="124" x2="238" y2="124" class="strip__scan"/><line x1="30" y1="130" x2="238" y2="130" class="strip__scan"/><line x1="30" y1="136" x2="238" y2="136" class="strip__scan"/><line x1="30" y1="142" x2="238" y2="142" class="strip__scan"/><line x1="30" y1="148" x2="238" y2="148" class="strip__scan"/><line x1="30" y1="154" x2="238" y2="154" class="strip__scan"/><line x1="30" y1="160" x2="238" y2="160" class="strip__scan"/><line x1="30" y1="166" x2="238" y2="166" class="strip__scan"/><line x1="30" y1="172" x2="238" y2="172" class="strip__scan"/><line x1="30" y1="178" x2="238" y2="178" class="strip__scan"/><line x1="30" y1="184" x2="238" y2="184" class="strip__scan"/><line x1="30" y1="190" x2="238" y2="190" class="strip__scan"/><line x1="30" y1="196" x2="238" y2="196" class="strip__scan"/><line x1="30" y1="202" x2="238" y2="202" class="strip__scan"/><line x1="30" y1="208" x2="238" y2="208" class="strip__scan"/><line x1="30" y1="214" x2="238" y2="214" class="strip__scan"/><line x1="30" y1="220" x2="238" y2="220" class="strip__scan"/><line x1="30" y1="226" x2="238" y2="226" class="strip__scan"/><line x1="30" y1="232" x2="238" y2="232" class="strip__scan"/><line x1="30" y1="238" x2="238" y2="238" class="strip__scan"/><line x1="30" y1="244" x2="238" y2="244" class="strip__scan"/><line x1="30" y1="250" x2="238" y2="250" class="strip__scan"/><path d="M82 108V96H94M174 96H186V108M186 176V188H174M94 188H82V176" class="strip__roi"/><text x="36" y="72" class="strip__tc">00:01.8</text></g><g class="strip__frame"><rect x="262" y="44" width="220" height="212" rx="3" class="strip__pane"/><line x1="268" y1="52" x2="476" y2="52" class="strip__scan"/><line x1="268" y1="58" x2="476" y2="58" class="strip__scan"/><line x1="268" y1="64" x2="476" y2="64" class="strip__scan"/><line x1="268" y1="70" x2="476" y2="70" class="strip__scan"/><line x1="268" y1="76" x2="476" y2="76" class="strip__scan"/><line x1="268" y1="82" x2="476" y2="82" class="strip__scan"/><line x1="268" y1="88" x2="476" y2="88" class="strip__scan"/><line x1="268" y1="94" x2="476" y2="94" class="strip__scan"/><line x1="268" y1="100" x2="476" y2="100" class="strip__scan"/><line x1="268" y1="106" x2="476" y2="106" class="strip__scan"/><line x1="268" y1="112" x2="476" y2="112" class="strip__scan"/><line x1="268" y1="118" x2="476" y2="118" class="strip__scan"/><line x1="268" y1="124" x2="476" y2="124" class="strip__scan"/><line x1="268" y1="130" x2="476" y2="130" class="strip__scan"/><line x1="268" y1="136" x2="476" y2="136" class="strip__scan"/><line x1="268" y1="142" x2="476" y2="142" class="strip__scan"/><line x1="268" y1="148" x2="476" y2="148" class="strip__scan"/><line x1="268" y1="154" x2="476" y2="154" class="strip__scan"/><line x1="268" y1="160" x2="476" y2="160" class="strip__scan"/><line x1="268" y1="166" x2="476" y2="166" class="strip__scan"/><line x1="268" y1="172" x2="476" y2="172" class="strip__scan"/><line x1="268" y1="178" x2="476" y2="178" class="strip__scan"/><line x1="268" y1="184" x2="476" y2="184" class="strip__scan"/><line x1="268" y1="190" x2="476" y2="190" class="strip__scan"/><line x1="268" y1="196" x2="476" y2="196" class="strip__scan"/><line x1="268" y1="202" x2="476" y2="202" class="strip__scan"/><line x1="268" y1="208" x2="476" y2="208" class="strip__scan"/><line x1="268" y1="214" x2="476" y2="214" class="strip__scan"/><line x1="268" y1="220" x2="476" y2="220" class="strip__scan"/><line x1="268" y1="226" x2="476" y2="226" class="strip__scan"/><line x1="268" y1="232" x2="476" y2="232" class="strip__scan"/><line x1="268" y1="238" x2="476" y2="238" class="strip__scan"/><line x1="268" y1="244" x2="476" y2="244" class="strip__scan"/><line x1="268" y1="250" x2="476" y2="250" class="strip__scan"/><path d="M320 108V96H332M412 96H424V108M424 176V188H412M332 188H320V176" class="strip__roi"/><text x="274" y="72" class="strip__tc">00:03.0</text></g><g class="strip__frame"><rect x="500" y="44" width="220" height="212" rx="3" class="strip__pane"/><line x1="506" y1="52" x2="714" y2="52" class="strip__scan"/><line x1="506" y1="58" x2="714" y2="58" class="strip__scan"/><line x1="506" y1="64" x2="714" y2="64" class="strip__scan"/><line x1="506" y1="70" x2="714" y2="70" class="strip__scan"/><line x1="506" y1="76" x2="714" y2="76" class="strip__scan"/><line x1="506" y1="82" x2="714" y2="82" class="strip__scan"/><line x1="506" y1="88" x2="714" y2="88" class="strip__scan"/><line x1="506" y1="94" x2="714" y2="94" class="strip__scan"/><line x1="506" y1="100" x2="714" y2="100" class="strip__scan"/><line x1="506" y1="106" x2="714" y2="106" class="strip__scan"/><line x1="506" y1="112" x2="714" y2="112" class="strip__scan"/><line x1="506" y1="118" x2="714" y2="118" class="strip__scan"/><line x1="506" y1="124" x2="714" y2="124" class="strip__scan"/><line x1="506" y1="130" x2="714" y2="130" class="strip__scan"/><line x1="506" y1="136" x2="714" y2="136" class="strip__scan"/><line x1="506" y1="142" x2="714" y2="142" class="strip__scan"/><line x1="506" y1="148" x2="714" y2="148" class="strip__scan"/><line x1="506" y1="154" x2="714" y2="154" class="strip__scan"/><line x1="506" y1="160" x2="714" y2="160" class="strip__scan"/><line x1="506" y1="166" x2="714" y2="166" class="strip__scan"/><line x1="506" y1="172" x2="714" y2="172" class="strip__scan"/><line x1="506" y1="178" x2="714" y2="178" class="strip__scan"/><line x1="506" y1="184" x2="714" y2="184" class="strip__scan"/><line x1="506" y1="190" x2="714" y2="190" class="strip__scan"/><line x1="506" y1="196" x2="714" y2="196" class="strip__scan"/><line x1="506" y1="202" x2="714" y2="202" class="strip__scan"/><line x1="506" y1="208" x2="714" y2="208" class="strip__scan"/><line x1="506" y1="214" x2="714" y2="214" class="strip__scan"/><line x1="506" y1="220" x2="714" y2="220" class="strip__scan"/><line x1="506" y1="226" x2="714" y2="226" class="strip__scan"/><line x1="506" y1="232" x2="714" y2="232" class="strip__scan"/><line x1="506" y1="238" x2="714" y2="238" class="strip__scan"/><line x1="506" y1="244" x2="714" y2="244" class="strip__scan"/><line x1="506" y1="250" x2="714" y2="250" class="strip__scan"/><path d="M558 108V96H570M650 96H662V108M662 176V188H650M570 188H558V176" class="strip__roi"/><text x="512" y="72" class="strip__tc">00:04.2</text></g><g class="strip__frame"><rect x="738" y="44" width="220" height="212" rx="3" class="strip__pane"/><line x1="744" y1="52" x2="952" y2="52" class="strip__scan"/><line x1="744" y1="58" x2="952" y2="58" class="strip__scan"/><line x1="744" y1="64" x2="952" y2="64" class="strip__scan"/><line x1="744" y1="70" x2="952" y2="70" class="strip__scan"/><line x1="744" y1="76" x2="952" y2="76" class="strip__scan"/><line x1="744" y1="82" x2="952" y2="82" class="strip__scan"/><line x1="744" y1="88" x2="952" y2="88" class="strip__scan"/><line x1="744" y1="94" x2="952" y2="94" class="strip__scan"/><line x1="744" y1="100" x2="952" y2="100" class="strip__scan"/><line x1="744" y1="106" x2="952" y2="106" class="strip__scan"/><line x1="744" y1="112" x2="952" y2="112" class="strip__scan"/><line x1="744" y1="118" x2="952" y2="118" class="strip__scan"/><line x1="744" y1="124" x2="952" y2="124" class="strip__scan"/><line x1="744" y1="130" x2="952" y2="130" class="strip__scan"/><line x1="744" y1="136" x2="952" y2="136" class="strip__scan"/><line x1="744" y1="142" x2="952" y2="142" class="strip__scan"/><line x1="744" y1="148" x2="952" y2="148" class="strip__scan"/><line x1="744" y1="154" x2="952" y2="154" class="strip__scan"/><line x1="744" y1="160" x2="952" y2="160" class="strip__scan"/><line x1="744" y1="166" x2="952" y2="166" class="strip__scan"/><line x1="744" y1="172" x2="952" y2="172" class="strip__scan"/><line x1="744" y1="178" x2="952" y2="178" class="strip__scan"/><line x1="744" y1="184" x2="952" y2="184" class="strip__scan"/><line x1="744" y1="190" x2="952" y2="190" class="strip__scan"/><line x1="744" y1="196" x2="952" y2="196" class="strip__scan"/><line x1="744" y1="202" x2="952" y2="202" class="strip__scan"/><line x1="744" y1="208" x2="952" y2="208" class="strip__scan"/><line x1="744" y1="214" x2="952" y2="214" class="strip__scan"/><line x1="744" y1="220" x2="952" y2="220" class="strip__scan"/><line x1="744" y1="226" x2="952" y2="226" class="strip__scan"/><line x1="744" y1="232" x2="952" y2="232" class="strip__scan"/><line x1="744" y1="238" x2="952" y2="238" class="strip__scan"/><line x1="744" y1="244" x2="952" y2="244" class="strip__scan"/><line x1="744" y1="250" x2="952" y2="250" class="strip__scan"/><path d="M796 108V96H808M888 96H900V108M900 176V188H888M808 188H796V176" class="strip__roi"/><text x="750" y="72" class="strip__tc">00:05.4</text></g><g class="strip__frame strip__frame--hit"><rect x="976" y="44" width="220" height="212" rx="3" class="strip__pane"/><line x1="982" y1="52" x2="1190" y2="52" class="strip__scan"/><line x1="982" y1="58" x2="1190" y2="58" class="strip__scan"/><line x1="982" y1="64" x2="1190" y2="64" class="strip__scan"/><line x1="982" y1="70" x2="1190" y2="70" class="strip__scan"/><line x1="982" y1="76" x2="1190" y2="76" class="strip__scan"/><line x1="982" y1="82" x2="1190" y2="82" class="strip__scan"/><line x1="982" y1="88" x2="1190" y2="88" class="strip__scan"/><line x1="982" y1="94" x2="1190" y2="94" class="strip__scan"/><line x1="982" y1="100" x2="1190" y2="100" class="strip__scan"/><line x1="982" y1="106" x2="1190" y2="106" class="strip__scan"/><line x1="982" y1="112" x2="1190" y2="112" class="strip__scan"/><line x1="982" y1="118" x2="1190" y2="118" class="strip__scan"/><line x1="982" y1="124" x2="1190" y2="124" class="strip__scan"/><line x1="982" y1="130" x2="1190" y2="130" class="strip__scan"/><line x1="982" y1="136" x2="1190" y2="136" class="strip__scan"/><line x1="982" y1="142" x2="1190" y2="142" class="strip__scan"/><line x1="982" y1="148" x2="1190" y2="148" class="strip__scan"/><line x1="982" y1="154" x2="1190" y2="154" class="strip__scan"/><line x1="982" y1="160" x2="1190" y2="160" class="strip__scan"/><line x1="982" y1="166" x2="1190" y2="166" class="strip__scan"/><line x1="982" y1="172" x2="1190" y2="172" class="strip__scan"/><line x1="982" y1="178" x2="1190" y2="178" class="strip__scan"/><line x1="982" y1="184" x2="1190" y2="184" class="strip__scan"/><line x1="982" y1="190" x2="1190" y2="190" class="strip__scan"/><line x1="982" y1="196" x2="1190" y2="196" class="strip__scan"/><line x1="982" y1="202" x2="1190" y2="202" class="strip__scan"/><line x1="982" y1="208" x2="1190" y2="208" class="strip__scan"/><line x1="982" y1="214" x2="1190" y2="214" class="strip__scan"/><line x1="982" y1="220" x2="1190" y2="220" class="strip__scan"/><line x1="982" y1="226" x2="1190" y2="226" class="strip__scan"/><line x1="982" y1="232" x2="1190" y2="232" class="strip__scan"/><line x1="982" y1="238" x2="1190" y2="238" class="strip__scan"/><line x1="982" y1="244" x2="1190" y2="244" class="strip__scan"/><line x1="982" y1="250" x2="1190" y2="250" class="strip__scan"/><path d="M1034 108V96H1046M1126 96H1138V108M1138 176V188H1126M1046 188H1034V176" class="strip__roi"/><text x="988" y="72" class="strip__tc">00:06.2</text><text x="1184" y="242" text-anchor="end" class="strip__flag">0.5 s</text></g><g class="strip__frame"><rect x="1214" y="44" width="220" height="212" rx="3" class="strip__pane"/><line x1="1220" y1="52" x2="1428" y2="52" class="strip__scan"/><line x1="1220" y1="58" x2="1428" y2="58" class="strip__scan"/><line x1="1220" y1="64" x2="1428" y2="64" class="strip__scan"/><line x1="1220" y1="70" x2="1428" y2="70" class="strip__scan"/><line x1="1220" y1="76" x2="1428" y2="76" class="strip__scan"/><line x1="1220" y1="82" x2="1428" y2="82" class="strip__scan"/><line x1="1220" y1="88" x2="1428" y2="88" class="strip__scan"/><line x1="1220" y1="94" x2="1428" y2="94" class="strip__scan"/><line x1="1220" y1="100" x2="1428" y2="100" class="strip__scan"/><line x1="1220" y1="106" x2="1428" y2="106" class="strip__scan"/><line x1="1220" y1="112" x2="1428" y2="112" class="strip__scan"/><line x1="1220" y1="118" x2="1428" y2="118" class="strip__scan"/><line x1="1220" y1="124" x2="1428" y2="124" class="strip__scan"/><line x1="1220" y1="130" x2="1428" y2="130" class="strip__scan"/><line x1="1220" y1="136" x2="1428" y2="136" class="strip__scan"/><line x1="1220" y1="142" x2="1428" y2="142" class="strip__scan"/><line x1="1220" y1="148" x2="1428" y2="148" class="strip__scan"/><line x1="1220" y1="154" x2="1428" y2="154" class="strip__scan"/><line x1="1220" y1="160" x2="1428" y2="160" class="strip__scan"/><line x1="1220" y1="166" x2="1428" y2="166" class="strip__scan"/><line x1="1220" y1="172" x2="1428" y2="172" class="strip__scan"/><line x1="1220" y1="178" x2="1428" y2="178" class="strip__scan"/><line x1="1220" y1="184" x2="1428" y2="184" class="strip__scan"/><line x1="1220" y1="190" x2="1428" y2="190" class="strip__scan"/><line x1="1220" y1="196" x2="1428" y2="196" class="strip__scan"/><line x1="1220" y1="202" x2="1428" y2="202" class="strip__scan"/><line x1="1220" y1="208" x2="1428" y2="208" class="strip__scan"/><line x1="1220" y1="214" x2="1428" y2="214" class="strip__scan"/><line x1="1220" y1="220" x2="1428" y2="220" class="strip__scan"/><line x1="1220" y1="226" x2="1428" y2="226" class="strip__scan"/><line x1="1220" y1="232" x2="1428" y2="232" class="strip__scan"/><line x1="1220" y1="238" x2="1428" y2="238" class="strip__scan"/><line x1="1220" y1="244" x2="1428" y2="244" class="strip__scan"/><line x1="1220" y1="250" x2="1428" y2="250" class="strip__scan"/><path d="M1272 108V96H1284M1364 96H1376V108M1376 176V188H1364M1284 188H1272V176" class="strip__roi"/><text x="1226" y="72" class="strip__tc">00:07.6</text></g><g class="strip__frame"><rect x="1452" y="44" width="220" height="212" rx="3" class="strip__pane"/><line x1="1458" y1="52" x2="1666" y2="52" class="strip__scan"/><line x1="1458" y1="58" x2="1666" y2="58" class="strip__scan"/><line x1="1458" y1="64" x2="1666" y2="64" class="strip__scan"/><line x1="1458" y1="70" x2="1666" y2="70" class="strip__scan"/><line x1="1458" y1="76" x2="1666" y2="76" class="strip__scan"/><line x1="1458" y1="82" x2="1666" y2="82" class="strip__scan"/><line x1="1458" y1="88" x2="1666" y2="88" class="strip__scan"/><line x1="1458" y1="94" x2="1666" y2="94" class="strip__scan"/><line x1="1458" y1="100" x2="1666" y2="100" class="strip__scan"/><line x1="1458" y1="106" x2="1666" y2="106" class="strip__scan"/><line x1="1458" y1="112" x2="1666" y2="112" class="strip__scan"/><line x1="1458" y1="118" x2="1666" y2="118" class="strip__scan"/><line x1="1458" y1="124" x2="1666" y2="124" class="strip__scan"/><line x1="1458" y1="130" x2="1666" y2="130" class="strip__scan"/><line x1="1458" y1="136" x2="1666" y2="136" class="strip__scan"/><line x1="1458" y1="142" x2="1666" y2="142" class="strip__scan"/><line x1="1458" y1="148" x2="1666" y2="148" class="strip__scan"/><line x1="1458" y1="154" x2="1666" y2="154" class="strip__scan"/><line x1="1458" y1="160" x2="1666" y2="160" class="strip__scan"/><line x1="1458" y1="166" x2="1666" y2="166" class="strip__scan"/><line x1="1458" y1="172" x2="1666" y2="172" class="strip__scan"/><line x1="1458" y1="178" x2="1666" y2="178" class="strip__scan"/><line x1="1458" y1="184" x2="1666" y2="184" class="strip__scan"/><line x1="1458" y1="190" x2="1666" y2="190" class="strip__scan"/><line x1="1458" y1="196" x2="1666" y2="196" class="strip__scan"/><line x1="1458" y1="202" x2="1666" y2="202" class="strip__scan"/><line x1="1458" y1="208" x2="1666" y2="208" class="strip__scan"/><line x1="1458" y1="214" x2="1666" y2="214" class="strip__scan"/><line x1="1458" y1="220" x2="1666" y2="220" class="strip__scan"/><line x1="1458" y1="226" x2="1666" y2="226" class="strip__scan"/><line x1="1458" y1="232" x2="1666" y2="232" class="strip__scan"/><line x1="1458" y1="238" x2="1666" y2="238" class="strip__scan"/><line x1="1458" y1="244" x2="1666" y2="244" class="strip__scan"/><line x1="1458" y1="250" x2="1666" y2="250" class="strip__scan"/><path d="M1510 108V96H1522M1602 96H1614V108M1614 176V188H1602M1522 188H1510V176" class="strip__roi"/><text x="1464" y="72" class="strip__tc">00:08.8</text></g></svg></div>
+      <svg class="hero__wave" viewBox="0 0 1680 120" preserveAspectRatio="none" data-sc-parallax="-0.26"><path d="M0 71.6L6 68.9L12 75.9L18 94.6L24 66.6L30 59.6L36 59.4L42 30.8L48 46.0L54 61.4L60 55.4L66 85.3L72 85.8L78 63.5L84 69.8L90 42.4L96 21.7L102 41.1L108 34.8L114 52.2L120 89.1L126 81.2L132 89.0L138 89.6L144 49.8L150 46.3L156 41.5L162 25.1L168 58.3L174 73.7L180 74.4L186 100.5L192 80.6L198 53.7L204 52.6L210 20.0L216 17.4L222 46.2L228 46.8L234 77.2L240 102.9L246 82.6L252 84.7L258 67.8L264 29.3L270 38.8L276 38.0L282 39.5L288 81.6L294 86.4L300 84.5L306 96.0L312 58.6L318 37.0L324 37.5L330 13.3L336 32.9L342 63.7L348 64.0L354 93.5L360 97.5L366 67.6L372 68.9L378 46.2L384 24.0L390 48.9L396 50.2L402 62.2L408 96.8L414 83.1L420 77.1L426 76.4L432 36.3L438 32.0L444 38.5L450 25.6L456 57.4L462 76.0L468 69.0L474 90.6L480 76.5L486 50.7L492 59.9L498 40.6L504 38.0L510 67.8L516 61.9L522 74.4L528 92.6L534 65.8L540 64.5L546 60.3L552 29.8L558 43.8L564 49.4L570 41.2L576 71.9L582 71.8L588 61.2L594 78.7L600 58.0L606 47.4L612 64.3L618 47.3L624 56.5L630 78.0L636 61.6L642 73.6L648 78.3L654 51.1L660 61.0L666 55.8L672 36.6L678 58.9L684 55.0L690 48.2L696 72.9L702 59.4L708 54.8L714 72.0L720 51.0L726 55.2L732 70.9L738 52.3L744 67.1L750 76.3L756 56.0L762 71.8L768 67.6L774 47.0L780 64.6L786 54.1L792 43.4L798 66.0L804 52.7L810 51.7L816 71.5L822 51.7L828 56.2L834 69.0L840 47.6L846 61.5L852 70.4L858 53.5L864 74.3L870 73.7L876 56.4L882 74.0L888 59.7L894 45.4L900 63.7L906 47.6L912 48.0L918 70.1L924 53.3L930 60.8L936 72.2L942 47.1L948 56.4L954 59.7L960 41.1L966 64.6L972 69.5L978 61.1L984 86.1L990 74.5L996 59.1L1002 70.7L1008 45.4L1014 39.6L1020 58.4L1026 44.5L1032 60.3L1038 79.6L1044 60.3L1050 69.9L1056 65.4L1062 35.8L1068 48.5L1074 46.2L1080 40.2L1086 75.3L1092 77.6L1098 77.0L1104 96.0L1110 68.4L1116 52.6L1122 55.6L1128 27.8L1134 38.4L1140 61.3L1146 55.0L1152 81.4L1158 88.3L1164 61.7L1170 65.9L1176 45.1L1182 20.4L1188 42.5L1194 43.1L1200 55.4L1206 95.1L1212 88.5L1218 87.3L1224 90.0L1230 48.6L1236 38.5L1242 40.1L1248 23.0L1254 53.4L1260 75.9L1266 72.3L1272 95.8L1278 81.2L1284 48.6L1290 49.5L1296 23.8L1302 17.5L1308 51.7L1314 56.1L1320 79.7L1326 108.6L1332 86.0L1338 80.4L1344 68.2L1350 27.2L1356 33.5L1362 40.0L1368 37.7L1374 78.0L1380 87.5L1386 78.5L1392 90.3L1398 57.8L1404 31.5L1410 38.0L1416 19.2L1422 34.7L1428 71.5L1434 71.1L1440 93.5L1446 101.7L1452 67.8L1458 65.0L1464 48.9L1470 22.8L1476 46.8L1482 53.4L1488 58.2L1494 92.3L1500 81.4L1506 68.4L1512 72.0L1518 36.2L1524 28.6L1530 43.0L1536 31.7L1542 58.9L1548 83.2L1554 72.2L1560 89.2L1566 80.8L1572 50.2L1578 58.9L1584 45.6L1590 36.6L1596 66.9L1602 63.2L1608 67.2L1614 87.7L1620 62.5L1626 56.0L1632 59.3L1638 30.8L1644 42.1L1650 55.5L1656 44.9L1662 72.3L1668 77.9L1674 62.0L1680 78.8"/></svg>
+    </div>
+    <div class="hero__copy" data-sc-in data-sc-stagger="70">
+      <h1 class="p-h1" id="df-h">Deepfake Defender</h1>
+      <p class="p-lede">It watches the lips, listens to the voice, and calls a clip fake when the two stop agreeing.</p>
+      <p class="p-meta">PyTorch · OpenCV · FFmpeg · LAV-DF</p>
+      <a class="p-link" href="https://github.com/potlurisravanth-png/deepfake-detection-lav-df" target="_blank" rel="noopener noreferrer">Code on GitHub <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+    </div>
+  </section>
+
+  <!-- 2. the bespoke move: where the training windows land -->
+  <section class="look" data-sc-act="pin" data-sc-span="2.8" data-sc-drift="#0B1013" aria-labelledby="look-h">
+    <div class="look__stage" data-sc-stage>
+      <div class="look__head">
+        <h2 class="p-h2" id="look-h" data-sc-cue="0 1 0 0.06">Find the half-second.</h2>
+        <div class="look__caps">
+          <p class="look__cap p-body" data-sc-cue="0 0.5 0 0.25"><b>Sampled at random</b>LAV-DF clips are mostly real, with small segments (around half a second) modified. Pick training windows at random and most of them are real frames carrying a “fake” label. Of the twelve windows drawn here, one lands in the edit.</p>
+          <p class="look__cap p-body" data-sc-cue="0.44 1 0.2 0.06"><b>Metadata-guided targeted sampling</b>The custom dataset class reads <code>fake_periods</code> from the metadata and makes the loader extract the frames and the audio where the manipulation actually happens.</p>
+        </div>
+      </div>
+      <div class="clip" role="img" aria-label="A ten-second clip with a video track and an audio track. A half-second segment near 6.2 seconds is marked as fake. Twelve sample windows start scattered across the clip, then move into the marked segment.">
+        <div class="ruler" aria-hidden="true"><span style="left:0">0 s</span><span style="left:20%">2</span><span style="left:40%">4</span><span style="left:60%">6</span><span style="left:80%">8</span><span style="left:100%">10 s</span></div>
+        <div class="track track--video"><span class="track__label">Video</span><span class="track__body"></span></div>
+        <div class="track track--audio"><span class="track__label">Audio</span><span class="track__body"><svg viewBox="0 0 1000 46" preserveAspectRatio="none"><path d="M0 23.0L4 17.1L8 29.6L12 18.3L16 28.3L20 15.2L24 29.0L28 24.2L32 15.2L36 31.9L40 15.3L44 31.8L48 12.8L52 29.2L56 25.8L60 13.1L64 34.0L68 13.0L72 33.9L76 11.9L80 28.4L84 27.3L88 12.3L92 33.8L96 13.5L100 33.4L104 13.1L108 26.8L112 28.1L116 13.4L120 31.4L124 16.0L128 31.4L132 14.9L136 25.2L140 28.5L144 14.7L148 29.5L152 17.2L156 30.8L160 15.7L164 24.0L168 29.4L172 14.2L176 30.4L180 15.4L184 32.6L188 15.3L192 22.7L196 31.5L200 11.9L204 33.3L208 12.1L212 35.1L216 15.0L220 21.1L224 33.5L228 10.1L232 35.0L236 10.5L240 35.6L244 16.1L248 19.6L252 34.0L256 11.0L260 33.5L264 12.0L268 33.7L272 18.1L276 18.7L280 32.6L284 14.3L288 30.0L292 15.0L296 31.1L300 20.0L304 18.5L308 30.6L312 17.5L316 27.1L320 17.0L324 29.5L328 21.3L332 18.2L336 29.6L340 18.6L344 26.9L348 16.7L352 29.2L356 22.3L360 17.3L364 29.9L368 18.2L372 27.9L376 15.7L380 29.2L384 23.4L388 16.0L392 31.3L396 16.2L400 30.8L404 13.3L408 29.7L412 24.9L416 13.5L420 34.4L424 12.2L428 35.0L432 10.5L436 29.9L440 26.9L444 10.7L448 37.4L452 9.0L456 37.8L460 9.4L464 28.9L468 28.8L472 9.5L476 37.6L480 9.3L484 37.1L488 10.9L492 26.9L496 29.6L500 10.9L504 34.4L508 12.8L512 33.9L516 13.7L520 25.0L524 29.5L528 13.6L532 30.5L536 16.4L540 31.2L544 15.9L548 23.5L552 29.4L556 15.2L560 28.7L564 17.3L568 30.8L572 16.7L576 22.3L580 30.1L584 14.9L588 29.3L592 16.0L596 31.8L600 17.1L604 21.1L608 31.2L612 14.5L616 29.8L620 15.4L624 31.8L628 18.1L632 20.0L636 31.1L640 15.8L644 28.2L648 16.8L652 30.3L656 19.7L660 19.5L664 29.8L668 17.5L672 27.5L676 16.3L680 30.6L684 20.4L688 18.0L692 31.5L696 15.9L700 29.4L704 14.7L708 30.9L712 21.4L716 16.9L720 31.6L724 16.3L728 29.2L732 14.9L736 29.9L740 22.7L744 16.5L748 30.7L752 17.4L756 28.7L760 15.2L764 29.1L768 23.9L772 15.8L776 31.0L780 16.6L784 30.3L788 13.8L792 29.1L796 25.3L800 13.7L804 33.6L808 13.1L812 34.2L816 11.2L820 29.2L824 27.4L828 10.8L832 36.9L836 9.4L840 37.6L844 9.7L848 28.3L852 29.4L856 9.1L860 38.0L864 8.7L868 37.7L872 10.7L876 26.5L880 30.4L884 10.1L888 35.4L892 11.7L896 34.9L900 13.4L904 24.5L908 30.2L912 13.0L916 31.1L920 15.7L924 31.7L928 16.0L932 23.1L936 29.5L940 15.5L944 28.0L948 17.9L952 30.1L956 17.5L960 22.0L964 29.4L968 16.7L972 27.0L976 18.3L980 29.8L984 18.4L988 21.0L992 29.4L996 17.4L1000 26.7"/></svg></span></div>
+        <div class="lane" aria-hidden="true">
+          <span class="fake"><span>fake_periods · 0.5 s</span></span>
+          <i class="s" style="--r:0.040;--t:0.630"></i><i class="s" style="--r:0.110;--t:0.643"></i><i class="s" style="--r:0.190;--t:0.622"></i><i class="s" style="--r:0.270;--t:0.647"></i><i class="s" style="--r:0.330;--t:0.664"></i><i class="s" style="--r:0.410;--t:0.639"></i><i class="s" style="--r:0.490;--t:0.626"></i><i class="s" style="--r:0.550;--t:0.635"></i><i class="s" style="--r:0.645;--t:0.660"></i><i class="s" style="--r:0.740;--t:0.668"></i><i class="s" style="--r:0.830;--t:0.655"></i><i class="s" style="--r:0.920;--t:0.651"></i>
+        </div>
+      </div>
+      <p class="look__note">An illustration of the sampling idea, not a frame-accurate clip.</p>
+    </div>
+  </section>
+
+  <!-- 3. two senses, one verdict; and what it scored -->
+  <section class="arch" data-sc-act="flow" data-sc-drift="#0D1315" aria-labelledby="arch-h">
+    <div class="arch__wrap">
+      <div class="arch__head" data-sc-in data-sc-stagger="70">
+        <h2 class="p-h2" id="arch-h">Late fusion: two streams, one head.</h2>
+        <p class="p-body">Each stream starts from a pre-trained network. R3D-18 (Kinetics-400) reads motion over time, which is where unnatural lip movement shows. ResNet18 (ImageNet) reads the Mel-spectrogram as an image, looking for artifacts in the frequency domain. Their 512-dimension features are concatenated and a fully connected network makes the call.</p>
+      </div>
+      <svg class="net" viewBox="0 0 1200 420" role="img" aria-label="Video frames go to R3D-18 pre-trained on Kinetics-400, producing 512 features. Audio becomes a Mel-spectrogram and goes to ResNet18 pre-trained on ImageNet, producing 512 features. Both are concatenated and passed through a fully connected network to output real or fake." data-sc-reveal="left" data-sc-reveal-at="0.1 0.4">
+        <rect class="bx" x="20" y="60" width="180" height="96" rx="8"/><text x="110" y="104" text-anchor="middle">VIDEO</text><text class="t2" x="110" y="128" text-anchor="middle">frames over time</text>
+        <rect class="bx" x="20" y="264" width="180" height="96" rx="8"/><text x="110" y="308" text-anchor="middle">AUDIO</text><text class="t2" x="110" y="332" text-anchor="middle">Mel-spectrogram</text>
+        <path class="ac" d="M202 108H310"/><path class="ac" d="M298 100l12 8l-12 8"/>
+        <path class="ac" d="M202 312H310"/><path class="ac" d="M298 304l12 8l-12 8"/>
+        <rect class="bx" x="314" y="52" width="260" height="112" rx="8"/><text x="444" y="100" text-anchor="middle">R3D-18</text><text class="t2" x="444" y="126" text-anchor="middle">pre-trained on Kinetics-400</text>
+        <rect class="bx" x="314" y="256" width="260" height="112" rx="8"/><text x="444" y="304" text-anchor="middle">RESNET18</text><text class="t2" x="444" y="330" text-anchor="middle">pre-trained on ImageNet</text>
+        <path class="ac" d="M576 108H640"/><path class="ac" d="M576 312H640"/>
+        <rect class="bx" x="644" y="80" width="64" height="56" rx="6"/><text x="676" y="114" text-anchor="middle">512</text>
+        <rect class="bx" x="644" y="284" width="64" height="56" rx="6"/><text x="676" y="318" text-anchor="middle">512</text>
+        <path class="ac" d="M710 108C770 108 770 196 812 206"/><path class="ac" d="M710 312C770 312 770 224 812 214"/>
+        <circle class="bx bx--ac" cx="836" cy="210" r="24"/><text x="836" y="216" text-anchor="middle">+</text>
+        <text class="t2" x="836" y="262" text-anchor="middle">concatenate</text>
+        <path class="ac" d="M860 210H930"/><path class="ac" d="M918 202l12 8l-12 8"/>
+        <rect class="bx" x="934" y="170" width="110" height="80" rx="8"/><text x="989" y="208" text-anchor="middle">FC</text><text class="t2" x="989" y="230" text-anchor="middle">fusion head</text>
+        <path class="ac" d="M1046 210H1080L1108 170M1080 210L1108 250"/>
+        <rect class="bx bx--ac" x="1110" y="146" width="76" height="44" rx="6"/><text x="1148" y="174" text-anchor="middle">REAL</text>
+        <rect class="bx bx--ac" x="1110" y="230" width="76" height="44" rx="6"/><text x="1148" y="258" text-anchor="middle">FAKE</text>
+      </svg>
+      <ol class="net-list">
+        <li><b>Video stream</b><span>R3D-18, pre-trained on Kinetics-400, reads motion over time: 512 features.</span></li>
+        <li><b>Audio stream</b><span>ResNet18, pre-trained on ImageNet, reads the Mel-spectrogram as an image: 512 features.</span></li>
+        <li><b>Fusion head</b><span>Both feature vectors are concatenated and a fully connected network outputs real or fake.</span></li>
+      </ol>
+      <div class="figs" data-sc-in data-sc-stagger="90">
+        <div>
+          <b>99.81<em>%</em></b>
+          <p class="p-body">Validation accuracy on LAV-DF, reached in three epochs.</p>
+        </div>
+        <div>
+          <b><span data-sc-count="1 50" data-sc-count-at="0.32 0.56">50</span><em>×</em></b>
+          <p class="p-body">Data throughput, from caching the audio offline with FFmpeg and loading frames with threaded OpenCV.</p>
+        </div>
+      </div>
+      <div class="licence" data-sc-in>
+        <p class="p-meta">Dataset</p>
+        <p class="p-body">Trained and validated on LAV-DF (Cai et al., 2022, “Do You Really Mean That? Content Driven Audio-Visual Deepfake Dataset”), licensed CC BY-NC 4.0. The repository is for educational and portfolio demonstration only.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. the close -->
+  <section class="close-act" id="close" data-sc-act="pin" data-sc-span="1.2" data-sc-drift="#0A0E10" aria-labelledby="close-h">
+    <div data-sc-stage class="close">
+      <div class="close__inner">
+        <h2 class="p-h2" id="close-h" data-sc-cue="0 1 0 0" data-sc-kinetic="lines">Two senses, one verdict.</h2>
+        <div data-sc-cue="0 1 0 0">
+          <p class="p-body">Built during the M.S. in Data Science at UAB, with PyTorch, OpenCV and FFmpeg. The code, the notebook and the project reports are on GitHub.</p>
+          <div class="close__row">
+            <a class="btn btn--solid" href="https://github.com/potlurisravanth-png/deepfake-detection-lav-df" target="_blank" rel="noopener noreferrer">Code on GitHub</a>
+            <a class="btn" href="../../index.html#routes">Back to the drawing</a>
+          </div>
+          <a class="close__next" href="../secure-file-sharing/index.html">
+            <span class="kicker">Next project</span>
+            <span class="close__next-name">Secure File-Sharing <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
+          </a>
+        </div>
+      </div>
+      <footer class="close__foot">
+        <span>Sravanth Potluri · 2026</span>
+        <a href="../medicare-part-d/index.html">Previous: Medicare Part D</a>
+      </footer>
+    </div>
+  </section>
+</main>
+
+<script src="../../assets/scrollcraft.js"></script>
+<script>
+  ScrollCraft.mount(document.body);
+  // The sample windows move in pure CSS off --sc-p. Publish the rendered
+  // phase so the verification harness can see the stage change.
+  (function () {
+    var look = document.querySelector('.look'), last = '';
+    (function tick() {
+      var p = parseFloat(look.style.getPropertyValue('--sc-p')) || 0;
+      var k = Math.min(1, Math.max(0, (p - 0.46) / 0.3)).toFixed(2);
+      var m = Math.min(1, Math.max(0, (p - 0.4) / 0.08)).toFixed(2);
+      var v = 'k:' + k + ' meta:' + m;
+      if (v !== last) { look.setAttribute('data-sc-verify-state', v); last = v; }
+      requestAnimationFrame(tick);
+    })();
+  })();
+</script>
+</body>
+</html>

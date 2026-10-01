@@ -1,380 +1,237 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="cyberpunk">
-
+<!doctype html>
+<html lang="en" class="no-js">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Sravanth Potluri &mdash; data analyst and data architect. M.S. Data Science; designs PostgreSQL data models for an IoT platform at Local Grown Salads after three years of Power BI reporting and process automation for a Fortune 500 life-sciences client. Also builds and evaluates LLM systems.">
-    <title>Sravanth Potluri &mdash; Data Analyst &amp; Data Architect</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- Vanta.js Dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sravanth Potluri · Data and AI systems that show their work</title>
+<meta name="description" content="Sravanth Potluri designs data and AI systems that show their work. Data architect at Local Grown Salads, M.S. in Data Science, and three years of enterprise BI and automation before that.">
+<meta name="theme-color" content="#EEF1F2">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sravanth Potluri · Data and AI systems that show their work">
+<meta property="og:description" content="An exploded drawing of a career in data and AI. Scroll through the sheets and the page routes you to a project, with a receipt.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='26' height='26' rx='2' fill='%23F9FAFA' stroke='%2314181D' stroke-width='2'/%3E%3Ccircle cx='11' cy='11' r='3.5' fill='none' stroke='%23D2381C' stroke-width='2'/%3E%3Cpath d='M11 14.5V27' stroke='%23D2381C' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/archivo-wdth.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/scrollcraft.css">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/home.css">
+<script>document.documentElement.classList.replace('no-js', 'js');</script>
 </head>
+<body class="home">
+<a class="skip" href="#routes">Skip to the projects</a>
 
-<body>
+<div class="paper" aria-hidden="true"></div>
+<div class="sc-grain" aria-hidden="true"></div>
 
-    <!-- THEME SWITCHER (Night = cyberpunk default, Day = bone editorial) -->
-    <div class="theme-switch" role="group" aria-label="Theme">
-        <button data-theme="cyberpunk" aria-pressed="true">Night</button>
-        <button data-theme="bone" aria-pressed="false">Day</button>
+<!-- The drawing. One fixed stage; the camera descends through the sheets. -->
+<div class="stage" aria-hidden="true" data-sc-verify-state="">
+  <div class="scene">
+    <div class="sheet" data-sheet="signal"><svg class="sheet-svg sheet-svg--signal" viewBox="0 0 960 640" aria-hidden="true" focusable="false"><rect class="fr0" x="0.8" y="0.8" width="958.5" height="638.5"/><rect class="fr1" x="20" y="20" width="920" height="600"/><path class="fr1" d="M135 20L135 28"/><path class="fr1" d="M135 620L135 612"/><path class="fr1" d="M250 20L250 28"/><path class="fr1" d="M250 620L250 612"/><path class="fr1" d="M365 20L365 28"/><path class="fr1" d="M365 620L365 612"/><path class="fr1" d="M480 20L480 28"/><path class="fr1" d="M480 620L480 612"/><path class="fr1" d="M595 20L595 28"/><path class="fr1" d="M595 620L595 612"/><path class="fr1" d="M710 20L710 28"/><path class="fr1" d="M710 620L710 612"/><path class="fr1" d="M825 20L825 28"/><path class="fr1" d="M825 620L825 612"/><path class="fr1" d="M20 120L28 120"/><path class="fr1" d="M940 120L932 120"/><path class="fr1" d="M20 220L28 220"/><path class="fr1" d="M940 220L932 220"/><path class="fr1" d="M20 320L28 320"/><path class="fr1" d="M940 320L932 320"/><path class="fr1" d="M20 420L28 420"/><path class="fr1" d="M940 420L932 420"/><path class="fr1" d="M20 520L28 520"/><path class="fr1" d="M940 520L932 520"/><rect class="fr1" x="708" y="574" width="232" height="46"/><path class="fr1" d="M708 596L940 596"/><text class="t t--cart" x="720" y="590">SIGNAL</text><text class="ts t--cart2" x="720" y="612">B.TECH ECE · 2017–2021</text><path class="k2" d="M124 140L156 140"/><path class="k2" d="M140 124L140 156"/><circle class="k2 pierce" cx="140" cy="140" r="6"/><path class="k" d="M140 548L140 168"/><path class="k" d="M143.7 176.2L140 168L136.3 176.2"/><path class="k" d="M122 340L884 340"/><path class="k" d="M875.8 343.7L884 340L875.8 336.3"/><text class="t t--math" x="154" y="178">x(t)</text><text class="t t--math" x="872" y="366">t</text><path class="k k--wave" d="M150 311.2L153 301.2L156 292.4L159 285.3L162 280.1L165 276.8L168 275.4L171 275.8L174 277.7L177 280.7L180 284.5L183 288.5L186 292.3L189 295.7L192 298.3L195 299.9L198 300.5L201 300L204 298.8L207 296.9L210 294.7L213 292.5L216 290.5L219 289L222 288.2L225 288.1L228 288.8L231 290L234 291.7L237 293.4L240 294.9L243 295.9L246 296L249 295.1L252 292.9L255 289.5L258 284.8L261 279.2L264 272.9L267 266.4L270 259.9L273 254.2L276 249.4L279 246.2L282 244.7L285 245.1L288 247.6L291 252.1L294 258.3L297 266L300 274.7L303 284.2L306 293.9L309 303.5L312 312.6L315 320.9L318 328.3L321 334.9L324 340.5L327 345.4L330 349.9L333 354.1L336 358.4L339 362.9L342 367.9L345 373.6L348 379.7L351 386.4L354 393.4L357 400.3L360 406.9L363 412.9L366 417.7L369 421.2L372 423.1L375 423.2L378 421.6L381 418.3L384 413.5L387 407.7L390 401.2L393 394.4L396 387.9L399 382L402 377.3L405 373.9L408 372L411 371.7L414 373L417 375.6L420 379.2L423 383.5L426 388.1L429 392.7L432 396.8L435 400.2L438 402.7L441 404.2L444 404.7L447 404.4L450 403.5L453 402.2L456 400.8L459 399.6L462 398.8L465 398.5L468 398.9L471 399.9L474 401.3L477 403L480 404.5L483 405.6L486 405.9L489 405L492 402.5L495 398.4L498 392.5L501 384.7L504 375.4L507 364.6L510 352.8L513 340.4L516 328L519 315.9L522 304.7L525 294.8L528 286.3L531 279.5L534 274.5L537 271L540 269.1L543 268.3L546 268.4L549 269L552 269.8L555 270.4L558 270.7L561 270.5L564 269.8L567 268.7L570 267.4L573 266L576 264.9L579 264.4L582 264.6L585 265.9L588 268.3L591 271.8L594 276.3L597 281.8L600 287.7L603 293.8L606 299.8L609 305L612 309.3L615 312.2L618 313.5L621 313.2L624 311.2L627 307.7L630 302.9L633 297.3L636 291.3L639 285.3L642 279.8L645 275.1L648 271.7L651 269.8L654 269.5L657 270.7L660 273.5L663 277.5L666 282.5L669 288.1L672 294L675 299.9L678 305.6L681 310.8L684 315.4L687 319.6L690 323.3L693 326.9L696 330.5L699 334.5L702 339L705 344.5L708 350.9L711 358.4L714 367L717 376.5L720 386.6L723 396.9L726 407.2L729 416.8L732 425.5L735 432.7L738 438.1L741 441.6L744 443L747 442.4L750 439.9L753 435.8L756 430.4L759 424.3L762 417.8L765 411.5L768 405.6L771 400.4L774 396.3L777 393.3L780 391.3L783 390.3L786 390L789 390.2L792 390.5L795 390.6L798 390.3L801 389.5L804 387.9L807 385.6L810 382.6L813 379.3L816 375.8L819 372.4L822 369.5L825 367.3L828 366.2L831 366.2L834 367.5L837 369.9L840 373.3L843 377.4L846 381.8L849 386.2L852 390L855 392.8L858 394.3L861 394"/><path class="k2" d="M160 340L160 283.3"/><path class="k2" d="M200 340L200 300.3"/><path class="k2" d="M240 340L240 294.9"/><path class="k2" d="M280 340L280 245.5"/><path class="k2" d="M320 340L320 332.8"/><path class="k2" d="M360 340L360 406.9"/><path class="k2" d="M400 340L400 380.3"/><path class="k2" d="M440 340L440 403.8"/><path class="k2" d="M480 340L480 404.5"/><path class="k2" d="M520 340L520 312.1"/><path class="k2" d="M560 340L560 270.6"/><path class="k2" d="M600 340L600 287.7"/><path class="k2" d="M640 340L640 283.4"/><path class="k2" d="M680 340L680 309.1"/><path class="k2" d="M720 340L720 386.6"/><path class="k2" d="M760 340L760 422.2"/><path class="k2" d="M800 340L800 389.8"/><path class="k2" d="M840 340L840 373.3"/><circle class="rd" cx="160" cy="283.3" r="4.2" style="--o:0.04;--d:0.05"/><circle class="rd" cx="200" cy="300.3" r="4.2" style="--o:0.062;--d:0.05"/><circle class="rd" cx="240" cy="294.9" r="4.2" style="--o:0.084;--d:0.05"/><circle class="rd" cx="280" cy="245.5" r="4.2" style="--o:0.106;--d:0.05"/><circle class="rd" cx="320" cy="332.8" r="4.2" style="--o:0.128;--d:0.05"/><circle class="rd" cx="360" cy="406.9" r="4.2" style="--o:0.15;--d:0.05"/><circle class="rd" cx="400" cy="380.3" r="4.2" style="--o:0.172;--d:0.05"/><circle class="rd" cx="440" cy="403.8" r="4.2" style="--o:0.194;--d:0.05"/><circle class="rd" cx="480" cy="404.5" r="4.2" style="--o:0.216;--d:0.05"/><circle class="rd" cx="520" cy="312.1" r="4.2" style="--o:0.238;--d:0.05"/><circle class="rd" cx="560" cy="270.6" r="4.2" style="--o:0.26;--d:0.05"/><circle class="rd" cx="600" cy="287.7" r="4.2" style="--o:0.282;--d:0.05"/><circle class="rd" cx="640" cy="283.4" r="4.2" style="--o:0.304;--d:0.05"/><circle class="rd" cx="680" cy="309.1" r="4.2" style="--o:0.326;--d:0.05"/><circle class="rd" cx="720" cy="386.6" r="4.2" style="--o:0.348;--d:0.05"/><circle class="rd" cx="760" cy="422.2" r="4.2" style="--o:0.37;--d:0.05"/><circle class="rd" cx="800" cy="389.8" r="4.2" style="--o:0.392;--d:0.05"/><circle class="rd" cx="840" cy="373.3" r="4.2" style="--o:0.414;--d:0.05"/><path class="r" pathLength="1" d="M160 283.3H200V300.3H240V294.9H280V245.5H320V332.8H360V406.9H400V380.3H440V403.8H480V404.5H520V312.1H560V270.6H600V287.7H640V283.4H680V309.1H720V386.6H760V422.2H800V389.8H840V373.3H880" style="--o:0.42;--d:0.38"/><path class="ks" d="M320 350L320 528"/><path class="ks" d="M360 350L360 528"/><path class="r" pathLength="1" d="M320 520L360 520" style="--o:0.62;--d:0.12"/><path class="r" pathLength="1" d="M326.4 517.1L320 520L326.4 522.9" style="--o:0.7;--d:0.04"/><path class="r" pathLength="1" d="M353.6 522.9L360 520L353.6 517.1" style="--o:0.7;--d:0.04"/><text class="tr t--math" x="340" y="511" text-anchor="middle" style="--o:0.72;--d:0.08">T</text><path class="r" pathLength="1" d="M600 279.7L634 196H796" style="--o:0.78;--d:0.14"/><text class="tr t--math" x="640" y="186" style="--o:0.86;--d:0.08">x[n] = x(nT)</text><path class="k2" d="M590 556L708 556"/><path class="k2" d="M699.8 559.7L708 556L699.8 552.3"/><path class="k2" d="M596 560L596 470"/><path class="k2" d="M599.7 478.2L596 470L592.3 478.2"/><path class="k" d="M616 556L616 512.6"/><circle class="k dot" cx="616" cy="512.6" r="2.6"/><path class="k" d="M648 556L648 537.1"/><circle class="k dot" cx="648" cy="537.1" r="2.6"/><path class="k" d="M686 556L686 548.3"/><circle class="k dot" cx="686" cy="548.3" r="2.6"/><text class="ts t--math" x="604" y="478">|X(f)|</text><text class="ts t--math" x="716" y="560">f</text></svg><i class="sheet__haze"></i></div>
+    <div class="sheet" data-sheet="enterprise"><svg class="sheet-svg sheet-svg--enterprise" viewBox="0 0 960 640" aria-hidden="true" focusable="false"><rect class="fr0" x="0.8" y="0.8" width="958.5" height="638.5"/><rect class="fr1" x="20" y="20" width="920" height="600"/><path class="fr1" d="M135 20L135 28"/><path class="fr1" d="M135 620L135 612"/><path class="fr1" d="M250 20L250 28"/><path class="fr1" d="M250 620L250 612"/><path class="fr1" d="M365 20L365 28"/><path class="fr1" d="M365 620L365 612"/><path class="fr1" d="M480 20L480 28"/><path class="fr1" d="M480 620L480 612"/><path class="fr1" d="M595 20L595 28"/><path class="fr1" d="M595 620L595 612"/><path class="fr1" d="M710 20L710 28"/><path class="fr1" d="M710 620L710 612"/><path class="fr1" d="M825 20L825 28"/><path class="fr1" d="M825 620L825 612"/><path class="fr1" d="M20 120L28 120"/><path class="fr1" d="M940 120L932 120"/><path class="fr1" d="M20 220L28 220"/><path class="fr1" d="M940 220L932 220"/><path class="fr1" d="M20 320L28 320"/><path class="fr1" d="M940 320L932 320"/><path class="fr1" d="M20 420L28 420"/><path class="fr1" d="M940 420L932 420"/><path class="fr1" d="M20 520L28 520"/><path class="fr1" d="M940 520L932 520"/><rect class="fr1" x="708" y="574" width="232" height="46"/><path class="fr1" d="M708 596L940 596"/><text class="t t--cart" x="720" y="590">ENTERPRISE</text><text class="ts t--cart2" x="720" y="612">COGNIZANT · 2021–2024</text><path class="k2" d="M124 140L156 140"/><path class="k2" d="M140 124L140 156"/><circle class="k2 pierce" cx="140" cy="140" r="6"/><path class="k" d="M150 168H198L214 184V250H150ZM198 168V184H214"/><path class="k2" d="M162 200L200 200"/><path class="k2" d="M162 212L190 212"/><path class="k2" d="M162 224L200 224"/><path class="k" d="M150 290H198L214 306V372H150ZM198 290V306H214"/><path class="k2" d="M162 322L200 322"/><path class="k2" d="M162 334L190 334"/><path class="k2" d="M162 346L200 346"/><path class="k" d="M150 412H198L214 428V494H150ZM198 412V428H214"/><path class="k2" d="M162 444L200 444"/><path class="k2" d="M162 456L190 456"/><path class="k2" d="M162 468L200 468"/><text class="ts" x="150" y="520">REQUESTS</text><path class="k" d="M326 330L366 290L406 330L366 370Z"/><text class="t t--math" x="366" y="335" text-anchor="middle">?</text><text class="ts" x="366" y="278" text-anchor="middle">APPROVE</text><rect class="k" x="452" y="298" width="132" height="64" rx="10"/><text class="t" x="518" y="326" text-anchor="middle">AUTOMATED</text><text class="t" x="518" y="344" text-anchor="middle">FLOW</text><path class="k" d="M648 300A42 11.8 0 0 1 732 300A42 11.8 0 0 1 648 300M648 300V362A42 11.8 0 0 0 732 362V300"/><text class="ts" x="690" y="280" text-anchor="middle">RECORDS</text><rect class="k" x="800" y="178" width="112" height="84" rx="4"/><path class="k2" d="M800 196L912 196"/><rect class="k2" x="816" y="228" width="12" height="26"/><rect class="k2" x="838" y="214" width="12" height="40"/><rect class="k2" x="860" y="221" width="12" height="33"/><rect class="k2" x="882" y="204" width="12" height="50"/><rect class="k" x="800" y="402" width="112" height="84" rx="4"/><path class="k2" d="M800 420L912 420"/><path class="k" d="M812 472L834 454L856 462L878 438L900 444"/><text class="ts" x="856" y="286" text-anchor="middle">DASHBOARDS</text><text class="ts" x="856" y="506" text-anchor="middle">REPORTS</text><path class="ks" d="M484 470A36 10.1 0 0 1 556 470A36 10.1 0 0 1 484 470M484 470V520A36 10.1 0 0 0 556 520V470"/><text class="ts" x="520" y="552" text-anchor="middle">LEGACY</text><path class="k2" d="M556 498L690 498L690 382"/><path class="k2" d="M693.7 390.2L690 382L686.3 390.2"/><text class="ts" x="610" y="488">MIGRATED</text><path class="ks" d="M366 370L366 560L120 560L120 452L146 452"/><path class="ks" d="M137.8 455.7L146 452L137.8 448.3"/><text class="ts" x="240" y="552">RETURNED</text><path class="r" pathLength="1" d="M214 209H290" style="--o:0.06;--d:0.08"/><path class="r" pathLength="1" d="M214 331H290" style="--o:0.1;--d:0.08"/><path class="r" pathLength="1" d="M214 453H290" style="--o:0.14;--d:0.08"/><path class="r" pathLength="1" d="M290 209V453" style="--o:0.14;--d:0.1"/><path class="r" pathLength="1" d="M290 330L324 330" style="--o:0.22;--d:0.06"/><path class="r" pathLength="1" d="M315.8 333.7L324 330L315.8 326.3" style="--o:0.271;--d:0.06"/><path class="r" pathLength="1" d="M406 330L450 330" style="--o:0.3;--d:0.08"/><path class="r" pathLength="1" d="M441.8 333.7L450 330L441.8 326.3" style="--o:0.368;--d:0.06"/><path class="r" pathLength="1" d="M416 316l5 6l11 -14" style="--o:0.34;--d:0.06"/><path class="r" pathLength="1" d="M584 330L646 330" style="--o:0.4;--d:0.08"/><path class="r" pathLength="1" d="M637.8 333.7L646 330L637.8 326.3" style="--o:0.468;--d:0.06"/><path class="r" pathLength="1" d="M732 330L764 330L764 220L798 220" style="--o:0.5;--d:0.14"/><path class="r" pathLength="1" d="M789.8 223.7L798 220L789.8 216.3" style="--o:0.619;--d:0.06"/><path class="r" pathLength="1" d="M764 330L764 444L798 444" style="--o:0.56;--d:0.12"/><path class="r" pathLength="1" d="M789.8 447.7L798 444L789.8 440.3" style="--o:0.662;--d:0.06"/></svg><i class="sheet__haze"></i></div>
+    <div class="sheet" data-sheet="architecture"><svg class="sheet-svg sheet-svg--architecture" viewBox="0 0 960 640" aria-hidden="true" focusable="false"><rect class="fr0" x="0.8" y="0.8" width="958.5" height="638.5"/><rect class="fr1" x="20" y="20" width="920" height="600"/><path class="fr1" d="M135 20L135 28"/><path class="fr1" d="M135 620L135 612"/><path class="fr1" d="M250 20L250 28"/><path class="fr1" d="M250 620L250 612"/><path class="fr1" d="M365 20L365 28"/><path class="fr1" d="M365 620L365 612"/><path class="fr1" d="M480 20L480 28"/><path class="fr1" d="M480 620L480 612"/><path class="fr1" d="M595 20L595 28"/><path class="fr1" d="M595 620L595 612"/><path class="fr1" d="M710 20L710 28"/><path class="fr1" d="M710 620L710 612"/><path class="fr1" d="M825 20L825 28"/><path class="fr1" d="M825 620L825 612"/><path class="fr1" d="M20 120L28 120"/><path class="fr1" d="M940 120L932 120"/><path class="fr1" d="M20 220L28 220"/><path class="fr1" d="M940 220L932 220"/><path class="fr1" d="M20 320L28 320"/><path class="fr1" d="M940 320L932 320"/><path class="fr1" d="M20 420L28 420"/><path class="fr1" d="M940 420L932 420"/><path class="fr1" d="M20 520L28 520"/><path class="fr1" d="M940 520L932 520"/><rect class="fr1" x="708" y="574" width="232" height="46"/><path class="fr1" d="M708 596L940 596"/><text class="t t--cart" x="720" y="590">ARCHITECTURE</text><text class="ts t--cart2" x="720" y="612">ILLUSTRATIVE PATTERN</text><path class="k2" d="M124 140L156 140"/><path class="k2" d="M140 124L140 156"/><circle class="k2 pierce" cx="140" cy="140" r="6"/><rect class="k" x="96" y="176" width="176" height="82" rx="3"/><path class="k" d="M96 206L272 206"/><text class="t" x="108" y="196">DEVICE</text><text class="t t--attr" x="108" y="224">device_id</text><text class="ts" x="260" y="224" text-anchor="end">PK</text><path class="k2" d="M96 232L272 232"/><text class="t t--attr" x="108" y="250">model</text><rect class="k" x="372" y="150" width="216" height="134" rx="3"/><path class="k" d="M372 180L588 180"/><text class="t" x="384" y="170">DEVICE_LOCATION</text><text class="t t--attr" x="384" y="198">device_id</text><text class="ts" x="576" y="198" text-anchor="end">FK</text><path class="k2" d="M372 206L588 206"/><text class="t t--attr" x="384" y="224">location_id</text><text class="ts" x="576" y="224" text-anchor="end">FK</text><path class="k2" d="M372 232L588 232"/><text class="t t--attr" x="384" y="250">valid_from</text><path class="r" pathLength="1" d="M378 254H582" style="--o:0.12;--d:0.1"/><path class="k2" d="M372 258L588 258"/><text class="t t--attr" x="384" y="276">valid_to</text><path class="r" pathLength="1" d="M378 280H582" style="--o:0.18;--d:0.1"/><rect class="k" x="688" y="176" width="176" height="82" rx="3"/><path class="k" d="M688 206L864 206"/><text class="t" x="700" y="196">LOCATION</text><text class="t t--attr" x="700" y="224">location_id</text><text class="ts" x="852" y="224" text-anchor="end">PK</text><path class="k2" d="M688 232L864 232"/><text class="t t--attr" x="700" y="250">name</text><rect class="k" x="372" y="330" width="216" height="108" rx="3"/><path class="k" d="M372 360L588 360"/><text class="t" x="384" y="350">READING</text><text class="t t--attr" x="384" y="378">device_id</text><text class="ts" x="576" y="378" text-anchor="end">FK</text><path class="k2" d="M372 386L588 386"/><text class="t t--attr" x="384" y="404">taken_at</text><path class="k2" d="M372 412L588 412"/><text class="t t--attr" x="384" y="430">value</text><path class="k" d="M272 218L372 218"/><path class="k" d="M272 210L272 226"/><path class="k" d="M372 209L358 218L372 227M372 218H358"/><path class="k" d="M588 218L688 218"/><path class="k" d="M688 210L688 226"/><path class="k" d="M588 209L602 218L588 227M588 218H602"/><path class="k" d="M184 258V378H372"/><path class="k" d="M176 258L192 258"/><path class="k" d="M372 369L358 378L372 387M372 378H358"/><path class="k2" d="M96 512L720 512"/><path class="k2" d="M711.8 515.7L720 512L711.8 508.3"/><text class="ts" x="96" y="542">TIME</text><path class="k2" d="M120 486L120 518"/><path class="r r--thick" pathLength="1" d="M123 498H327" style="--o:0.34;--d:0.12"/><text class="ts" x="225" y="486" text-anchor="middle">LOCATION A</text><path class="k2" d="M330 486L330 518"/><path class="r r--thick" pathLength="1" d="M333 498H517" style="--o:0.44000000000000006;--d:0.12"/><text class="ts" x="425" y="486" text-anchor="middle">LOCATION B</text><path class="k2" d="M520 486L520 518"/><path class="r r--thick" pathLength="1" d="M523 498H697" style="--o:0.54;--d:0.12"/><text class="ts" x="610" y="486" text-anchor="middle">LOCATION A</text><path class="k2" d="M700 486L700 518"/><circle class="k dot" cx="160" cy="512" r="3.2"/><circle class="k dot" cx="214" cy="512" r="3.2"/><circle class="k dot" cx="262" cy="512" r="3.2"/><circle class="k dot" cx="300" cy="512" r="3.2"/><circle class="k dot" cx="372" cy="512" r="3.2"/><circle class="k dot" cx="418" cy="512" r="3.2"/><circle class="k dot" cx="480" cy="512" r="3.2"/><circle class="k dot" cx="556" cy="512" r="3.2"/><circle class="k dot" cx="612" cy="512" r="3.2"/><circle class="k dot" cx="668" cy="512" r="3.2"/><circle class="rr" cx="480" cy="512" r="8" style="--o:0.68;--d:0.06"/><path class="r" pathLength="1" d="M480 503V468H498V448H600" style="--o:0.72;--d:0.16"/><text class="tr" x="606" y="452" style="--o:0.84;--d:0.06">A READING KEEPS</text><text class="tr" x="606" y="470" style="--o:0.88;--d:0.06">ITS LOCATION</text></svg><i class="sheet__haze"></i></div>
+    <div class="sheet" data-sheet="models"><svg class="sheet-svg sheet-svg--models" viewBox="0 0 960 640" aria-hidden="true" focusable="false"><rect class="fr0" x="0.8" y="0.8" width="958.5" height="638.5"/><rect class="fr1" x="20" y="20" width="920" height="600"/><path class="fr1" d="M135 20L135 28"/><path class="fr1" d="M135 620L135 612"/><path class="fr1" d="M250 20L250 28"/><path class="fr1" d="M250 620L250 612"/><path class="fr1" d="M365 20L365 28"/><path class="fr1" d="M365 620L365 612"/><path class="fr1" d="M480 20L480 28"/><path class="fr1" d="M480 620L480 612"/><path class="fr1" d="M595 20L595 28"/><path class="fr1" d="M595 620L595 612"/><path class="fr1" d="M710 20L710 28"/><path class="fr1" d="M710 620L710 612"/><path class="fr1" d="M825 20L825 28"/><path class="fr1" d="M825 620L825 612"/><path class="fr1" d="M20 120L28 120"/><path class="fr1" d="M940 120L932 120"/><path class="fr1" d="M20 220L28 220"/><path class="fr1" d="M940 220L932 220"/><path class="fr1" d="M20 320L28 320"/><path class="fr1" d="M940 320L932 320"/><path class="fr1" d="M20 420L28 420"/><path class="fr1" d="M940 420L932 420"/><path class="fr1" d="M20 520L28 520"/><path class="fr1" d="M940 520L932 520"/><rect class="fr1" x="708" y="574" width="232" height="46"/><path class="fr1" d="M708 596L940 596"/><text class="t t--cart" x="720" y="590">MODELS</text><text class="ts t--cart2" x="720" y="612">M.S. DATA SCIENCE · UAB</text><path class="k2" d="M124 140L156 140"/><path class="k2" d="M140 124L140 156"/><circle class="k2 pierce" cx="140" cy="140" r="6"/><rect class="k2" x="172" y="150" width="92" height="64" rx="2"/><rect class="k2" x="182" y="140" width="92" height="64" rx="2"/><rect class="k2" x="192" y="130" width="92" height="64" rx="2"/><rect class="k" x="202" y="120" width="92" height="64" rx="2"/><text class="ts" x="172" y="238">VIDEO</text><path class="k" d="M172 444L174 451.4L176 442.7L178 450.5L180 450.2L182 437L184 442.6L186 438.5L188 431.6L190 446L192 446.9L194 447.6L196 460.5L198 450.7L200 442.8L202 444L204 427.9L206 428.1L208 440L210 438.7L212 453.9L214 465.3L216 454.7L218 455.2L220 445L222 424.4L224 428.4L226 428.9L228 431.2L230 454.7L232 460.1L234 459.2L236 464.9L238 446.1L240 432.2L242 432.9L244 422L246 430.4L248 448.7L250 448.8L252 460L254 463.6L256 446.2L258 444.5L260 437.8L262 425.1L264 437L266 441.1L268 441.2L270 457.1L272 453.1L274 446.1L276 451.7L278 438.9L280 434.8L282 443.9L284 436.5L286 442L288 452.1L290 442.8L292 447.8L294 450.4"/><text class="ts" x="172" y="496">AUDIO</text><path class="k2" d="M335 414L343 400"/><path class="k2" d="M346.7 414L354.7 400"/><path class="k2" d="M351.3 414L359.3 400"/><path class="k2" d="M359.5 414L367.5 400"/><path class="k2" d="M363 414L371 400"/><path class="k2" d="M366.5 414L374.5 400"/><path class="k2" d="M374.7 414L382.7 400"/><path class="k2" d="M379.3 414L387.3 400"/><path class="k2" d="M391 414L399 400"/><path class="k2" d="M321 432L329 418"/><path class="k2" d="M332.7 432L340.7 418"/><path class="k2" d="M337.3 432L345.3 418"/><path class="k2" d="M345.5 432L353.5 418"/><path class="k2" d="M349 432L357 418"/><path class="k2" d="M352.5 432L360.5 418"/><path class="k2" d="M359.5 432L367.5 418"/><path class="k2" d="M363 432L371 418"/><path class="k2" d="M366.5 432L374.5 418"/><path class="k2" d="M374.7 432L382.7 418"/><path class="k2" d="M379.3 432L387.3 418"/><path class="k2" d="M391 432L399 418"/><path class="k2" d="M405 432L413 418"/><path class="k2" d="M335 450L343 436"/><path class="k2" d="M349 450L357 436"/><path class="k2" d="M360.7 450L368.7 436"/><path class="k2" d="M365.3 450L373.3 436"/><path class="k2" d="M373.5 450L381.5 436"/><path class="k2" d="M377 450L385 436"/><path class="k2" d="M380.5 450L388.5 436"/><path class="k2" d="M388.7 450L396.7 436"/><path class="k2" d="M393.3 450L401.3 436"/><path class="k2" d="M405 450L413 436"/><path class="k2" d="M349 468L357 454"/><path class="k2" d="M363 468L371 454"/><path class="k2" d="M374.7 468L382.7 454"/><path class="k2" d="M379.3 468L387.3 454"/><path class="k2" d="M387.5 468L395.5 454"/><path class="k2" d="M391 468L399 454"/><path class="k2" d="M394.5 468L402.5 454"/><path class="k2" d="M402.7 468L410.7 454"/><path class="k2" d="M407.3 468L415.3 454"/><path class="k2" d="M363 486L371 472"/><path class="k2" d="M377 486L385 472"/><path class="k2" d="M388.7 486L396.7 472"/><path class="k2" d="M393.3 486L401.3 472"/><path class="k2" d="M401.5 486L409.5 472"/><path class="k2" d="M405 486L413 472"/><path class="k2" d="M408.5 486L416.5 472"/><rect class="k" x="318" y="398" width="98" height="90"/><text class="ts" x="318" y="510">MEL SPECTROGRAM</text><path class="k" d="M446 152H552V218H446ZM446 152L460 138H566L552 152M566 138V204L552 218"/><text class="t" x="499" y="192" text-anchor="middle">R3D-18</text><path class="k" d="M446 410H552V476H446ZM446 410L460 396H566L552 410M566 396V462L552 476"/><text class="t" x="499" y="450" text-anchor="middle">RESNET-18</text><rect class="k" x="600" y="126" width="16" height="120"/><path class="k2" d="M600 146L616 146"/><path class="k2" d="M600 166L616 166"/><path class="k2" d="M600 186L616 186"/><path class="k2" d="M600 206L616 206"/><path class="k2" d="M600 226L616 226"/><text class="ts" x="608" y="116" text-anchor="middle">512</text><rect class="k" x="600" y="384" width="16" height="120"/><path class="k2" d="M600 404L616 404"/><path class="k2" d="M600 424L616 424"/><path class="k2" d="M600 444L616 444"/><path class="k2" d="M600 464L616 464"/><path class="k2" d="M600 484L616 484"/><text class="ts" x="608" y="374" text-anchor="middle">512</text><circle class="k" cx="680" cy="315" r="17"/><path class="k" d="M676 307L676 323"/><path class="k" d="M684 307L684 323"/><rect class="k" x="722" y="225" width="16" height="180"/><path class="k2" d="M722 245L738 245"/><path class="k2" d="M722 265L738 265"/><path class="k2" d="M722 285L738 285"/><path class="k2" d="M722 305L738 305"/><path class="k2" d="M722 325L738 325"/><path class="k2" d="M722 345L738 345"/><path class="k2" d="M722 365L738 365"/><path class="k2" d="M722 385L738 385"/><text class="ts" x="730" y="215" text-anchor="middle">1024</text><rect class="k" x="774" y="285" width="62" height="60" rx="6"/><text class="t" x="805" y="320" text-anchor="middle">FC</text><circle class="k" cx="874" cy="281" r="10"/><text class="t" x="891" y="286">REAL</text><circle class="k" cx="874" cy="349" r="10"/><text class="t" x="891" y="354">FAKE</text><path class="r" pathLength="1" d="M298 182L440 182" style="--o:0.06;--d:0.12"/><path class="r" pathLength="1" d="M431.8 185.7L440 182L431.8 178.3" style="--o:0.162;--d:0.06"/><path class="r" pathLength="1" d="M300 444L314 444" style="--o:0.06;--d:0.05"/><path class="r" pathLength="1" d="M305.8 447.7L314 444L305.8 440.3" style="--o:0.103;--d:0.06"/><path class="r" pathLength="1" d="M420 444L440 444" style="--o:0.14;--d:0.05"/><path class="r" pathLength="1" d="M431.8 447.7L440 444L431.8 440.3" style="--o:0.183;--d:0.06"/><path class="r" pathLength="1" d="M568 186L596 186" style="--o:0.22;--d:0.05"/><path class="r" pathLength="1" d="M587.8 189.7L596 186L587.8 182.3" style="--o:0.263;--d:0.06"/><path class="r" pathLength="1" d="M568 444L596 444" style="--o:0.22;--d:0.05"/><path class="r" pathLength="1" d="M587.8 447.7L596 444L587.8 440.3" style="--o:0.263;--d:0.06"/><path class="r" pathLength="1" d="M616 186C652 186 652 293 668 303" style="--o:0.3;--d:0.12"/><path class="r" pathLength="1" d="M616 444C652 444 652 337 668 327" style="--o:0.3;--d:0.12"/><path class="r" pathLength="1" d="M697 315L718 315" style="--o:0.44;--d:0.04"/><path class="r" pathLength="1" d="M709.8 318.7L718 315L709.8 311.3" style="--o:0.474;--d:0.06"/><path class="r" pathLength="1" d="M738 315L770 315" style="--o:0.5;--d:0.04"/><path class="r" pathLength="1" d="M761.8 318.7L770 315L761.8 311.3" style="--o:0.534;--d:0.06"/><path class="r" pathLength="1" d="M836 315H846L864 287" style="--o:0.56;--d:0.06"/><path class="r" pathLength="1" d="M846 315L864 343" style="--o:0.56;--d:0.06"/><path class="r" pathLength="1" d="M926 263h8v104h-8" style="--o:0.64;--d:0.08"/><text class="tr" x="934" y="391" text-anchor="end" style="--o:0.7;--d:0.06">ONE VERDICT</text></svg><i class="sheet__haze"></i></div>
+    <div class="sheet" data-sheet="decisions"><svg class="sheet-svg sheet-svg--decisions" viewBox="0 0 960 640" aria-hidden="true" focusable="false"><rect class="fr0" x="0.8" y="0.8" width="958.5" height="638.5"/><rect class="fr1" x="20" y="20" width="920" height="600"/><path class="fr1" d="M135 20L135 28"/><path class="fr1" d="M135 620L135 612"/><path class="fr1" d="M250 20L250 28"/><path class="fr1" d="M250 620L250 612"/><path class="fr1" d="M365 20L365 28"/><path class="fr1" d="M365 620L365 612"/><path class="fr1" d="M480 20L480 28"/><path class="fr1" d="M480 620L480 612"/><path class="fr1" d="M595 20L595 28"/><path class="fr1" d="M595 620L595 612"/><path class="fr1" d="M710 20L710 28"/><path class="fr1" d="M710 620L710 612"/><path class="fr1" d="M825 20L825 28"/><path class="fr1" d="M825 620L825 612"/><path class="fr1" d="M20 120L28 120"/><path class="fr1" d="M940 120L932 120"/><path class="fr1" d="M20 220L28 220"/><path class="fr1" d="M940 220L932 220"/><path class="fr1" d="M20 320L28 320"/><path class="fr1" d="M940 320L932 320"/><path class="fr1" d="M20 420L28 420"/><path class="fr1" d="M940 420L932 420"/><path class="fr1" d="M20 520L28 520"/><path class="fr1" d="M940 520L932 520"/><rect class="fr1" x="708" y="574" width="232" height="46"/><path class="fr1" d="M708 596L940 596"/><text class="t t--cart" x="720" y="590">DECISIONS</text><text class="ts t--cart2" x="720" y="612">AGENTIC ROUTER</text><path class="k2" d="M124 140L156 140"/><path class="k2" d="M140 124L140 156"/><circle class="k2 pierce" cx="140" cy="140" r="6"/><path class="k" d="M104 286H210V344H138L118 362V344H104Z"/><text class="t" x="157" y="320" text-anchor="middle">REQUEST</text><path class="k2" d="M256 276L328 276"/><path class="k2" d="M256 276L256 348"/><path class="k2" d="M256 294L328 294"/><path class="k2" d="M274 276L274 348"/><path class="k2" d="M256 312L328 312"/><path class="k2" d="M292 276L292 348"/><path class="k2" d="M256 330L328 330"/><path class="k2" d="M310 276L310 348"/><path class="k2" d="M256 348L328 348"/><path class="k2" d="M328 276L328 348"/><path class="k2" d="M260 303l4 5l7 -9"/><path class="k2" d="M278 339l4 5l7 -9"/><path class="k2" d="M296 285l4 5l7 -9"/><path class="k2" d="M314 321l4 5l7 -9"/><text class="ts" x="292" y="372" text-anchor="middle">ROUTE MAP</text><rect class="ks" x="400" y="120" width="196" height="300" rx="14"/><text class="ts" x="414" y="142">LOW-COST POOL</text><rect class="k" x="424" y="146" width="148" height="48" rx="8"/><text class="t" x="498" y="175" text-anchor="middle">CHEAPEST</text><rect class="k" x="424" y="238" width="148" height="48" rx="8"/><text class="t" x="498" y="267" text-anchor="middle">STRONGER</text><rect class="k" x="424" y="330" width="148" height="48" rx="8"/><text class="t" x="498" y="359" text-anchor="middle">TOP OF POOL</text><path class="k2" d="M498 194L498 238"/><path class="k2" d="M498 286L498 330"/><rect class="ks" x="424" y="478" width="148" height="48" rx="8"/><text class="t" x="498" y="507" text-anchor="middle">FRONTIER</text><path class="ks" d="M498 378L498 474"/><path class="ks" d="M494.3 465.8L498 474L501.7 465.8"/><text class="ts" x="510" y="452">FLAGGED</text><path class="k" d="M652 262L690 224L728 262L690 300Z"/><text class="t" x="690" y="267" text-anchor="middle">CHECK</text><path class="k" d="M806 132H900V236L892.2 230L884.3 236L876.5 230L868.7 236L860.8 230L853 236L845.2 230L837.3 236L829.5 230L821.7 236L813.8 230L806 236Z"/><path class="k2" d="M816 148L890 148"/><path class="k2" d="M816 162L872 162"/><path class="k2" d="M816 176L890 176"/><path class="k2" d="M816 190L872 190"/><text class="ts" x="853" y="120" text-anchor="middle">RECEIPT</text><rect class="k" x="806" y="352" width="94" height="84" rx="3"/><path class="k2" d="M806 373L900 373"/><path class="k2" d="M806 394L900 394"/><path class="k2" d="M806 415L900 415"/><path class="k2" d="M846 352L846 436"/><text class="ts" x="853" y="458" text-anchor="middle">BILLING</text><path class="r" pathLength="1" d="M210 315L252 315" style="--o:0.04;--d:0.06"/><path class="r" pathLength="1" d="M243.8 318.7L252 315L243.8 311.3" style="--o:0.091;--d:0.06"/><path class="r" pathLength="1" d="M330 312L370 312L370 170L420 170" style="--o:0.1;--d:0.12"/><path class="r" pathLength="1" d="M411.8 173.7L420 170L411.8 166.3" style="--o:0.202;--d:0.06"/><path class="r" pathLength="1" d="M572 170L690 170L690 221" style="--o:0.22;--d:0.1"/><path class="r" pathLength="1" d="M686.3 212.8L690 221L693.7 212.8" style="--o:0.305;--d:0.06"/><path class="r" pathLength="1" d="M690 302C690 336 612 304 578 276" style="--o:0.34;--d:0.1"/><path class="r" pathLength="1" d="M586.7 278.4L578 276L582 284.1" style="--o:0.43;--d:0.03"/><text class="tr" x="682" y="340" text-anchor="end" style="--o:0.36;--d:0.05">FAIL: CLIMB</text><path class="r" pathLength="1" d="M574 248L624 248L624 262L649 262" style="--o:0.46;--d:0.08"/><path class="r" pathLength="1" d="M640.8 265.7L649 262L640.8 258.3" style="--o:0.528;--d:0.06"/><path class="r" pathLength="1" d="M728 262L760 262L760 184L802 184" style="--o:0.56;--d:0.1"/><path class="r" pathLength="1" d="M793.8 187.7L802 184L793.8 180.3" style="--o:0.645;--d:0.06"/><text class="tr" x="736" y="252" style="--o:0.62;--d:0.05">PASS</text><path class="r" pathLength="1" d="M853 244V346M845 256l8 -12l8 12M845 334l8 12l8 -12" style="--o:0.7;--d:0.1"/><text class="tr" x="843" y="300" text-anchor="end" style="--o:0.78;--d:0.06">RECONCILED</text></svg><i class="sheet__haze"></i></div>
+    <div class="sheet" data-sheet="routes"><svg class="sheet-svg sheet-svg--routes" viewBox="0 0 960 640" aria-hidden="true" focusable="false"><rect class="fr0" x="0.8" y="0.8" width="958.5" height="638.5"/><rect class="fr1" x="20" y="20" width="920" height="600"/><path class="fr1" d="M135 20L135 28"/><path class="fr1" d="M135 620L135 612"/><path class="fr1" d="M250 20L250 28"/><path class="fr1" d="M250 620L250 612"/><path class="fr1" d="M365 20L365 28"/><path class="fr1" d="M365 620L365 612"/><path class="fr1" d="M480 20L480 28"/><path class="fr1" d="M480 620L480 612"/><path class="fr1" d="M595 20L595 28"/><path class="fr1" d="M595 620L595 612"/><path class="fr1" d="M710 20L710 28"/><path class="fr1" d="M710 620L710 612"/><path class="fr1" d="M825 20L825 28"/><path class="fr1" d="M825 620L825 612"/><path class="fr1" d="M20 120L28 120"/><path class="fr1" d="M940 120L932 120"/><path class="fr1" d="M20 220L28 220"/><path class="fr1" d="M940 220L932 220"/><path class="fr1" d="M20 320L28 320"/><path class="fr1" d="M940 320L932 320"/><path class="fr1" d="M20 420L28 420"/><path class="fr1" d="M940 420L932 420"/><path class="fr1" d="M20 520L28 520"/><path class="fr1" d="M940 520L932 520"/><rect class="fr1" x="708" y="574" width="232" height="46"/><path class="fr1" d="M708 596L940 596"/><text class="t t--cart" x="720" y="590">ROUTES</text><text class="ts t--cart2" x="720" y="612">FOUR PROJECTS</text><path class="k2" d="M124 140L156 140"/><path class="k2" d="M140 124L140 156"/><circle class="k2 pierce" cx="140" cy="140" r="6"/><path class="r" pathLength="1" d="M140 146V236" style="--o:0.0;--d:0.12"/><rect class="k" x="92" y="238" width="268" height="236" rx="12"/><path class="k" d="M92 272L360 272"/><text class="t" x="106" y="261">CLASSIFIER</text><text class="ts" x="346" y="261" text-anchor="end">DWELL</text><text class="ts t--row" x="106" y="308">SIGNAL</text><path class="k2 track" d="M224 304L344 304"/><line class="dwell-bar" data-row="0" x1="224" y1="304" x2="224" y2="304"/><text class="ts t--row" x="106" y="344">ENTERPRISE</text><path class="k2 track" d="M224 340L344 340"/><line class="dwell-bar" data-row="1" x1="224" y1="340" x2="224" y2="340"/><text class="ts t--row" x="106" y="380">ARCHITECTURE</text><path class="k2 track" d="M224 376L344 376"/><line class="dwell-bar" data-row="2" x1="224" y1="376" x2="224" y2="376"/><text class="ts t--row" x="106" y="416">MODELS</text><path class="k2 track" d="M224 412L344 412"/><line class="dwell-bar" data-row="3" x1="224" y1="412" x2="224" y2="412"/><text class="ts t--row" x="106" y="452">DECISIONS</text><path class="k2 track" d="M224 448L344 448"/><line class="dwell-bar" data-row="4" x1="224" y1="448" x2="224" y2="448"/><circle class="k dot" cx="360" cy="356" r="5"/><path class="ks route-base" d="M366 356.0H420C470 356.0 470 150 520 150H688"/><path class="r r--route" data-route="router" pathLength="1" d="M366 356.0H420C470 356.0 470 150 520 150H688"/><text class="t t--port" x="530" y="138">AI SYSTEMS</text><circle class="k port" cx="700" cy="150" r="9"/><circle class="port-ring" data-route="router" cx="700" cy="150" r="17"/><path class="ks route-base" d="M366 356.0H420C470 356.0 470 270 520 270H688"/><path class="r r--route" data-route="medicare" pathLength="1" d="M366 356.0H420C470 356.0 470 270 520 270H688"/><text class="t t--port" x="530" y="258">DATA &amp; ANALYTICS</text><circle class="k port" cx="700" cy="270" r="9"/><circle class="port-ring" data-route="medicare" cx="700" cy="270" r="17"/><path class="ks route-base" d="M366 356.0H420C470 356.0 470 390 520 390H688"/><path class="r r--route" data-route="deepfake" pathLength="1" d="M366 356.0H420C470 356.0 470 390 520 390H688"/><text class="t t--port" x="530" y="378">ML &amp; VISION</text><circle class="k port" cx="700" cy="390" r="9"/><circle class="port-ring" data-route="deepfake" cx="700" cy="390" r="17"/><path class="ks route-base" d="M366 356.0H420C470 356.0 470 510 520 510H688"/><path class="r r--route" data-route="secure" pathLength="1" d="M366 356.0H420C470 356.0 470 510 520 510H688"/><text class="t t--port" x="530" y="498">CLOUD &amp; SECURITY</text><circle class="k port" cx="700" cy="510" r="9"/><circle class="port-ring" data-route="secure" cx="700" cy="510" r="17"/></svg><i class="sheet__haze"></i></div>
+  </div>
+</div>
+<!-- Drafting convention: the assembly centre line is drawn over everything. -->
+<svg class="overlay" aria-hidden="true" focusable="false"><path class="axis-line" d="M0 0"/></svg>
+
+<header class="strip">
+  <a class="strip__mark" href="#overview" data-goto="overview">
+    <span class="strip__name">Sravanth Potluri</span>
+    <span class="strip__role">Data architect · AI systems</span>
+  </a>
+  <nav class="strip__nav" aria-label="Sheets">
+    <button class="strip__current" type="button" aria-expanded="false" aria-controls="sheet-list">
+      <span class="strip__k">Sheet</span>
+      <span class="strip__v" data-out="sheet">Overview</span>
+      <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+    </button>
+    <ol class="strip__list" id="sheet-list">
+      <li><a href="#overview" data-goto="overview" aria-current="true">Overview</a></li>
+      <li><a href="#signal" data-goto="signal">Signal</a></li>
+      <li><a href="#enterprise" data-goto="enterprise">Enterprise</a></li>
+      <li><a href="#architecture" data-goto="architecture">Architecture</a></li>
+      <li><a href="#models" data-goto="models">Models</a></li>
+      <li><a href="#decisions" data-goto="decisions">Decisions</a></li>
+      <li><a href="#routes" data-goto="routes">Routes</a></li>
+      <li><a href="#contact" data-goto="contact">Contact</a></li>
+      <li class="strip__list-spec"><button type="button" data-open="spec">Spec sheet</button></li>
+    </ol>
+  </nav>
+  <button class="strip__spec" type="button" data-open="spec">Spec sheet</button>
+  <a class="btn btn--solid strip__cta" href="#contact" data-goto="contact">Get in touch</a>
+</header>
+
+<main class="track" id="top">
+
+  <section class="waypoint" id="overview" data-sc-act="flow" data-span="1.2" data-hold="0 0.62" aria-labelledby="overview-h">
+    <div class="copy copy--hero" data-sc-copy data-win="-1 0 0.5 0.64" data-plate="right">
+      <h1 class="hero-name" id="overview-h"><span>Sravanth</span> <span>Potluri</span></h1>
+      <p class="hero-lede">I design data and AI systems that show their work.</p>
+      <p class="hero-facts">Data architect at Local Grown Salads. M.S. in Data Science. Before that, three years of enterprise BI and automation.</p>
+      <a class="btn btn--solid hero-cta" href="#contact" data-goto="contact">Get in touch</a>
     </div>
+  </section>
 
-    <!-- NAVIGATION BAR (appears on scroll) -->
-    <nav class="navbar" id="navbar">
-        <a href="#" class="nav-brand">SP</a>
-        <ul class="nav-links">
-            <li><a href="#about" class="nav-link">About</a></li>
-            <li><a href="#experience" class="nav-link">Experience</a></li>
-            <li><a href="#projects" class="nav-link">Projects</a></li>
-            <li><a href="#education" class="nav-link">Education</a></li>
-            <li><a href="#certifications" class="nav-link">Certifications</a></li>
-            <li><a href="#contact" class="nav-link">Contact</a></li>
-        </ul>
-    </nav>
+  <section class="waypoint" id="signal" data-sc-act="flow" data-span="1.1" aria-labelledby="signal-h">
+    <div class="copy copy--lead-bottom" data-sc-copy data-plate="right">
+      <h2 class="h" id="signal-h">It started with signals.</h2>
+      <p>B.Tech in Electronics and Communication Engineering at B.V. Raju Institute of Technology, 2017 to 2021. Digital signal processing and communication systems: the craft of turning a continuous world into numbers you can trust.</p>
+    </div>
+  </section>
 
-    <!-- HERO -->
-    <header class="hero" id="hero">
-        <canvas id="hero-canvas"></canvas>
+  <section class="waypoint" id="enterprise" data-sc-act="flow" data-span="1.4" aria-labelledby="enterprise-h">
+    <div class="copy copy--trail-top" data-sc-copy data-plate="left">
+      <h2 class="h" id="enterprise-h">Then three years of enterprise data.</h2>
+      <p>At Cognizant, from 2021 to 2024, I built the reporting and automation layer for a Fortune 500 life-sciences client.</p>
+      <dl class="figures">
+        <div><dt>automated workflows</dt><dd data-count="40" data-suffix="+">40+</dd></div>
+        <div><dt>records through them</dt><dd data-count="10000" data-suffix="+">10,000+</dd></div>
+        <div><dt>less manual work, roughly</dt><dd data-count="80" data-suffix="%">80%</dd></div>
+        <div><dt>SharePoint dashboards</dt><dd data-count="10" data-suffix="+">10+</dd></div>
+      </dl>
+      <p class="small">Plus two Power BI reports, and a legacy SharePoint migration with zero data loss.</p>
+    </div>
+  </section>
 
-        <div class="hero-content">
-            <p class="hero-eyebrow">Data&nbsp;Analyst &middot; Data&nbsp;Architect &middot; LLM&nbsp;Systems</p>
-            <h1 class="typewriter" id="heroName">Sravanth Potluri</h1>
-            <p class="hero-description">I build the path from raw data to a decision someone acts on &mdash; the data model underneath, SQL and Power BI for the reporting layer, and LLM systems when a dashboard isn't enough.</p>
-            <ul class="hero-meta" aria-label="At a glance">
-                <li>Data Architect, Local Grown Salads</li>
-                <li>M.S. Data Science, UAB</li>
-                <li>3 years enterprise BI, Cognizant</li>
-            </ul>
-            <div class="hero-links">
-                <a href="#projects" class="btn-primary">View projects</a>
-                <a href="https://www.linkedin.com/in/sravanth-potluri-001522193/" target="_blank"
-                    rel="noopener noreferrer" class="btn-outline">LinkedIn</a>
-                <a href="https://github.com/potlurisravanth-png" target="_blank" rel="noopener noreferrer"
-                    class="btn-outline">GitHub</a>
-                <a href="mailto:potlurisravanth@gmail.com" class="btn-outline">Email</a>
-            </div>
+  <section class="waypoint" id="architecture" data-sc-act="flow" data-span="1.3" aria-labelledby="architecture-h">
+    <div class="copy copy--split" data-sc-copy data-plate="top">
+      <h2 class="h" id="architecture-h">Now I design the data model.</h2>
+      <div class="split__body">
+        <p>Data Architect at Local Grown Salads since September 2026, designing the data model for an IoT indoor-farming platform: PostgreSQL schemas, device and location history, and data contracts shared across teams.</p>
+        <p class="small">The drawing shows the general pattern behind location history, not a production schema.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="waypoint" id="models" data-sc-act="flow" data-span="1.4" aria-labelledby="models-h">
+    <div class="copy copy--lead-top" data-sc-copy data-plate="right">
+      <h2 class="h" id="models-h">Models that watch and listen.</h2>
+      <p>M.S. in Data Science at the University of Alabama at Birmingham, 2024 to 2026, GPA 3.88. In my deepfake detector, one network watches the lips move, another listens to the voice, and a fusion head weighs both.</p>
+      <p class="stat"><strong>99.81%</strong> validation accuracy on LAV-DF, in three epochs.</p>
+    </div>
+  </section>
+
+  <section class="waypoint" id="decisions" data-sc-act="flow" data-span="1.4" data-hold="0.16 0.86" aria-labelledby="decisions-h">
+    <div class="copy copy--trail-bottom" data-sc-copy data-win="0.06 0.16 0.5 0.6" data-plate="left">
+      <h2 class="h" id="decisions-h">And AI that shows its work.</h2>
+      <p>Agentic Router sends each request to the cheapest model that still gets it right. It checks the answer, climbs to a stronger model when the check fails, and returns a receipt with the real cost.</p>
+    </div>
+    <p class="copy copy--quiet" data-sc-copy data-win="0.62 0.7 0.86 0.95">You’ve been scrolling through a system. Let it route you.</p>
+  </section>
+
+  <section class="waypoint" id="routes" data-sc-act="flow" data-span="2" data-hold="0.12 0.88" aria-labelledby="routes-h">
+    <div class="copy copy--routes" data-sc-copy data-win="0.03 0.13 0.88 0.97" data-plate="left">
+      <div class="routes__head">
+        <h2 class="h" id="routes-h">Routed by how you read.</h2>
+        <p class="routes__lede">A classifier weighed how long you stayed on each sheet and picked the project that fits. Nothing left your browser, and every route stays open.</p>
+      </div>
+      <figure class="receipt" aria-labelledby="receipt-cap">
+        <figcaption class="vh" id="receipt-cap">Routing receipt for this visit</figcaption>
+        <div class="receipt__window">
+          <div class="receipt__paper">
+            <p class="rc rc--title">Routing receipt</p>
+            <dl class="rc-list">
+              <div class="rc"><dt>Request</dt><dd>your reading</dd></div>
+              <div class="rc rc--rule"><dt>Time on sheet</dt><dd></dd></div>
+              <div class="rc rc--sub rc--dwell"><dt>Signal</dt><dd data-dwell="1">0.0 s</dd></div>
+              <div class="rc rc--sub rc--dwell"><dt>Enterprise</dt><dd data-dwell="2">0.0 s</dd></div>
+              <div class="rc rc--sub rc--dwell"><dt>Architecture</dt><dd data-dwell="3">0.0 s</dd></div>
+              <div class="rc rc--sub rc--dwell"><dt>Models</dt><dd data-dwell="4">0.0 s</dd></div>
+              <div class="rc rc--sub rc--dwell"><dt>Decisions</dt><dd data-dwell="5">0.0 s</dd></div>
+              <div class="rc rc--rule rc--weighted"><dt>Weighted</dt><dd></dd></div>
+              <div class="rc rc--sub rc--score"><dt data-score-name="0">AI systems</dt><dd data-score="0">0.00</dd></div>
+              <div class="rc rc--sub rc--score"><dt data-score-name="1">Data &amp; analytics</dt><dd data-score="1">0.00</dd></div>
+              <div class="rc rc--sub rc--score"><dt data-score-name="2">ML &amp; vision</dt><dd data-score="2">0.00</dd></div>
+              <div class="rc rc--sub rc--score"><dt data-score-name="3">Cloud &amp; security</dt><dd data-score="3">0.00</dd></div>
+              <div class="rc rc--rule rc--out"><dt>Routed to</dt><dd data-out="route">Agentic Router</dd></div>
+              <div class="rc rc--why"><dt>Reason</dt><dd data-out="reason">You moved quickly, so it chose the flagship.</dd></div>
+              <div class="rc"><dt>Sent</dt><dd>nothing</dd></div>
+            </dl>
+          </div>
         </div>
+        <div class="receipt__slot"></div>
+      </figure>
+      <ul class="ports">
+        <li><a href="projects/agentic-router/index.html" data-route="router"><span class="ports__cat">AI systems</span><span class="ports__name">Agentic Router</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a></li>
+        <li><a href="projects/medicare-part-d/index.html" data-route="medicare"><span class="ports__cat">Data &amp; analytics</span><span class="ports__name">Medicare Part D</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a></li>
+        <li><a href="projects/deepfake-defender/index.html" data-route="deepfake"><span class="ports__cat">ML &amp; vision</span><span class="ports__name">Deepfake Defender</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a></li>
+        <li><a href="projects/secure-file-sharing/index.html" data-route="secure"><span class="ports__cat">Cloud &amp; security</span><span class="ports__name">Secure File-Sharing</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a></li>
+      </ul>
+      <p class="vh" role="status" aria-live="polite" data-out="status"></p>
+    </div>
+  </section>
 
-        <div class="scroll-indicator" id="scrollIndicator">
-            <span>Scroll</span>
-            <div class="arrow-down"></div>
+  <section class="waypoint" id="contact" data-sc-act="flow" data-span="1" data-hold="0.34 1" aria-labelledby="contact-h">
+    <div class="copy copy--contact" data-sc-copy data-win="0.12 0.3 2 2" data-plate="right">
+      <h2 class="h" id="contact-h">Get in touch</h2>
+      <p class="contact__lede">Hiring for data architecture, analytics or AI systems? Leave a note here, or reach me directly.</p>
+      <form class="form" id="contact-form" action="mailto:potlurisravanth@gmail.com" method="post" enctype="text/plain">
+        <div class="field">
+          <label for="f-name">Name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required>
         </div>
-    </header>
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="field field--wide">
+          <label for="f-company">Company <span class="field__opt">(optional)</span></label>
+          <input id="f-company" name="company" type="text" autocomplete="organization">
+        </div>
+        <div class="field field--wide">
+          <label for="f-message">Message</label>
+          <textarea id="f-message" name="message" rows="3" required></textarea>
+        </div>
+        <div class="form__foot">
+          <button class="btn btn--solid" type="submit">Send message</button>
+          <p class="form__status" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+      <ul class="reach">
+        <li><a class="btn" href="https://www.linkedin.com/in/sravanth-potluri-001522193/" target="_blank" rel="me noopener noreferrer">LinkedIn</a></li>
+        <li><a class="btn" href="https://github.com/potlurisravanth-png" target="_blank" rel="me noopener noreferrer">GitHub</a></li>
+        <li><a class="btn" href="mailto:potlurisravanth@gmail.com">Email</a></li>
+      </ul>
+      <p class="colophon">Drawn by Sravanth Potluri · 2026</p>
+    </div>
+  </section>
 
-    <main>
-        <!-- ABOUT -->
-        <section id="about">
-            <div class="container">
-                <h2 class="section-title">About</h2>
-                <div class="about-grid">
-                    <div class="about-prose">
-                        <p class="about-content about-lead">
-                            Data analyst and data architect with an M.S. in Data Science. At Local Grown Salads I design
-                            the data model for an IoT indoor-farming platform &mdash; PostgreSQL schemas, device and
-                            location history, and data contracts shared across teams.
-                        </p>
-                        <p class="about-content">
-                            Before that, three years at Cognizant building the reporting and automation layer for a
-                            Fortune 500 life-sciences client: 10+ SharePoint dashboards, 2 Power BI reports, and 40+
-                            automated workflows that cut manual effort by roughly 80%. Recent analysis work is on public
-                            Medicare Part D claims data.
-                        </p>
-                        <p class="about-content">
-                            On the AI side I build and evaluate LLM systems &mdash; a cross-provider router that sends
-                            each prompt to the cheapest model that still passes, with an agent mode that plugs into
-                            Claude Code &mdash; and trained a multi-modal deepfake detector on LAV-DF.
-                        </p>
-                    </div>
-                    <aside class="about-facts" aria-label="At a glance">
-                        <dl>
-                            <div>
-                                <dt>Now</dt>
-                                <dd>Data Architect, Local Grown Salads</dd>
-                            </div>
-                            <div>
-                                <dt>Before</dt>
-                                <dd>3 years at Cognizant &mdash; BI and automation for a Fortune 500 life-sciences client</dd>
-                            </div>
-                            <div>
-                                <dt>Education</dt>
-                                <dd>M.S. Data Science, UAB &middot; GPA 3.88</dd>
-                            </div>
-                            <div>
-                                <dt>Toolkit</dt>
-                                <dd>SQL &middot; PostgreSQL &middot; Power BI &middot; Python</dd>
-                            </div>
-                            <div>
-                                <dt>AI work</dt>
-                                <dd>LLM routing &middot; evaluation &middot; MCP agents</dd>
-                            </div>
-                        </dl>
-                    </aside>
-                </div>
-            </div>
-        </section>
+</main>
 
-        <!-- EXPERIENCE -->
-        <section id="experience">
-            <div class="container">
-                <h2 class="section-title">Experience</h2>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <span class="timeline-date">Sep 2026 &ndash; Present</span>
-                        <h3 class="timeline-title">Data Architect</h3>
-                        <p class="timeline-subtitle">Local Grown Salads</p>
-                        <ul>
-                            <li>Designing the data model for an IoT indoor-farming platform &mdash; PostgreSQL schemas, device and location history, and data contracts shared across teams.</li>
-                        </ul>
-                    </div>
-                    <div class="timeline-item">
-                        <span class="timeline-date">Oct 2021 &ndash; Aug 2024</span>
-                        <h3 class="timeline-title">Associate &mdash; SharePoint &amp; Power Platform Developer</h3>
-                        <p class="timeline-subtitle">Cognizant Technology Solutions, Hyderabad</p>
-                        <ul>
-                            <li>Built 10+ SharePoint dashboards and 2 Power BI reports giving client stakeholders self-service visibility into operational and finance data.</li>
-                            <li>Automated 40+ business processes with Power Automate across 10,000+ records, reducing manual workload by roughly 80%.</li>
-                            <li>Migrated legacy SharePoint systems with ShareGate &mdash; zero data loss, minimal downtime.</li>
-                            <li>Gathered requirements directly from business stakeholders and mentored new team members across cross-functional delivery.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+<dialog class="spec" id="spec" aria-labelledby="spec-h">
+  <div class="spec__head">
+    <h2 class="spec__title" id="spec-h">Spec sheet</h2>
+    <button class="spec__close btn" type="button" data-close>Close</button>
+  </div>
+  <table class="bom">
+    <caption class="vh">Experience, education, certifications and toolkit</caption>
+    <thead><tr><th scope="col">Item</th><th scope="col">Detail</th><th scope="col">Dates</th></tr></thead>
+    <tbody>
+      <tr class="bom__group"><th colspan="3" scope="colgroup">Experience</th></tr>
+      <tr><th scope="row">Data Architect</th><td>Local Grown Salads</td><td>Sep 2026 to present</td></tr>
+      <tr><th scope="row">Associate, SharePoint and Power Platform Developer</th><td>Cognizant Technology Solutions, Hyderabad</td><td>Oct 2021 to Aug 2024</td></tr>
+      <tr class="bom__group"><th colspan="3" scope="colgroup">Education</th></tr>
+      <tr><th scope="row">M.S. in Data Science</th><td>University of Alabama at Birmingham · GPA 3.88</td><td>2024 to 2026</td></tr>
+      <tr><th scope="row">B.Tech in Electronics and Communication Engineering</th><td>B.V. Raju Institute of Technology · CGPA 8.20</td><td>2017 to 2021</td></tr>
+      <tr class="bom__group"><th colspan="3" scope="colgroup">Certifications</th></tr>
+      <tr><th scope="row">DP-900, AI-900, AZ-900</th><td colspan="2">Microsoft</td></tr>
+      <tr><th scope="row">Python for Everybody</th><td colspan="2">University of Michigan · Coursera</td></tr>
+      <tr class="bom__group"><th colspan="3" scope="colgroup">Toolkit</th></tr>
+      <tr><th scope="row">Data</th><td colspan="2">SQL, PostgreSQL, Power BI, Python</td></tr>
+      <tr><th scope="row">AI and ML</th><td colspan="2">PyTorch, OpenCV, FFmpeg, MCP</td></tr>
+      <tr><th scope="row">Cloud</th><td colspan="2">AWS (EC2, S3, RDS, Lambda, SES, IAM), Flask</td></tr>
+      <tr><th scope="row">Automation</th><td colspan="2">Power Automate, SharePoint</td></tr>
+    </tbody>
+  </table>
+</dialog>
 
-        <!-- PROJECTS -->
-        <section id="projects">
-            <div class="container">
-                <h2 class="section-title">Projects</h2>
-                <div class="projects-grid">
+<div class="sheet-frame" aria-hidden="true"></div>
 
-                    <article class="project-card featured" data-badge="New">
-                        <div class="project-tags">
-                            <span class="project-tag">SQL</span>
-                            <span class="project-tag">CMS Open Data</span>
-                            <span class="project-tag">Healthcare Analytics</span>
-                            <span class="project-tag">Data Quality</span>
-                        </div>
-                        <h3>Medicare Part D Spend Analytics &mdash; Alabama</h3>
-                        <p>Profiled the complete CMS Medicare Part D prescriber dataset for Alabama &mdash; 18,322
-                            prescribers, $5.35B in drug spend, 32.5M claims &mdash; pulled through the CMS public data
-                            API, with suppression counts cross-validated by two independent methods.</p>
-                        <ul class="project-impact">
-                            <li>Found a <strong>15&times;</strong> gap between mean ($291,946) and median ($19,141) prescriber spend &mdash; enough to invalidate average-based benchmarking and force median-and-percentile peer comparison instead.</li>
-                            <li>Quantified CMS claim-count suppression affecting <strong>41.7%</strong> of prescribers (7,635) before analysis, rather than defaulting suppressed values to zero.</li>
-                            <li>Surfaced an <strong>85.3%</strong> brand share of branded-plus-generic spend, with Nurse Practitioners the largest prescribing group at $1.03B &mdash; 19.3% of state spend.</li>
-                        </ul>
-                        <div class="project-links">
-                            <span class="project-status">Repository and Power BI model in progress</span>
-                        </div>
-                    </article>
-
-                    <article class="project-card badge-outline" data-badge="Active"
-                        data-href="stories/agentic-router.html">
-                        <div class="project-tags">
-                            <span class="project-tag">Python</span>
-                            <span class="project-tag">LLM Routing</span>
-                            <span class="project-tag">MCP</span>
-                            <span class="project-tag">Evaluation</span>
-                        </div>
-                        <h3>Agentic Router</h3>
-                        <p>A cross-provider LLM router that picks the cheapest model that still passes &mdash; and
-                            proves it. Every routed call returns a receipt (tier, models used, real cost), and in-process
-                            cost is reconciled against the provider's billing API, failing loudly on drift.</p>
-                        <ul class="project-impact">
-                            <li><strong>Verifier-bounded routing</strong> &mdash; a cheap model's answer is checked before it is trusted; a failure climbs within the low-cost pool, and anything beyond it is flagged for a frontier model. On 1,095 public benchmark questions the learned route map matched the best single model's accuracy at 54&ndash;68% of its cost.</li>
-                            <li><strong>Pre-registered evaluation</strong> &mdash; experiments are reported whether they pass or fail, and new behavior ships switched off until the evidence is in. A methodology paper is in preparation.</li>
-                            <li><strong>Agent mode (experimental)</strong> &mdash; runs as an MCP server for Claude Code, handing repository tasks to cheaper worker models while Claude reviews the result: 25% cheaper than Claude Opus at low effort on eight real tasks, with every hidden test still passing.</li>
-                        </ul>
-                        <div class="project-links">
-                            <a href="stories/agentic-router.html" target="_blank" class="project-link">Case Study</a>
-                            <a href="https://github.com/potlurisravanth-png/agentic-router" target="_blank"
-                                rel="noopener noreferrer" class="project-link">GitHub</a>
-                        </div>
-                    </article>
-
-                    <article class="project-card"
-                        data-href="stories/deepfake-defender.html">
-                        <div class="project-tags">
-                            <span class="project-tag">PyTorch</span>
-                            <span class="project-tag">OpenCV</span>
-                            <span class="project-tag">FFmpeg</span>
-                        </div>
-                        <h3>Deepfake Defender: Multi-Modal Detection System</h3>
-                        <p>Late-fusion architecture combining a 3D ResNet (R3D-18) for spatial-temporal video features
-                            with a ResNet-18 audio branch operating on Mel-spectrograms &mdash; trained against LAV-DF,
-                            the content-driven deepfake dataset.</p>
-                        <ul class="project-impact">
-                            <li><strong>99.81%</strong> validation accuracy in 3 epochs after a <strong>50&times;</strong> data-pipeline throughput optimization (FFmpeg pre-caching, threaded OpenCV).</li>
-                        </ul>
-                        <div class="project-links">
-                            <a href="stories/deepfake-defender.html" target="_blank" class="project-link">Case Study</a>
-                            <a href="https://github.com/potlurisravanth-png/deepfake-detection-lav-df" target="_blank"
-                                class="project-link">GitHub</a>
-                        </div>
-                    </article>
-
-                    <article class="project-card hidden-project"
-                        data-href="stories/secure-file-sharing.html">
-                        <div class="project-tags">
-                            <span class="project-tag">Python</span>
-                            <span class="project-tag">Flask</span>
-                            <span class="project-tag">AWS</span>
-                        </div>
-                        <h3>Secure File-Sharing Web App</h3>
-                        <p>Flask backend on EC2, S3 object storage, RDS (MySQL) for metadata, and a decoupled
-                            serverless notification layer using S3 events &rarr; Lambda &rarr; SES &mdash; all
-                            scoped with IAM least-privilege roles.</p>
-                        <ul class="project-impact">
-                            <li>Cleanly separates compute, storage, data, and notifications across managed AWS services.</li>
-                        </ul>
-                        <div class="project-links">
-                            <a href="stories/secure-file-sharing.html" target="_blank" class="project-link">Case Study</a>
-                            <a href="https://github.com/potlurisravanth-png/secure-file-sharing-webapp" target="_blank"
-                                class="project-link">GitHub</a>
-                        </div>
-                    </article>
-
-                </div>
-                <div class="more-projects-container">
-                    <button id="moreProjectsBtn" class="btn-toggle" aria-expanded="false">
-                        More Projects <span class="arrow-down-small"></span>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- EDUCATION -->
-        <section id="education">
-            <div class="container">
-                <h2 class="section-title">Education</h2>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <span class="timeline-date">2024 &ndash; 2026</span>
-                        <h3 class="timeline-title">M.S. in Data Science</h3>
-                        <p class="timeline-subtitle">University of Alabama at Birmingham &middot; GPA: 3.88</p>
-                        <ul>
-                            <li>Coursework: machine learning, deep learning, computer vision, natural language processing, statistical analysis, and cloud computing across AWS and Azure.</li>
-                            <li>Architected the <em>Deepfake Defender</em> (a multi-modal detection system using PyTorch and OpenCV), the <em>Agentic Router</em>, and a <em>Secure File-Sharing Web App</em> on AWS.</li>
-                            <li>Bridging academic theory with practical application by building high-throughput data pipelines, training complex neural networks, and deploying cloud architecture.</li>
-                        </ul>
-                    </div>
-                    <div class="timeline-item">
-                        <span class="timeline-date">2017 &ndash; 2021</span>
-                        <h3 class="timeline-title">B.Tech in Electronics and Communication Engineering</h3>
-                        <p class="timeline-subtitle">B.V.Raju Institute of Technology &middot; CGPA: 8.20</p>
-                        <ul>
-                            <li>Gained a strong foundation in hardware-software integration through coursework in Embedded Systems, VLSI Design, and Microprocessors.</li>
-                            <li>Studied advanced analytical subjects including Digital Signal Processing and Communication Systems, developing rigorous mathematical problem-solving skills.</li>
-                            <li>Built foundational programming and technical skills that enabled a seamless transition into enterprise software development and artificial intelligence.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CERTIFICATIONS -->
-        <section id="certifications">
-            <div class="container">
-                <h2 class="section-title">Certifications</h2>
-                <div class="cert-grid">
-                    <div class="cert-card" id="cert-dp900">
-                        <span class="cert-icon" data-icon="award"></span>
-                        <div class="cert-info">
-                            <h4>Azure Data Fundamentals</h4>
-                            <span>DP-900 &middot; Microsoft</span>
-                        </div>
-                    </div>
-                    <a href="https://learn.microsoft.com/api/credentials/share/en-us/sravanthpotluri-5244/87955E698D1A90B9?sharingId=93D3FAC02A6145A4"
-                        target="_blank" class="cert-card" id="cert-ai900">
-                        <span class="cert-icon" data-icon="award"></span>
-                        <div class="cert-info">
-                            <h4>Azure AI Fundamentals</h4>
-                            <span>AI-900 &middot; Microsoft</span>
-                        </div>
-                    </a>
-                    <a href="https://learn.microsoft.com/api/credentials/share/en-us/sravanthpotluri-5244/C42B5CE47432FD79?sharingId=93D3FAC02A6145A4"
-                        target="_blank" class="cert-card" id="cert-az900">
-                        <span class="cert-icon" data-icon="award"></span>
-                        <div class="cert-info">
-                            <h4>Azure Fundamentals</h4>
-                            <span>AZ-900 &middot; Microsoft</span>
-                        </div>
-                    </a>
-                    <a href="https://www.coursera.org/account/accomplishments/certificate/CSJALJKWWRY3" target="_blank"
-                        class="cert-card" id="cert-python">
-                        <span class="cert-icon" data-icon="award"></span>
-                        <div class="cert-info">
-                            <h4>Python for Everybody</h4>
-                            <span>University of Michigan &middot; Coursera</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- CONTACT -->
-        <section id="contact" data-tone="obsidian">
-            <div class="container">
-                <h2 class="section-title">Get in touch</h2>
-                <p class="contact-intro">
-                    Hiring for a data analyst, BI or data architecture role, curious about the Medicare Part D or router work, or want to dig into one of the case studies above? Pick whichever channel is easiest &mdash; they all reach me.
-                </p>
-                <div class="contact-grid">
-                    <a href="mailto:potlurisravanth@gmail.com" class="contact-card">
-                        <span class="channel-icon" data-icon="mail"></span>
-                        <div class="channel-meta">
-                            <div class="channel-label">Email</div>
-                            <div class="channel-value">Send an email</div>
-                        </div>
-                    </a>
-                    <a href="https://www.linkedin.com/in/sravanth-potluri-001522193/" target="_blank" rel="noopener noreferrer" class="contact-card">
-                        <span class="channel-icon" data-icon="linkedin"></span>
-                        <div class="channel-meta">
-                            <div class="channel-label">LinkedIn</div>
-                            <div class="channel-value">@sravanth-potluri</div>
-                        </div>
-                    </a>
-                    <a href="https://github.com/potlurisravanth-png" target="_blank" rel="noopener noreferrer" class="contact-card">
-                        <span class="channel-icon" data-icon="github"></span>
-                        <div class="channel-meta">
-                            <div class="channel-label">GitHub</div>
-                            <div class="channel-value">@potlurisravanth-png</div>
-                        </div>
-                    </a>
-                </div>
-
-                <form class="contact-form" id="contactForm" novalidate>
-                    <label>
-                        <span class="field-label">Your name</span>
-                        <input type="text" id="cf-name" placeholder="Jane Recruiter" autocomplete="name">
-                    </label>
-                    <label>
-                        <span class="field-label">Your email</span>
-                        <input type="email" id="cf-email" placeholder="jane@acme.com" autocomplete="email" required>
-                    </label>
-                    <label class="full">
-                        <span class="field-label">What's the role?</span>
-                        <textarea id="cf-body" placeholder="Data analyst role at &hellip; &mdash; would love to talk about the Medicare Part D work."></textarea>
-                    </label>
-                    <div class="contact-submit-row">
-                        <button type="submit" class="contact-submit">Send via email</button>
-                        <span class="contact-submit-note">Opens your mail client &mdash; no form data is sent or stored.</span>
-                    </div>
-                </form>
-            </div>
-        </section>
-
-    </main>
-
-    <footer>
-        <p>&copy; 2026 Sravanth Potluri. All rights reserved.</p>
-    </footer>
-
-    <!-- Scripts -->
-    <script src="main.js"></script>
-
+<script src="assets/scrollcraft.js"></script>
+<script src="assets/home.js"></script>
+<script src="assets/contact.js"></script>
 </body>
-
 </html>

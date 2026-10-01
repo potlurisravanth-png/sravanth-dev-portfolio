@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Medicare Part D, Alabama · Sravanth Potluri</title>
+<meta name="description" content="Profiling every Medicare Part D prescriber in Alabama from CMS public data: 18,322 prescribers, $5.35B in drug spend, 32.5M claims, and why the analysis benchmarks on medians.">
+<meta name="theme-color" content="#F4F6F8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='26' height='26' rx='2' fill='%23F9FAFA' stroke='%2314181D' stroke-width='2'/%3E%3Ccircle cx='11' cy='11' r='3.5' fill='none' stroke='%23D2381C' stroke-width='2'/%3E%3Cpath d='M11 14.5V27' stroke='%23D2381C' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preload" href="../../assets/fonts/archivo-wdth.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/scrollcraft.css">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/project.css">
+<style>
+  /* A clinical ledger: white stock, navy ink, and an auditor's amber. Amber
+     marks what was checked; it is never used for small type. */
+  :root {
+    --sc-canvas: #F4F6F8;
+    --sc-surface: #FFFFFF;
+    --sc-ink: #0F2338;
+    --sc-ink-soft: #4A5B6D;
+    --sc-accent: #C46A00;
+    --sc-accent-ink: #FFFFFF;
+    --amber-text: #8F4D00;
+    --rule: #D5DCE3;
+    --sc-shadow-color: 212 40% 30%;
+    --sc-gutter: clamp(1.25rem, 5vw, 5rem);
+    --tab-bg: #FFFFFF;
+  }
+  body.medicare { background: var(--sc-canvas); }
+  .medicare .sc-grain { opacity: 0.025; mix-blend-mode: multiply; }
+  .medicare .btn--solid { --btn-bg: var(--sc-ink); --btn-fg: #FFFFFF; --btn-line: var(--sc-ink); }
+  .medicare .tab--cta { background: var(--sc-ink); border-color: var(--sc-ink); color: #FFFFFF; }
+  @media (hover: hover) and (pointer: fine) {
+    .medicare .btn--solid:hover { --btn-bg: #1D3A57; }
+    .medicare .tab--cta:hover { background: #1D3A57; }
+  }
+
+  /* ----------------------------------------------------------------- hero */
+  .hero__stage {
+    height: 100svh;
+    overflow: clip;
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    align-items: center;
+    gap: var(--sc-7);
+    padding: 0 var(--sc-gutter);
+  }
+  .hero__copy .p-h1 { max-width: 9ch; }
+  .hero__copy .p-lede { max-width: 24ch; }
+  .hero__copy .p-meta { margin-bottom: var(--sc-3); }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: var(--sc-ink);
+    font-size: var(--sc-t-sm);
+  }
+  .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--sc-accent); }
+
+  .desk { position: relative; justify-self: center; width: min(620px, 100%); }
+  .sheet-back {
+    position: absolute; inset: 0;
+    background: #FFFFFF;
+    border: 1px solid var(--rule);
+    box-shadow: 0 1px 2px hsl(var(--sc-shadow-color) / 0.08), 0 18px 36px -22px hsl(var(--sc-shadow-color) / 0.35);
+  }
+  .sheet-back--1 { rotate: -3.2deg; translate: -16px 14px; }
+  .sheet-back--2 { rotate: 2deg; translate: 18px 8px; }
+  .ledger {
+    position: relative;
+    padding: 26px 30px 24px 58px;
+    background:
+      linear-gradient(to right, transparent 40px, rgb(196 106 0 / 0.55) 40px, rgb(196 106 0 / 0.55) 41px, transparent 41px),
+      repeating-linear-gradient(to bottom, transparent 0 43px, var(--rule) 43px 44px) 0 72px / 100% calc(100% - 72px) no-repeat,
+      #FFFFFF;
+    border: 1px solid var(--rule);
+    box-shadow: 0 1px 2px hsl(var(--sc-shadow-color) / 0.1), 0 28px 50px -26px hsl(var(--sc-shadow-color) / 0.45);
+  }
+  .ledger__head {
+    display: flex; justify-content: space-between; gap: 12px;
+    height: 46px; margin-bottom: 0; padding-bottom: 10px;
+    border-bottom: 2px solid var(--sc-ink);
+    font-family: var(--sc-font-display); font-stretch: 76%; font-weight: 640;
+    font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sc-ink);
+    align-items: flex-end;
+  }
+  .ledger dl { margin: 0; }
+  .ledger__row { position: relative; display: flex; align-items: baseline; gap: 10px; height: 44px; padding-top: 13px; }
+  .ledger__row dt { flex: 1; min-width: 0; display: flex; gap: 8px; align-items: baseline; color: var(--sc-ink-soft); font-size: 16px; white-space: nowrap; overflow: hidden; }
+  .ledger__row dt::after { content: ""; flex: 1; border-bottom: 1.5px dotted #A9B4BF; translate: 0 -4px; }
+  .ledger__row dd {
+    margin: 0; font-family: var(--sc-font-display); font-stretch: 84%; font-weight: 680;
+    font-size: 20px; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; color: var(--sc-ink);
+  }
+  .tick { position: absolute; left: -40px; top: 11px; width: 22px; height: 22px; }
+  .tick path { fill: none; stroke: var(--sc-accent); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .strike { position: absolute; left: -6px; right: -8px; top: 25px; height: 2.5px; background: var(--sc-accent); }
+  .ledger__row--note { justify-content: flex-end; }
+  .ledger .note {
+    margin: 0; padding: 2px 10px;
+    font-family: var(--sc-font-text); font-style: italic; font-stretch: 100%; font-size: 15px; font-weight: 500; letter-spacing: 0;
+    color: var(--amber-text); background: #FFF8EE; border: 1px solid rgb(196 106 0 / 0.4);
+    rotate: -1.2deg; white-space: nowrap;
+  }
+  .ledger__row--mean dd { color: var(--sc-ink-soft); }
+
+  /* --------------------------------------------------------- benchmark */
+  .bench-sec { padding: var(--sc-section) var(--sc-gutter); }
+  .bench-sec__wrap { max-width: var(--sc-maxw); margin: 0 auto; }
+  .bench-sec__head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--sc-7); align-items: end; margin-bottom: var(--sc-7); }
+  .big {
+    font-family: var(--sc-font-display); font-stretch: 76%; font-weight: 760;
+    font-size: clamp(6rem, 3rem + 10vw, 13rem); line-height: 0.8; letter-spacing: -0.05em; color: var(--sc-ink);
+  }
+  .big em { font-style: normal; color: var(--sc-accent); }
+  .bench { --bench: 291946; position: relative; padding: 34px 0 6px; overflow-x: clip; }
+  .bench[data-mode="median"] { --bench: 19141; }
+  .bench__axis { position: relative; height: 26px; margin-left: 190px; border-top: 1px solid var(--sc-ink); }
+  .bench__axis span {
+    position: absolute; top: 6px; translate: -50% 0;
+    font-family: var(--sc-font-display); font-stretch: 78%; font-weight: 560; font-size: 12px; letter-spacing: 0.06em; color: var(--sc-ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .bench__axis span::before { content: ""; position: absolute; left: 50%; top: -6px; height: 6px; border-left: 1px solid var(--sc-ink); }
+  .bench__axis span:first-child { translate: 0 0; }
+  .bench__axis span:first-child::before { left: 0; }
+  .bench__axis span:last-child { translate: -100% 0; }
+  .bench__axis span:last-child::before { left: auto; right: 0; }
+  .bench__row { display: grid; grid-template-columns: 190px minmax(0, 1fr); align-items: center; height: 64px; }
+  .bench__label { font-family: var(--sc-font-display); font-stretch: 84%; font-weight: 620; font-size: 15px; }
+  .bench__label small { display: block; font-family: var(--sc-font-text); font-weight: 450; font-size: 14px; color: var(--sc-ink-soft); font-variant-numeric: tabular-nums; }
+  .bench__track { position: relative; height: 26px; }
+  .bench__bar { position: absolute; inset: 0; transform-origin: 0 50%; transform: scaleX(calc(var(--v) / 300000)); background: var(--sc-ink); }
+  .bench__bar--mean { background: repeating-linear-gradient(135deg, var(--sc-ink) 0 2px, transparent 2px 7px); outline: 1.5px solid var(--sc-ink); outline-offset: -1.5px; }
+  .bench__rule { position: absolute; left: 190px; right: 0; top: 0; bottom: 0; pointer-events: none; container-type: inline-size; }
+  .bench__line {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+    translate: calc(var(--bench) / 300000 * 100cqw) 0;
+    transition: translate 520ms var(--sc-ease-out);
+  }
+  .bench__line::before { content: ""; position: absolute; left: -1.5px; top: 0; bottom: 0; width: 3px; background: var(--sc-accent); }
+  .bench__line span {
+    position: absolute; left: 8px; top: 0;
+    font-family: var(--sc-font-display); font-stretch: 78%; font-weight: 700; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--amber-text); white-space: nowrap;
+  }
+  .bench[data-mode="mean"] .bench__line span { left: auto; right: 8px; }
+  .toggle { display: inline-flex; margin: var(--sc-6) 0 var(--sc-4); border: 1px solid var(--sc-ink); border-radius: var(--r-2); padding: 3px; background: #FFFFFF; }
+  .toggle button {
+    min-height: 40px; padding: 0 18px; border: 0; border-radius: 3px; background: none; cursor: pointer;
+    font-family: var(--sc-font-display); font-stretch: 84%; font-weight: 640; font-size: 15px; color: var(--sc-ink);
+    transition: background-color 160ms var(--sc-ease-out), color 160ms var(--sc-ease-out);
+  }
+  .toggle button[aria-pressed="true"] { background: var(--sc-ink); color: #FFFFFF; }
+  @media (hover: hover) and (pointer: fine) { .toggle button[aria-pressed="false"]:hover { background: #E8EDF2; } }
+  .bench__read { margin: 0; max-width: 58ch; font-size: var(--sc-t-lg); line-height: 1.45; color: var(--sc-ink); min-height: 2.9em; }
+  .bench__read strong { font-weight: 640; }
+
+  /* -------------------------------------------------------- suppression */
+  .supp { --fill: calc(clamp(0, (var(--sc-p, 0) - 0.06) / 0.5, 1) * 100); }
+  .supp__stage { overflow: clip; height: 100svh; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--sc-8); align-items: center; padding: 0 var(--sc-gutter); }
+  .grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; width: min(460px, 100%); justify-self: end; aspect-ratio: 1; }
+  .c { position: relative; border: 1.5px solid #9FB0C1; background: #FFFFFF; }
+  .c--sup::after {
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(135deg, var(--sc-accent) 0 2px, rgb(196 106 0 / 0.12) 2px 6px);
+    opacity: clamp(0, calc(var(--fill) - var(--i)), 1);
+  }
+  .c--part::after { clip-path: inset(0 30% 0 0); }
+  .supp__copy { max-width: 520px; }
+  .supp__copy .p-h2 { margin-bottom: var(--sc-5); }
+  .rule-line {
+    margin: var(--sc-6) 0 0; padding: 14px 18px; border-left: 3px solid var(--sc-accent); background: #FFFFFF;
+    font-family: var(--sc-font-display); font-stretch: 86%; font-weight: 660; font-size: var(--sc-t-xl); letter-spacing: -0.02em; line-height: 1.1;
+  }
+  .legend { display: flex; gap: 18px; margin-top: var(--sc-5); font-size: var(--sc-t-sm); color: var(--sc-ink-soft); }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .legend i { width: 14px; height: 14px; border: 1.5px solid #9FB0C1; background: #FFFFFF; }
+  .legend i.sup { background: repeating-linear-gradient(135deg, var(--sc-accent) 0 2px, rgb(196 106 0 / 0.12) 2px 6px); }
+
+  /* ---------------------------------------------------------- the rest */
+  .more { padding: var(--sc-section) var(--sc-gutter); }
+  .more__wrap { max-width: var(--sc-maxw); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: var(--sc-8); align-items: start; }
+  .share { margin: var(--sc-5) 0 var(--sc-4); }
+  .share__bar { display: flex; height: 54px; border: 1.5px solid var(--sc-ink); }
+  .share__bar b { display: flex; align-items: center; padding-left: 14px; color: #FFFFFF; background: var(--sc-ink); font-family: var(--sc-font-display); font-stretch: 84%; font-weight: 680; font-size: 18px; font-variant-numeric: tabular-nums; }
+  .share__bar i { display: flex; align-items: center; justify-content: center; font-style: normal; color: var(--sc-ink); background: repeating-linear-gradient(135deg, rgb(15 35 56 / 0.18) 0 1.5px, transparent 1.5px 6px); font-family: var(--sc-font-display); font-stretch: 84%; font-weight: 640; font-size: 14px; }
+  .share__keys { display: flex; justify-content: space-between; margin-top: 8px; font-size: var(--sc-t-sm); color: var(--sc-ink-soft); }
+  .np { margin-top: var(--sc-7); padding-top: var(--sc-5); border-top: 1px solid var(--rule); }
+  .np b { display: block; font-family: var(--sc-font-display); font-stretch: 80%; font-weight: 740; font-size: clamp(2.6rem, 1.8rem + 2vw, 3.6rem); line-height: 0.95; letter-spacing: -0.035em; font-variant-numeric: tabular-nums; }
+  .slip-req { background: #FFFFFF; border: 1px solid var(--rule); box-shadow: 0 1px 2px hsl(var(--sc-shadow-color) / 0.08), 0 24px 44px -28px hsl(var(--sc-shadow-color) / 0.4); padding: 26px 28px 22px; }
+  .slip-req h3 { margin: 0 0 14px; padding-bottom: 12px; border-bottom: 2px solid var(--sc-ink); font-family: var(--sc-font-display); font-stretch: 78%; font-weight: 700; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .slip-req dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 18px; }
+  .slip-req dt { font-family: var(--sc-font-display); font-stretch: 78%; font-weight: 640; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sc-ink-soft); padding-top: 3px; }
+  .slip-req dd { margin: 0; font-size: 15px; line-height: 1.5; }
+
+  .close { background: linear-gradient(to bottom, var(--sc-canvas), #EDF1F5); }
+
+  @media (max-width: 860px) {
+    .hero__stage { grid-template-columns: minmax(0, 1fr); align-content: center; gap: var(--sc-6); padding-top: 70px; }
+    .hero__copy .p-h1 { max-width: none; }
+    .desk { width: 100%; }
+    .ledger { padding: 18px 16px 16px 40px; background:
+      linear-gradient(to right, transparent 26px, rgb(196 106 0 / 0.55) 26px, rgb(196 106 0 / 0.55) 27px, transparent 27px),
+      repeating-linear-gradient(to bottom, transparent 0 33px, var(--rule) 33px 34px) 0 58px / 100% calc(100% - 58px) no-repeat, #FFFFFF; }
+    .ledger__head { height: 40px; font-size: 10.5px; }
+    .ledger__row { height: 34px; padding-top: 9px; }
+    .ledger__row dt { font-size: 13.5px; }
+    .ledger__row dd { font-size: 16px; }
+    .tick { left: -34px; top: 6px; width: 20px; height: 20px; }
+    .strike { top: 18px; }
+    .ledger .note { font-size: 13px; }
+    .bench-sec__head { grid-template-columns: minmax(0, 1fr); gap: var(--sc-4); }
+    .bench__axis { margin-left: 0; }
+    .bench__row { grid-template-columns: 1fr; height: auto; padding: 12px 0; gap: 8px; }
+    .bench__rule { left: 0; }
+    .supp__stage { grid-template-columns: minmax(0, 1fr); align-content: center; gap: var(--sc-6); padding-top: 64px; }
+    .grid { justify-self: start; width: min(300px, 78vw); gap: 4px; }
+    .rule-line { margin-top: var(--sc-4); }
+    .more__wrap { grid-template-columns: minmax(0, 1fr); gap: var(--sc-7); }
+  }
+  @media (max-width: 860px) and (max-height: 760px) {
+    .hero__copy .p-h1 { font-size: 2.6rem; margin-bottom: var(--sc-3); }
+    .hero__copy .p-lede { font-size: 1.1rem; margin-bottom: var(--sc-2); }
+    .ledger__row:nth-of-type(7) { display: none; }
+  }
+</style>
+</head>
+<body class="project medicare">
+<a class="skip" href="#close">Skip to the end</a>
+<div class="sc-grain" aria-hidden="true"></div>
+<a class="tab tab--back" href="../../index.html#routes"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>Back to the drawing <small>Routes</small></a>
+<a class="tab tab--cta" href="../../index.html#contact">Get in touch</a>
+
+<main>
+  <!-- 1. the ledger is audited as you read -->
+  <section class="hero" data-sc-act="pin" data-sc-span="2.2" data-sc-drift="#F4F6F8" aria-labelledby="medicare-h">
+    <div class="hero__stage" data-sc-stage>
+      <div class="hero__copy" data-sc-cue="0 0.98 0 0.08">
+        <h1 class="p-h1" id="medicare-h">Medicare Part D, Alabama</h1>
+        <p class="p-lede">Every prescriber in the state, profiled before a single average was trusted.</p>
+        <p class="p-meta">CMS public data · SQL · Data quality</p>
+        <p class="status">Repository and Power BI model in progress</p>
+      </div>
+      <div class="desk" data-sc-tilt="2">
+        <div class="sheet-back sheet-back--1" data-sc-parallax="-0.04" aria-hidden="true"></div>
+        <div class="sheet-back sheet-back--2" data-sc-parallax="-0.08" aria-hidden="true"></div>
+        <div class="ledger">
+          <div class="ledger__head"><span>Alabama · Part D prescribers</span><span>Profiled</span></div>
+          <dl>
+            <div class="ledger__row"><svg class="tick" viewBox="0 0 22 22" aria-hidden="true" data-sc-cue="0.06 1 0.2 0"><path d="M4 11.5l4.5 5L18 5"/></svg><dt>Prescribers</dt><dd>18,322</dd></div>
+            <div class="ledger__row"><svg class="tick" viewBox="0 0 22 22" aria-hidden="true" data-sc-cue="0.14 1 0.2 0"><path d="M4 11.5l4.5 5L18 5"/></svg><dt>Total drug spend</dt><dd>$5.35B</dd></div>
+            <div class="ledger__row"><svg class="tick" viewBox="0 0 22 22" aria-hidden="true" data-sc-cue="0.22 1 0.2 0"><path d="M4 11.5l4.5 5L18 5"/></svg><dt>Claims</dt><dd>32.5M</dd></div>
+            <div class="ledger__row ledger__row--mean">
+              <dt>Mean spend per prescriber</dt><dd>$291,946</dd>
+              <span class="strike" data-sc-reveal="right" data-sc-reveal-at="0.34 0.48" aria-hidden="true"></span>
+            </div>
+            <div class="ledger__row ledger__row--note"><dd class="note" data-sc-cue="0.46 1 0.15 0">15× the median. Benchmark on the median instead.</dd></div>
+            <div class="ledger__row"><svg class="tick" viewBox="0 0 22 22" aria-hidden="true" data-sc-cue="0.56 1 0.2 0"><path d="M4 11.5l4.5 5L18 5"/></svg><dt>Median spend per prescriber</dt><dd>$19,141</dd></div>
+            <div class="ledger__row"><svg class="tick" viewBox="0 0 22 22" aria-hidden="true" data-sc-cue="0.64 1 0.2 0"><path d="M4 11.5l4.5 5L18 5"/></svg><dt>Suppressed claim counts</dt><dd>41.7%</dd></div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. the bespoke move: re-benchmark it yourself -->
+  <section class="bench-sec" data-sc-act="flow" data-sc-drift="#F7F8FA" aria-labelledby="bench-h">
+    <div class="bench-sec__wrap">
+      <div class="bench-sec__head" data-sc-in data-sc-stagger="70">
+        <p class="big" aria-hidden="true">15<em>×</em></p>
+        <div>
+          <h2 class="p-h2" id="bench-h">The average sat 15 times above the typical prescriber.</h2>
+          <p class="p-body">Prescriber spend is heavily skewed: a few very large prescribers pull the mean far above the median. Move the benchmark and watch what a comparison would say.</p>
+        </div>
+      </div>
+      <div class="bench" data-mode="mean" data-sc-reveal="left" data-sc-reveal-at="0.12 0.42">
+        <div class="bench__axis" aria-hidden="true"><span>$0</span><span style="left:33.333%">$100K</span><span style="left:66.667%">$200K</span><span style="left:100%">$300K</span></div>
+        <div class="bench__row"><span class="bench__label">Median prescriber<small>$19,141</small></span><span class="bench__track"><span class="bench__bar" style="--v:19141"></span></span></div>
+        <div class="bench__row"><span class="bench__label">Mean prescriber<small>$291,946</small></span><span class="bench__track"><span class="bench__bar bench__bar--mean" style="--v:291946"></span></span></div>
+        <div class="bench__rule" aria-hidden="true"><span class="bench__line"><span>Benchmark</span></span></div>
+      </div>
+      <div class="toggle" role="group" aria-label="Benchmark against">
+        <button type="button" aria-pressed="true" data-mode="mean">Mean</button>
+        <button type="button" aria-pressed="false" data-mode="median">Median</button>
+      </div>
+      <p class="bench__read" aria-live="polite" data-read>Against the mean ($291,946), the median prescriber sits <strong>93% below</strong> the benchmark.</p>
+    </div>
+  </section>
+
+  <!-- 3. suppression, cell by cell -->
+  <section class="supp" data-sc-act="pin" data-sc-span="2.4" data-sc-drift="#F4F6F8" aria-labelledby="supp-h">
+    <div class="supp__stage" data-sc-stage>
+      <div class="grid" role="img" aria-label="A grid of 100 squares, one per percent of prescribers; 41.7 of them are hatched to show suppressed counts.">
+        <i class="c" style="--i:0"></i><i class="c" style="--i:1"></i><i class="c" style="--i:2"></i><i class="c" style="--i:3"></i><i class="c c--sup" style="--i:4"></i><i class="c c--sup" style="--i:5"></i><i class="c c--sup" style="--i:6"></i><i class="c c--sup" style="--i:7"></i><i class="c c--sup" style="--i:8"></i><i class="c c--sup" style="--i:9"></i><i class="c" style="--i:10"></i><i class="c c--sup" style="--i:11"></i><i class="c c--sup" style="--i:12"></i><i class="c" style="--i:13"></i><i class="c" style="--i:14"></i><i class="c c--sup" style="--i:15"></i><i class="c" style="--i:16"></i><i class="c c--sup" style="--i:17"></i><i class="c c--sup" style="--i:18"></i><i class="c c--sup" style="--i:19"></i><i class="c" style="--i:20"></i><i class="c" style="--i:21"></i><i class="c" style="--i:22"></i><i class="c" style="--i:23"></i><i class="c" style="--i:24"></i><i class="c" style="--i:25"></i><i class="c" style="--i:26"></i><i class="c c--sup" style="--i:27"></i><i class="c c--sup" style="--i:28"></i><i class="c" style="--i:29"></i><i class="c c--sup" style="--i:30"></i><i class="c" style="--i:31"></i><i class="c" style="--i:32"></i><i class="c" style="--i:33"></i><i class="c" style="--i:34"></i><i class="c c--sup" style="--i:35"></i><i class="c" style="--i:36"></i><i class="c c--sup" style="--i:37"></i><i class="c" style="--i:38"></i><i class="c c--sup" style="--i:39"></i><i class="c" style="--i:40"></i><i class="c c--sup" style="--i:41"></i><i class="c" style="--i:42"></i><i class="c c--sup" style="--i:43"></i><i class="c" style="--i:44"></i><i class="c" style="--i:45"></i><i class="c c--sup" style="--i:46"></i><i class="c" style="--i:47"></i><i class="c" style="--i:48"></i><i class="c" style="--i:49"></i><i class="c c--sup" style="--i:50"></i><i class="c" style="--i:51"></i><i class="c c--sup" style="--i:52"></i><i class="c c--sup" style="--i:53"></i><i class="c c--sup" style="--i:54"></i><i class="c c--sup" style="--i:55"></i><i class="c" style="--i:56"></i><i class="c" style="--i:57"></i><i class="c" style="--i:58"></i><i class="c" style="--i:59"></i><i class="c" style="--i:60"></i><i class="c" style="--i:61"></i><i class="c" style="--i:62"></i><i class="c" style="--i:63"></i><i class="c c--sup" style="--i:64"></i><i class="c" style="--i:65"></i><i class="c" style="--i:66"></i><i class="c" style="--i:67"></i><i class="c c--sup" style="--i:68"></i><i class="c" style="--i:69"></i><i class="c c--sup" style="--i:70"></i><i class="c c--sup" style="--i:71"></i><i class="c c--sup" style="--i:72"></i><i class="c" style="--i:73"></i><i class="c c--sup" style="--i:74"></i><i class="c c--sup" style="--i:75"></i><i class="c" style="--i:76"></i><i class="c c--sup" style="--i:77"></i><i class="c" style="--i:78"></i><i class="c" style="--i:79"></i><i class="c c--sup" style="--i:80"></i><i class="c" style="--i:81"></i><i class="c" style="--i:82"></i><i class="c c--sup" style="--i:83"></i><i class="c" style="--i:84"></i><i class="c c--sup" style="--i:85"></i><i class="c" style="--i:86"></i><i class="c" style="--i:87"></i><i class="c" style="--i:88"></i><i class="c c--sup" style="--i:89"></i><i class="c c--sup" style="--i:90"></i><i class="c" style="--i:91"></i><i class="c" style="--i:92"></i><i class="c" style="--i:93"></i><i class="c" style="--i:94"></i><i class="c c--sup" style="--i:95"></i><i class="c c--sup" style="--i:96"></i><i class="c c--sup c--part" style="--i:97"></i><i class="c" style="--i:98"></i><i class="c" style="--i:99"></i>
+      </div>
+      <div class="supp__copy">
+        <h2 class="p-h2" id="supp-h" data-sc-cue="0 1 0 0.08">41.7% of prescribers had a suppressed count.</h2>
+        <div data-sc-cue="0.18 1 0.2 0.08">
+          <p class="p-body">CMS suppresses small counts to protect patient privacy, and 7,635 Alabama prescribers had at least one claim count withheld. Reading those blanks as zero would understate them, so they were counted and flagged before any analysis, and the count was cross-checked by two independent methods.</p>
+          <p class="legend" aria-hidden="true"><span><i></i>Reported</span><span><i class="sup"></i>Suppressed</span></p>
+        </div>
+        <p class="rule-line" data-sc-cue="0.5 1 0.2 0.08">Empty means suppressed, not zero.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. brand share, the largest group, and how it was pulled -->
+  <section class="more" data-sc-act="flow" data-sc-drift="#F7F8FA" aria-labelledby="more-h">
+    <div class="more__wrap">
+      <div data-sc-in data-sc-stagger="70">
+        <h2 class="p-h2" id="more-h">Where the money went.</h2>
+        <p class="p-body">Brand-name drugs took 85.3% of combined brand and generic spend.</p>
+        <div class="share" data-sc-reveal="left" data-sc-reveal-at="0.2 0.5">
+          <div class="share__bar" role="img" aria-label="Brand 85.3 percent, generic 14.7 percent"><b style="width:85.3%">Brand 85.3%</b><i style="width:14.7%">14.7%</i></div>
+          <div class="share__keys" aria-hidden="true"><span>Branded</span><span>Generic</span></div>
+        </div>
+        <div class="np">
+          <b>$1.03B</b>
+          <p class="p-body">Nurse practitioners were the largest prescribing group: 19.3% of the state’s Part D drug spend.</p>
+        </div>
+      </div>
+      <aside class="slip-req" aria-labelledby="req-h" data-sc-in>
+        <h3 id="req-h">How it was pulled</h3>
+        <dl>
+          <dt>Source</dt><dd>CMS public data API, Medicare Part D prescriber data</dd>
+          <dt>Scope</dt><dd>Alabama, every prescriber: 58 pages of 320 rows, 18,322 prescribers</dd>
+          <dt>Checks</dt><dd>Suppressed counts tallied two independent ways; a blank is suppressed, never zero</dd>
+          <dt>Benchmarks</dt><dd>Medians and percentiles, not means</dd>
+          <dt>Status</dt><dd>Repository and Power BI model in progress</dd>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 5. the close -->
+  <section class="close-act" id="close" data-sc-act="pin" data-sc-span="1.2" data-sc-drift="#EDF1F5" aria-labelledby="close-h">
+    <div data-sc-stage class="close">
+      <div class="close__inner">
+        <h2 class="p-h2" id="close-h" data-sc-cue="0 1 0 0" data-sc-kinetic="lines">Medians, not means.</h2>
+        <div data-sc-cue="0 1 0 0">
+          <p class="p-body">Profiling comes first because it decides whether every chart after it can be trusted. The repository and the Power BI model are in progress.</p>
+          <div class="close__row">
+            <a class="btn btn--solid" href="../../index.html#routes">Back to the drawing</a>
+            <a class="btn" href="../../index.html#contact">Get in touch</a>
+          </div>
+          <a class="close__next" href="../deepfake-defender/index.html">
+            <span class="kicker">Next project</span>
+            <span class="close__next-name">Deepfake Defender <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
+          </a>
+        </div>
+      </div>
+      <footer class="close__foot">
+        <span>Sravanth Potluri · 2026</span>
+        <a href="../agentic-router/index.html">Previous: Agentic Router</a>
+      </footer>
+    </div>
+  </section>
+</main>
+
+<script src="../../assets/scrollcraft.js"></script>
+<script>
+  ScrollCraft.mount(document.body);
+  // Re-benchmark: the same two real figures, judged against either statistic.
+  (function () {
+    var bench = document.querySelector('.bench');
+    var read = document.querySelector('[data-read]');
+    var COPY = {
+      mean: 'Against the mean ($291,946), the median prescriber sits <strong>93% below</strong> the benchmark.',
+      median: 'Against the median ($19,141), half of prescribers sit on each side of the line, so a comparison <strong>means something</strong>.'
+    };
+    document.querySelectorAll('.toggle button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var mode = b.getAttribute('data-mode');
+        bench.setAttribute('data-mode', mode);
+        document.querySelectorAll('.toggle button').forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+        read.innerHTML = COPY[mode];
+      });
+    });
+    // publish the suppression grid's rendered fill for the verification harness
+    var supp = document.querySelector('.supp'), last = '';
+    (function tick() {
+      var p = parseFloat(supp.style.getPropertyValue('--sc-p')) || 0;
+      var fill = Math.round(Math.min(1, Math.max(0, (p - 0.06) / 0.5)) * 100);
+      if (String(fill) !== last) { supp.setAttribute('data-sc-verify-state', 'fill:' + fill); last = String(fill); }
+      requestAnimationFrame(tick);
+    })();
+  })();
+</script>
+</body>
+</html>

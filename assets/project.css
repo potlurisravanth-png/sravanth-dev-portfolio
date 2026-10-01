@@ -1,0 +1,184 @@
+/* ==========================================================================
+   project.css: what the four project pages share. Each page is its own
+   world (its own six tokens, its own composition and bespoke move); this
+   file only carries the way back to the drawing, the close, and a few
+   layout utilities. Two families everywhere: Archivo and Geist.
+   ========================================================================== */
+
+body.project { min-height: 100%; }
+
+/* ---- the way back: two quiet tabs, no bar ------------------------------- */
+.tab {
+  position: fixed;
+  top: 14px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--tab-line, color-mix(in oklab, var(--sc-ink) 28%, transparent));
+  border-radius: var(--r-2);
+  background: var(--tab-bg, color-mix(in oklab, var(--sc-canvas) 94%, transparent));
+  color: var(--sc-ink);
+  font-family: var(--sc-font-display);
+  font-stretch: 84%;
+  font-weight: 620;
+  font-size: 14px;
+  letter-spacing: 0.005em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 160ms var(--sc-ease-out), border-color 160ms var(--sc-ease-out), transform 120ms var(--sc-ease-out);
+}
+.tab svg { width: 16px; height: 16px; flex: none; }
+.tab--back { left: 14px; }
+.tab--back small {
+  font-family: var(--sc-font-display);
+  font-stretch: 76%;
+  font-weight: 560;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sc-ink-soft);
+}
+.tab--cta { right: 14px; background: var(--sc-accent); border-color: var(--sc-accent); color: var(--sc-accent-ink); }
+@media (hover: hover) and (pointer: fine) {
+  .tab--back:hover { border-color: var(--sc-ink); }
+  .tab--cta:hover { background: color-mix(in oklab, var(--sc-accent) 86%, var(--sc-ink)); }
+}
+.tab:active { transform: translateY(1px); }
+@media (max-width: 560px) {
+  .tab { top: 10px; padding: 0 12px; font-size: 13px; }
+  .tab--back { left: 10px; }
+  .tab--cta { right: 10px; }
+  .tab--back small { display: none; }
+}
+
+/* ---- shared type --------------------------------------------------------- */
+.kicker {
+  margin: 0 0 var(--sc-4);
+  font-family: var(--sc-font-display);
+  font-stretch: 76%;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sc-ink-soft);
+}
+.p-h1 {
+  margin: 0 0 var(--sc-5);
+  font-family: var(--sc-font-display);
+  font-stretch: 80%;
+  font-weight: 700;
+  font-size: clamp(3rem, 1.4rem + 5.6vw, 7rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+.p-h2 {
+  margin: 0 0 var(--sc-4);
+  font-family: var(--sc-font-display);
+  font-stretch: 84%;
+  font-weight: 650;
+  font-size: clamp(2rem, 1.2rem + 2.4vw, 3.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.p-h3 {
+  margin: 0 0 var(--sc-2);
+  font-family: var(--sc-font-display);
+  font-stretch: 88%;
+  font-weight: 640;
+  font-size: var(--sc-t-lg);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+.p-lede {
+  margin: 0 0 var(--sc-4);
+  max-width: 30ch;
+  font-family: var(--sc-font-display);
+  font-stretch: 92%;
+  font-weight: 540;
+  font-size: clamp(1.25rem, 0.95rem + 0.9vw, 1.75rem);
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.p-body { margin: 0; max-width: 60ch; color: var(--sc-ink-soft); text-wrap: pretty; }
+.p-body + .p-body { margin-top: var(--sc-3); }
+.p-meta {
+  margin: 0;
+  font-family: var(--sc-font-display);
+  font-stretch: 78%;
+  font-weight: 560;
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sc-ink-soft);
+}
+.p-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--sc-ink);
+  font-family: var(--sc-font-display);
+  font-stretch: 86%;
+  font-weight: 620;
+  text-underline-offset: 0.28em;
+  text-decoration-thickness: 1px;
+}
+.p-link svg { width: 14px; height: 14px; }
+
+/* ---- the close ------------------------------------------------------------ */
+.close-act { position: relative; }
+.close {
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: clamp(5rem, 10vh, 8rem) var(--sc-gutter) var(--sc-6);
+}
+.close__inner { align-self: center; max-width: var(--sc-maxw); width: 100%; margin: 0 auto; }
+.close__next {
+  display: inline-grid;
+  gap: var(--sc-2);
+  margin-top: var(--sc-6);
+  color: var(--sc-ink);
+  text-decoration: none;
+}
+.close__next .kicker { margin: 0; }
+.close__next-name {
+  font-family: var(--sc-font-display);
+  font-stretch: 80%;
+  font-weight: 700;
+  font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6rem);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25em;
+}
+.close__next-name svg { width: 0.5em; height: 0.5em; transition: transform 200ms var(--sc-ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .close__next:hover .close__next-name svg { transform: translate(4px, -4px); }
+}
+.close__row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: var(--sc-6); }
+.close__foot {
+  max-width: var(--sc-maxw);
+  width: 100%;
+  margin: 0 auto;
+  padding-top: var(--sc-5);
+  border-top: 1px solid var(--sc-hairline-strong);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--sc-font-display);
+  font-stretch: 78%;
+  font-weight: 560;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sc-ink-soft);
+}
+.close__foot a { color: inherit; }

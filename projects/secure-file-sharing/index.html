@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Secure File-Sharing on AWS · Sravanth Potluri</title>
+<meta name="description" content="A file-sharing web app on AWS: Flask on EC2, files in S3, metadata in RDS (MySQL), and notifications through Lambda and SES, with IAM roles and security groups for least-privilege access.">
+<meta name="theme-color" content="#E8ECF0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='26' height='26' rx='2' fill='%23F9FAFA' stroke='%2314181D' stroke-width='2'/%3E%3Ccircle cx='11' cy='11' r='3.5' fill='none' stroke='%23D2381C' stroke-width='2'/%3E%3Cpath d='M11 14.5V27' stroke='%23D2381C' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preload" href="../../assets/fonts/archivo-wdth.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/scrollcraft.css">
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/project.css">
+<style>
+  /* A vault: brushed steel in raking daylight, and one steel blue for the
+     path a request is allowed to take. */
+  :root {
+    --sc-canvas: #E8ECF0;
+    --sc-surface: #F5F7F9;
+    --sc-ink: #121820;
+    --sc-ink-soft: #4A5767;
+    --sc-accent: #2B6CB0;
+    --sc-accent-ink: #FFFFFF;
+    --steel-1: #D5DCE3;
+    --steel-2: #C3CCD5;
+    --steel-3: #AEB9C4;
+    --sc-shadow-color: 212 22% 30%;
+    --sc-gutter: clamp(1.25rem, 5vw, 5rem);
+    --tab-bg: #F5F7F9;
+  }
+  body.secure { background: var(--sc-canvas); }
+  .secure .sc-grain { opacity: 0.03; mix-blend-mode: multiply; }
+
+  /* ----------------------------------------------------------------- hero */
+  .hero { --open: clamp(0, calc((var(--sc-p, 0) - 0.08) / 0.5), 1); }
+  .hero__stage {
+    height: 100svh; overflow: clip;
+    display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); align-items: center;
+    padding: 0 0 0 var(--sc-gutter);
+    background: linear-gradient(115deg, rgb(255 255 255 / 0.55) 0%, transparent 45%), var(--sc-canvas);
+  }
+  .hero__copy { position: relative; z-index: 2; max-width: 600px; padding-right: var(--sc-6); }
+  .hero__copy .p-h1 { max-width: 10ch; }
+  .hero__copy .p-lede { max-width: 26ch; }
+  .hero__copy .p-meta { margin-bottom: var(--sc-5); }
+  .wallwrap { position: relative; height: 100%; perspective: 1500px; perspective-origin: 20% 45%; }
+  .wall {
+    position: absolute; left: 4%; top: 50%;
+    width: 920px; translate: 0 -50%;
+    display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px;
+    padding: 14px;
+    background: linear-gradient(180deg, #CDD5DD, #BCC6D0);
+    border-radius: 6px;
+    transform: rotateY(-24deg) rotateX(4deg);
+    transform-origin: 0 50%;
+    box-shadow: 0 40px 80px -40px hsl(var(--sc-shadow-color) / 0.6);
+  }
+  .box { position: relative; aspect-ratio: 1.25; background: #8E9AA6; border-radius: 3px; perspective: 600px; }
+  .door {
+    position: absolute; inset: 0;
+    border-radius: 3px;
+    background:
+      linear-gradient(115deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0) 55%),
+      repeating-linear-gradient(90deg, rgb(255 255 255 / 0.06) 0 1px, transparent 1px 3px),
+      linear-gradient(180deg, var(--steel-1), var(--steel-2));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.8), inset 0 -1px 0 rgb(0 0 0 / 0.12), 0 1px 1px rgb(0 0 0 / 0.08);
+    transform-origin: 0 50%;
+    backface-visibility: hidden;
+  }
+  .key { position: absolute; right: 16%; top: 50%; width: 12px; height: 12px; translate: 0 -50%; border-radius: 50%; background: radial-gradient(circle at 40% 40%, #F4F6F8, #7E8A96); box-shadow: 0 1px 1px rgb(0 0 0 / 0.25); }
+  .key::after { content: ""; position: absolute; left: 50%; top: 55%; width: 2px; height: 5px; translate: -50% 0; background: #39424C; border-radius: 1px; }
+  .hinge { position: absolute; left: 4px; top: 16%; bottom: 16%; width: 3px; border-radius: 2px; background: linear-gradient(#B5BFC9, #8E9AA6); }
+  .door--swing { transform: rotateY(calc(var(--open) * -104deg)); z-index: 2; }
+  .box__inside { position: absolute; inset: 0; border-radius: 3px; background: linear-gradient(180deg, #2A323B, #3C4652); overflow: hidden; display: grid; place-items: center; }
+  .doc { position: relative; width: 34%; aspect-ratio: 0.78; background: #F5F7F9; border-radius: 2px; box-shadow: 0 6px 12px rgb(0 0 0 / 0.35); }
+  .doc::before { content: ""; position: absolute; left: 18%; right: 18%; top: 26%; height: 44%; background: repeating-linear-gradient(to bottom, var(--sc-accent) 0 2px, transparent 2px 7px); opacity: 0.85; }
+  .doc::after { content: ""; position: absolute; right: 0; top: 0; width: 26%; height: 20%; background: linear-gradient(225deg, var(--sc-canvas) 50%, #C9D2DB 50%); }
+
+  /* ------------------------------------------------------- trace (bespoke) */
+  .trace .sc-stage, .trace [data-sc-stage] { height: 100svh; display: flex; align-items: center; overflow: hidden; }
+  .trace__line { position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: color-mix(in oklab, var(--sc-ink) 22%, transparent); }
+  .token {
+    position: absolute; left: 50%; top: 50%; z-index: 3;
+    width: 26px; height: 32px; translate: -50% -50%;
+    background: #FFFFFF; border: 1.5px solid var(--sc-accent); border-radius: 2px;
+    box-shadow: 0 8px 18px -6px hsl(var(--sc-shadow-color) / 0.6);
+    /* arrives once the lead paragraph has slid past the middle */
+    opacity: clamp(0, calc((var(--sc-p, 0) - 0.05) / 0.05), 1);
+  }
+  .token::before { content: ""; position: absolute; left: 5px; right: 5px; top: 9px; height: 12px; background: repeating-linear-gradient(to bottom, var(--sc-accent) 0 1.5px, transparent 1.5px 5px); }
+  .token::after { content: ""; position: absolute; left: 50%; top: calc(100% + 10px); width: 1.5px; height: 18vh; translate: -50% 0; background: linear-gradient(var(--sc-accent), transparent); }
+  .route { list-style: none; margin: 0; align-items: center; gap: 0; padding: 0 50vw 0 var(--sc-gutter); }
+  .nb { white-space: nowrap; }
+  .route__lead { flex: 0 0 min(520px, 82vw); padding-right: var(--sc-8); align-self: center; }
+  .route__lead .p-body { max-width: 36ch; }
+  .stop { position: relative; flex: 0 0 auto; width: clamp(260px, 26vw, 340px); margin-right: clamp(60px, 9vw, 150px); align-self: stretch; display: flex; flex-direction: column; justify-content: center; }
+  .stop__node {
+    position: relative; z-index: 2; align-self: flex-start;
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 10px 16px; margin: 0 0 0 -2px;
+    background: var(--sc-surface); border: 1.5px solid var(--sc-ink); border-radius: var(--r-2);
+    font-family: var(--sc-font-display); font-stretch: 84%; font-weight: 680; font-size: 17px; letter-spacing: 0.01em;
+    box-shadow: var(--sc-edge), 0 6px 14px -8px hsl(var(--sc-shadow-color) / 0.5);
+  }
+  .stop__node::before { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--sc-ink); background: var(--sc-surface); }
+  .stop__card { position: absolute; left: 0; right: 0; padding: 0; }
+  .stop__card--up { bottom: calc(50% + 34px); }
+  .stop__card--down { top: calc(50% + 34px); }
+  .stop__card h3 { margin: 0 0 6px; font-family: var(--sc-font-display); font-stretch: 84%; font-weight: 660; font-size: 1.25rem; letter-spacing: -0.01em; }
+  .stop__card p { margin: 0; color: var(--sc-ink-soft); font-size: 0.98rem; line-height: 1.55; max-width: 34ch; }
+  .stop__card .p-meta { margin-top: 10px; }
+  .fork { position: absolute; left: 10px; width: 2px; background: color-mix(in oklab, var(--sc-ink) 22%, transparent); }
+  .fork--up { bottom: 50%; height: 64px; }
+  .fork--down { top: 50%; height: 64px; }
+  .route__end { flex: 0 0 min(420px, 80vw); align-self: center; }
+  .route__end .p-body { max-width: 34ch; }
+
+  /* ----------------------------------------------------------- guardrails */
+  .guard { padding: var(--sc-section) var(--sc-gutter); }
+  .guard__wrap { max-width: var(--sc-maxw); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--sc-8); align-items: start; }
+  .ledgerlist { list-style: none; margin: var(--sc-5) 0 0; padding: 0; border-top: 1.5px solid var(--sc-ink); }
+  .ledgerlist li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: var(--sc-5); padding: var(--sc-4) 0; border-bottom: 1px solid color-mix(in oklab, var(--sc-ink) 16%, transparent); }
+  .ledgerlist b { font-family: var(--sc-font-display); font-stretch: 80%; font-weight: 680; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; padding-top: 3px; }
+  .ledgerlist span { color: var(--sc-ink-soft); }
+  .later { margin-top: var(--sc-6); padding: var(--sc-5); border: 1.5px dashed color-mix(in oklab, var(--sc-ink) 34%, transparent); border-radius: var(--r-2); }
+  .later h3 { margin: 0 0 8px; font-family: var(--sc-font-display); font-stretch: 80%; font-weight: 680; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .later p { margin: 0; color: var(--sc-ink-soft); }
+
+  .close { background: linear-gradient(115deg, rgb(255 255 255 / 0.5), transparent 50%), var(--sc-canvas); }
+
+  @media (max-width: 860px) {
+    .hero__stage { grid-template-columns: minmax(0, 1fr); align-content: start; padding: 84px var(--sc-gutter) 0; }
+    .hero__copy { padding-right: 0; }
+    .wallwrap { position: absolute; inset: auto 0 0 0; height: 46svh; perspective-origin: 50% 30%; }
+    .wall { left: 8%; width: 640px; gap: 7px; padding: 10px; transform: rotateY(-20deg) rotateX(8deg); }
+    .key { width: 9px; height: 9px; }
+    .route { padding-right: 30vw; }
+    .stop { width: 250px; margin-right: 64px; }
+    .stop__card p { font-size: 0.92rem; }
+    .guard__wrap { grid-template-columns: minmax(0, 1fr); gap: var(--sc-7); }
+    .ledgerlist li { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  }
+  @media (max-width: 860px) and (max-height: 760px) {
+    .hero__copy .p-h1 { font-size: 2.5rem; margin-bottom: var(--sc-3); }
+    .hero__copy .p-lede { font-size: 1.1rem; }
+    .wallwrap { height: 38svh; }
+  }
+</style>
+</head>
+<body class="project secure">
+<a class="skip" href="#close">Skip to the end</a>
+<div class="sc-grain" aria-hidden="true"></div>
+<a class="tab tab--back" href="../../index.html#routes"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>Back to the drawing <small>Routes</small></a>
+<a class="tab tab--cta" href="../../index.html#contact">Get in touch</a>
+
+<main>
+  <!-- 1. the vault: one box opens as you read -->
+  <section class="hero" data-sc-act="pin" data-sc-span="2" data-sc-drift="#E8ECF0" aria-labelledby="sfs-h">
+    <div class="hero__stage" data-sc-stage>
+      <div class="hero__copy" data-sc-cue="0 0.98 0 0.08">
+        <h1 class="p-h1" id="sfs-h">Secure <span class="nb">File-Sharing</span> on AWS</h1>
+        <p class="p-lede">A file-sharing web app split so each service does one job, with only the access it needs.</p>
+        <p class="p-meta">Flask · EC2 · S3 · RDS (MySQL) · Lambda · SES · IAM</p>
+        <a class="p-link" href="https://github.com/potlurisravanth-png/secure-file-sharing-webapp" target="_blank" rel="noopener noreferrer">Code on GitHub <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+      </div>
+      <div class="wallwrap" aria-hidden="true">
+        <div class="wall"><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box box--open"><div class="box__inside"><i class="doc"></i></div><div class="door door--swing"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div><div class="box"><div class="door"><i class="key"></i><i class="hinge"></i></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. the bespoke move: ride one upload along the line -->
+  <section class="trace" data-sc-act="pan" data-sc-span="4.2" data-sc-drift="#EDF0F3" aria-labelledby="trace-h">
+    <div data-sc-stage>
+      <div class="trace__line" aria-hidden="true"></div>
+      <div class="token" aria-hidden="true"></div>
+      <ol class="route" data-sc-pan="0" aria-labelledby="trace-h">
+        <li class="route__lead">
+          <h2 class="p-h2" id="trace-h">Follow one upload.</h2>
+          <p class="p-body">The file in the middle of the screen stays put while the system slides past it. Each stop does one job and holds only the access that job needs.</p>
+        </li>
+        <li class="stop">
+          <span class="stop__node">Browser</span>
+          <div class="stop__card stop__card--up"><h3>The upload</h3><p>A user sends a file through the app’s web form.</p></div>
+        </li>
+        <li class="stop">
+          <span class="stop__node">EC2 · Flask</span>
+          <div class="stop__card stop__card--down"><h3>The web app</h3><p>Python Flask on EC2, with Jinja2 templates, takes the request.</p><p class="p-meta">Security group: who may reach it</p></div>
+        </li>
+        <li class="stop stop--fork">
+          <i class="fork fork--up" aria-hidden="true"></i><i class="fork fork--down" aria-hidden="true"></i>
+          <span class="stop__node">S3 + RDS</span>
+          <div class="stop__card stop__card--up"><h3>S3 keeps the file</h3><p>The upload is stored as an object in S3.</p></div>
+          <div class="stop__card stop__card--down"><h3>RDS keeps the record</h3><p>File metadata and users live in RDS (MySQL).</p></div>
+        </li>
+        <li class="stop">
+          <span class="stop__node">Lambda</span>
+          <div class="stop__card stop__card--up"><h3>Decoupled</h3><p>An S3 event, or an API call, triggers a function, so notifications run apart from the web app.</p></div>
+        </li>
+        <li class="stop">
+          <span class="stop__node">SES</span>
+          <div class="stop__card stop__card--down"><h3>The notification</h3><p>The function sends the email through SES.</p></div>
+        </li>
+        <li class="route__end">
+          <p class="p-body">Behind every hop: IAM roles and security groups, set for least-privilege access.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 3. guardrails, and what is honestly not built yet -->
+  <section class="guard" data-sc-act="flow" data-sc-drift="#E8ECF0" aria-labelledby="guard-h">
+    <div class="guard__wrap">
+      <div data-sc-in data-sc-stagger="70">
+        <h2 class="p-h2" id="guard-h">Least privilege, by design.</h2>
+        <p class="p-body">Compute, storage, data and notifications are separate managed services, and IAM roles and security groups decide what each piece may touch.</p>
+        <div class="later">
+          <h3>On the list, not built</h3>
+          <p>Presigned URLs for direct downloads from S3 are optional, future work, and Auto Scaling for the EC2 tier is a design option, not a running feature.</p>
+        </div>
+      </div>
+      <ul class="ledgerlist" data-sc-in data-sc-stagger="60">
+        <li><b>Frontend</b><span>HTML and CSS through Jinja2 templates</span></li>
+        <li><b>Backend</b><span>Python Flask on EC2</span></li>
+        <li><b>Storage</b><span>S3</span></li>
+        <li><b>Database</b><span>RDS (MySQL), through PyMySQL</span></li>
+        <li><b>Async tasks</b><span>Lambda and SES</span></li>
+        <li><b>AWS access</b><span>Boto3</span></li>
+        <li><b>Configuration</b><span>Environment variables for the database and the bucket</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4. the close -->
+  <section class="close-act" id="close" data-sc-act="pin" data-sc-span="1.2" data-sc-drift="#E8ECF0" aria-labelledby="close-h">
+    <div data-sc-stage class="close">
+      <div class="close__inner">
+        <h2 class="p-h2" id="close-h" data-sc-cue="0 1 0 0" data-sc-kinetic="lines">Every piece holds only the keys it needs.</h2>
+        <div data-sc-cue="0 1 0 0">
+          <p class="p-body">Built on AWS during the M.S. in Data Science at UAB. The code and setup steps are on GitHub.</p>
+          <div class="close__row">
+            <a class="btn btn--solid" href="https://github.com/potlurisravanth-png/secure-file-sharing-webapp" target="_blank" rel="noopener noreferrer">Code on GitHub</a>
+            <a class="btn" href="../../index.html#routes">Back to the drawing</a>
+          </div>
+          <a class="close__next" href="../agentic-router/index.html">
+            <span class="kicker">Next project</span>
+            <span class="close__next-name">Agentic Router <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
+          </a>
+        </div>
+      </div>
+      <footer class="close__foot">
+        <span>Sravanth Potluri · 2026</span>
+        <a href="../deepfake-defender/index.html">Previous: Deepfake Defender</a>
+      </footer>
+    </div>
+  </section>
+</main>
+
+<script src="../../assets/scrollcraft.js"></script>
+<script>
+  ScrollCraft.mount(document.body);
+  // The vault door swings in pure CSS off --sc-p. Publish the rendered angle
+  // so the verification harness can see the hero move.
+  (function () {
+    var hero = document.querySelector('.hero'), last = '';
+    (function tick() {
+      var p = parseFloat(hero.style.getPropertyValue('--sc-p')) || 0;
+      var open = Math.min(1, Math.max(0, (p - 0.08) / 0.5)).toFixed(2);
+      if (open !== last) { hero.setAttribute('data-sc-verify-state', 'door:' + open); last = open; }
+      requestAnimationFrame(tick);
+    })();
+  })();
+</script>
+</body>
+</html>
