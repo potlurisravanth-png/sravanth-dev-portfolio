@@ -43,7 +43,7 @@
     mask-image: radial-gradient(ellipse 70% 60% at 60% 40%, #000 30%, transparent 75%);
   }
   .hero__glow { position: absolute; inset: 0; background: radial-gradient(ellipse 55% 45% at 62% 36%, rgb(214 236 233 / 0.07), transparent 70%); }
-  .hero__strip { position: absolute; left: -6%; width: 116%; top: 13%; rotate: -4deg; filter: drop-shadow(0 30px 40px rgb(0 0 0 / 0.55)); }
+  .hero__strip { position: absolute; left: -6%; width: 116%; top: 13%; rotate: -4deg; border-radius: 6px; box-shadow: 0 30px 40px rgb(0 0 0 / 0.55); }   /* a box shadow is drawn once; a drop-shadow filter on a moving layer is blurred again every frame */
   .strip { display: block; width: 100%; height: auto; }
   .strip__body { fill: #11171A; stroke: rgb(230 239 238 / 0.08); }
   .strip__hole { fill: #05080A; }
@@ -223,7 +223,7 @@
           <p class="p-body">Validation accuracy on LAV-DF, reached in three epochs.</p>
         </div>
         <div>
-          <b><span data-sc-count="1 50" data-sc-count-at="0.32 0.56">50</span><em>×</em></b>
+          <b><span>50</span><em>×</em></b>
           <p class="p-body">Data throughput, from caching the audio offline with FFmpeg and loading frames with threaded OpenCV.</p>
         </div>
       </div>

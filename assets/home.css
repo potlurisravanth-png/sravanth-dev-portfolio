@@ -29,12 +29,21 @@
 html { background: var(--sc-canvas); }
 body.home { min-height: 100%; }
 
+/* The engine publishes each section's progress as --sc-p on every scroll
+   frame. Nothing on this page reads it below the section itself, so stop it
+   inheriting: otherwise every element in the section (the whole receipt, the
+   form) has its style recalculated on every frame of scrolling. */
+@property --sc-p { syntax: '*'; inherits: false; }
+
 /* ---------------------------------------------------------------- paper -- */
 .paper {
   position: fixed;
   inset: -48px;
   z-index: 0;
   pointer-events: none;
+  /* it drifts a fraction of a pixel every frame; without the hint the browser
+     redraws the whole grid at each new sub-pixel offset instead of moving it */
+  will-change: transform;
   background-image:
     linear-gradient(to right, rgb(20 24 29 / 0.06) 1px, transparent 1px),
     linear-gradient(to bottom, rgb(20 24 29 / 0.06) 1px, transparent 1px),
@@ -43,7 +52,9 @@ body.home { min-height: 100%; }
   background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
   background-position: -1px -1px;
 }
-.home .sc-grain { z-index: 2; opacity: 0.035; mix-blend-mode: multiply; }
+/* plain blending: a multiply blend over the moving stage made the compositor
+   copy the whole frame behind the grain on every frame, for a 3.5% texture */
+.home .sc-grain { z-index: 2; opacity: 0.035; }
 
 .sheet-frame {
   position: fixed;
@@ -92,6 +103,9 @@ body.home { min-height: 100%; }
   background: var(--sc-canvas);
   opacity: 0;
   pointer-events: none;
+  /* its own layer, so fading it does not redraw the drawing under it;
+     home.js removes it whenever it is fully clear */
+  will-change: opacity;
 }
 
 /* sheet drawing: ink, soft ink, and the redline that draws on */
@@ -114,7 +128,7 @@ body.home { min-height: 100%; }
 .sheet-svg .r,
 .sheet-svg .rd,
 .sheet-svg .rr,
-.sheet-svg .tr {
+.lbl.tr {
   --p: clamp(0, calc((var(--draw, 0) - var(--o, 0)) / var(--d, 0.3)), 1);
 }
 .sheet-svg .r {
@@ -136,22 +150,37 @@ body.home { min-height: 100%; }
 .sheet-svg .port-ring { fill: none; stroke: var(--sc-accent); stroke-width: calc(1.6px * var(--k, 1)); opacity: 0; }
 .sheet-svg .port-ring.is-on { opacity: 1; }
 
-.sheet-svg text {
+/* Sheet labels are HTML laid over the drawing, in the drawing's own
+   coordinates (build.py labels()): x is where the text starts, or its centre
+   (lbl--m) or end (lbl--e), and y is its baseline, as in SVG. --bl is the
+   font's baseline below the top of a line-height:1 box: (1 + ascent -
+   descent) / 2 em, from the fonts' typo metrics (Archivo 878/-210, Geist
+   1005/-295; both fonts set USE_TYPO_METRICS, so every platform agrees). */
+.sheet-lbls { position: absolute; inset: 0; pointer-events: none; }
+.lbl {
+  --bl: 0.834em;
+  --ax: 0%;
+  position: absolute;
+  white-space: nowrap;
   font-family: var(--sc-font-display);
   font-stretch: 76%;
   font-weight: 560;
   font-size: 13px;
+  line-height: 1;
   letter-spacing: 0.06em;
-  fill: var(--sc-ink);
+  color: var(--sc-ink);
+  translate: var(--ax) calc(-1 * var(--bl));
 }
-.sheet-svg .ts { fill: var(--sc-ink-soft); }
-.sheet-svg .tr { fill: var(--red-text); opacity: var(--p); }
-.sheet-svg .t--math { font-family: var(--sc-font-text); font-style: italic; font-size: 17px; letter-spacing: 0; }
-.sheet-svg .t--attr { font-family: var(--sc-font-text); font-size: 12.5px; letter-spacing: 0; font-weight: 450; }
-.sheet-svg .t--cart { font-weight: 680; font-size: 12px; letter-spacing: 0.1em; }
-.sheet-svg .t--cart2 { font-size: 10.5px; letter-spacing: 0.08em; }
-.sheet-svg .t--port { font-weight: 640; }
-.sheet-svg .t--row { font-size: 11.5px; }
+.lbl--m { --ax: -50%; }
+.lbl--e { --ax: -100%; }
+.lbl.ts { color: var(--sc-ink-soft); }
+.lbl.tr { color: var(--red-text); opacity: var(--p); }
+.lbl.t--math { --bl: 0.855em; font-family: var(--sc-font-text); font-style: italic; font-size: 17px; letter-spacing: 0; }
+.lbl.t--attr { --bl: 0.855em; font-family: var(--sc-font-text); font-size: 12.5px; letter-spacing: 0; font-weight: 450; }
+.lbl.t--cart { font-weight: 680; font-size: 12px; letter-spacing: 0.1em; }
+.lbl.t--cart2 { font-size: 10.5px; letter-spacing: 0.08em; }
+.lbl.t--port { font-weight: 640; }
+.lbl.t--row { font-size: 11.5px; }
 
 /* the assembly centre line, drawn over everything as a drafting convention */
 .overlay {
@@ -464,6 +493,7 @@ body.home { min-height: 100%; }
   letter-spacing: 0.05em;
   text-transform: uppercase;
   transform: translate3d(0, var(--feed, 0px), 0);
+  will-change: transform;   /* moved, not redrawn, as it feeds */
 }
 /* the leading edge of a thermal receipt is cut with a serrated blade */
 .receipt__paper::before {
@@ -545,7 +575,7 @@ body.home { min-height: 100%; }
 
 /* desktop: the project links sit on the drawing's own ports */
 .ports.ports--pinned { display: block; margin: 0; }
-.ports--pinned li { position: fixed; left: 0; top: 0; z-index: 21; }
+.ports--pinned li { position: fixed; left: 0; top: 0; z-index: 21; will-change: transform; }
 .ports--pinned a { flex-direction: row; align-items: center; padding: 9px 32px 9px 12px; translate: 0 -50%; }
 .ports--pinned .ports__cat { display: none; }
 
@@ -710,7 +740,7 @@ body.home { min-height: 100%; }
 @media (max-width: 860px) {
   :root { --inset: 6px; --strip-h: 54px; --pad: 16px; }
 
-  .sheet-svg text { display: none; }
+  .sheet-lbls { display: none; }
 
   .strip__mark { padding: 0 12px; }
   .strip__role { display: none; }
@@ -765,12 +795,15 @@ body.home { min-height: 100%; }
   .reach .btn { padding: 0 14px; }
   .copy .colophon { margin-top: var(--sc-4); }
 
-  .bom th, .bom td { padding: 9px 14px; }
+  .bom th, .bom td { padding: 9px 12px; }
   .bom tbody th[scope="row"] { width: auto; }
+  /* let the dates wrap so the table fits the sheet instead of scrolling sideways */
+  .bom td:last-child { white-space: normal; }
 }
 @media (max-width: 380px) {
   .strip__name { font-size: 12px; }
   .form { grid-template-columns: 1fr; }
+  .bom th, .bom td { padding: 9px 8px; }
 }
 
 /* ------------------------------------------------------------ no script -- */
@@ -780,3 +813,9 @@ body.home { min-height: 100%; }
 .no-js [data-sc-copy] { opacity: 1; pointer-events: auto; }
 .no-js .copy--split .h { margin-bottom: var(--sc-4); }
 .no-js .copy--quiet { text-align: left; margin-top: var(--sc-6); }
+
+/* spec sheet: the current role's duties (from the resume), full width under it */
+.bom .bom__role > * { border-bottom: 0; padding-bottom: 4px; }
+.bom .bom__duties td { padding-top: 0; white-space: normal; }
+.bom__list { margin: 0; padding-left: 1.1em; }
+.bom__list li + li { margin-top: 5px; }

@@ -13,6 +13,9 @@ Every sheet is 960 x 640 user units. Classes are styled in assets/home.css:
     t   label               ts  soft label        tr  red label (draws on)
 
 The red layer starts undrawn and draws once per visit; ink is always present.
+
+Labels are written with text() like any other mark, but they are published as
+HTML on the sheet, not as SVG text (see labels() below).
 """
 import math
 import pathlib
@@ -23,6 +26,10 @@ ROOT = HERE.parent
 
 W, H = 960, 640
 PIERCE = (140, 140)  # where the assembly axis passes through every sheet
+
+# True: labels leave the SVG and ride on the sheet as HTML. False keeps SVG
+# text, which is only used for the stand-alone inspection copies in plates/.
+LABELS_AS_HTML = True
 
 
 def f(v):
@@ -110,9 +117,47 @@ def frame(name, sub):
     return "".join(g)
 
 
+TEXT_RE = re.compile(r'<text class="([^"]*)" x="([^"]*)" y="([^"]*)"((?: [a-z-]+="[^"]*")*)>(.*?)</text>')
+
+
+def labels(markup):
+    """Take every label out of the SVG and return (svg, html_labels).
+
+    The camera rescales the whole stack on every frame, and the browser lays
+    SVG text out again whenever the scale above it changes: ninety labels
+    re-shaped and re-drawn on every frame was most of the lag on the way in.
+    HTML text on the same sheet is not laid out again under a transform. One
+    SVG user unit is one CSS pixel (the sheet is 960 x 640), so x and y carry
+    over unchanged; home.css puts each label's baseline on y."""
+    spans = []
+
+    def take(m):
+        cls, x, y, rest, s = m.groups()
+        anchor = re.search(r'text-anchor="(\w+)"', rest)
+        style = re.search(r'style="([^"]*)"', rest)
+        size = re.search(r'font-size="([^"]*)"', rest)
+        a = {"middle": " lbl--m", "end": " lbl--e"}.get(anchor.group(1) if anchor else "", "")
+        st = f"left:{x}px;top:{y}px"
+        if size:
+            st += f";font-size:{size.group(1)}px"
+        if style:
+            st += ";" + style.group(1)
+        spans.append(f'<span class="lbl {cls}{a}" style="{st}">{s}</span>')
+        return ""
+
+    out = TEXT_RE.sub(take, markup)
+    if "<text" in out:
+        raise SystemExit("a label did not match TEXT_RE")
+    return out, "".join(spans)
+
+
 def svg(slug, name, sub, body):
-    return (f'<svg class="sheet-svg sheet-svg--{slug}" viewBox="0 0 {W} {H}" '
-            f'aria-hidden="true" focusable="false">{frame(name, sub)}{body}</svg>')
+    out = (f'<svg class="sheet-svg sheet-svg--{slug}" viewBox="0 0 {W} {H}" '
+           f'aria-hidden="true" focusable="false">{frame(name, sub)}{body}</svg>')
+    if not LABELS_AS_HTML:
+        return out
+    out, spans = labels(out)
+    return out + f'<div class="sheet-lbls">{spans}</div>'
 
 
 # --------------------------------------------------------------- SIGNAL --
@@ -571,7 +616,9 @@ def main():
     if "<!--@plate:" in out:
         raise SystemExit("unreplaced plate marker")
     (ROOT / "index.html").write_text(out, encoding="utf-8")
-    # also emit each plate on its own for inspection
+    # also emit each plate on its own for inspection (with its labels as SVG text)
+    global LABELS_AS_HTML
+    LABELS_AS_HTML = False
     dbg = HERE / "plates"
     dbg.mkdir(exist_ok=True)
     for k, fn in PLATES.items():

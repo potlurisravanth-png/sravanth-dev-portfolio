@@ -121,6 +121,7 @@
     buildKnots();
     computePoses();
     layoutReceipt();
+    cleared = false;   // the hidden receipt's offset depends on its new height
   }
 
   // Scroll (in viewport heights) to camera parameter s. Each waypoint arrives
@@ -167,12 +168,53 @@
       .rotateAxisAngle(0, 0, 1, p.rz)
       .translate(0, 0, p.fi * G * p.ex);
   }
-  function project(M, x, y, z) {
-    var X = M.m11 * x + M.m21 * y + M.m31 * z + M.m41;
-    var Y = M.m12 * x + M.m22 * y + M.m32 * z + M.m42;
-    var Z = M.m13 * x + M.m23 * y + M.m33 * z + M.m43;
-    var f = D / Math.max(D - Z, 1);
-    return [vw / 2 + X * f, vh / 2 + Y * f];
+  function camPoint(M, x, y, z) {
+    return [M.m11 * x + M.m21 * y + M.m31 * z + M.m41,
+            M.m12 * x + M.m22 * y + M.m32 * z + M.m42,
+            M.m13 * x + M.m23 * y + M.m33 * z + M.m43];
+  }
+  function toScreen(c) {
+    var f = D / Math.max(D - c[2], 1);
+    return [vw / 2 + c[0] * f, vh / 2 + c[1] * f];
+  }
+  function project(M, x, y, z) { return toScreen(camPoint(M, x, y, z)); }
+
+  // The assembly centre line runs through every sheet and passes close to the
+  // camera, so projected as it stands its ends can land hundreds of thousands
+  // of pixels off screen, and the browser then rasters a layer that size on
+  // every frame. Clip it to a near plane, then to the screen. The dash pattern
+  // (26 6 3 6 = 41px) stays pinned to the top sheet's pierce point.
+  var AXIS_DASH = 41;
+  function axisPath(M, ex) {
+    var a = camPoint(M, PIERCE[0], PIERCE[1], G * ex * 0.9);
+    var b = camPoint(M, PIERCE[0], PIERCE[1], -(NS - 1) * G * ex - G * ex * 0.9);
+    var zmax = D * 0.8;
+    var cut = function (p, q) {
+      var t = (zmax - p[2]) / (q[2] - p[2]);
+      return [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t, zmax];
+    };
+    if (a[2] > zmax && b[2] > zmax) return null;
+    if (a[2] > zmax) a = cut(a, b); else if (b[2] > zmax) b = cut(b, a);
+    var p = toScreen(a), q = toScreen(b);
+    var dx = q[0] - p[0], dy = q[1] - p[1], t0 = 0, t1 = 1, m = 40;
+    var P = [-dx, dx, -dy, dy], Q = [p[0] + m, vw + m - p[0], p[1] + m, vh + m - p[1]];
+    for (var i = 0; i < 4; i++) {
+      if (P[i] === 0) { if (Q[i] < 0) return null; continue; }
+      var r = Q[i] / P[i];
+      if (P[i] < 0) { if (r > t1) return null; if (r > t0) t0 = r; }
+      else { if (r < t0) return null; if (r < t1) t1 = r; }
+    }
+    var sx = p[0] + dx * t0, sy = p[1] + dy * t0, len = Math.sqrt(dx * dx + dy * dy) || 1;
+    var off = 0, o = camPoint(M, PIERCE[0], PIERCE[1], 0);
+    if (o[2] < zmax) {
+      o = toScreen(o);
+      var along = ((o[0] - sx) * dx + (o[1] - sy) * dy) / len;
+      off = ((-along % AXIS_DASH) + AXIS_DASH) % AXIS_DASH;
+    }
+    return {
+      d: 'M' + sx.toFixed(1) + ' ' + sy.toFixed(1) + 'L' + (p[0] + dx * t1).toFixed(1) + ' ' + (p[1] + dy * t1).toFixed(1),
+      off: off.toFixed(1)
+    };
   }
   function bbox(p) {
     var M = matrixFor(p), x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
@@ -374,7 +416,10 @@
   }
 
   // ---- render ---------------------------------------------------------------
-  var lastVerify = '', lastCopyState = '', kSet = 0;
+  var lastVerify = '', lastCopyState = '', kSet = [0, 0, 0, 0, 0, 0], axisD = null, axisO = null, cleared = false;
+  // only write an SVG attribute when its value changes: every write, even of
+  // the same value, makes the browser lay the drawing out and redraw it
+  function setX2(b, v) { if (b._x2 !== v) { b.setAttribute('x2', v); b._x2 = v; } }
   function render(now) {
     requestAnimationFrame(render);
     var dt = lastT ? Math.min(100, now - lastT) : 16;
@@ -383,8 +428,10 @@
     var y = clamp(scrollY, 0, maxY);
     var yv = y / vh;
     var target = sAt(yv);
+    // the camera eases after the scroll, by elapsed time rather than by frame,
+    // so a slow or dropped frame never leaves it trailing further behind
     if (s < 0 || reduce || Math.abs(target - s) > 0.35) s = target;
-    else s += (target - s) * 0.2;
+    else s += (target - s) * (1 - Math.pow(0.76, dt / 16.7));
     if (Math.abs(target - s) < 0.0004) s = target;
 
     var fine = fineMQ.matches && !reduce;
@@ -433,8 +480,14 @@
     var M = matrixFor(pose);
     if (moved || !render._done) {
       scene.style.transform = M.toString();
-      var kq = Math.round(clamp(0.95 / (pose.sc * (pose.m > 0.5 ? 1 : 0.8)), 1, 2.8) * 4) / 4;
-      if (kq !== kSet) { stage.style.setProperty('--k', kq); kSet = kq; }
+      // Line weight follows the camera so a far-off sheet still reads, in
+      // quarter steps. Each step redraws a sheet, so the sheets take their steps
+      // at slightly different moments rather than all six on the same frame.
+      var kBase = clamp(0.95 / (pose.sc * lerp(0.8, 1, ease(pose.m))), 1, 2.8);
+      for (var ki = 0; ki < NS; ki++) {
+        var kq = clamp(Math.round((kBase + (ki - 2.5) * 0.04) * 4) / 4, 1, 2.75);
+        if (kq !== kSet[ki]) { sheets[ki].style.setProperty('--k', kq); kSet[ki] = kq; }
+      }
       stage.style.opacity = stageOp.toFixed(3);
 
       // the authored silence: the Decisions sheet empties to bare paper before the peak
@@ -458,22 +511,30 @@
         el.style.transform = 'translate3d(0,0,' + z.toFixed(1) + 'px)';
         el.style.opacity = op.toFixed(3);
         el.style.visibility = op < 0.003 ? 'hidden' : '';
-        hazes[i].style.opacity = haze.toFixed(3);
+        // the haze is its own layer while it shows, and gone when it is clear
+        var hz = hazes[i], hs = haze > 0.002 ? haze.toFixed(3) : '0';
+        if (hz._o !== hs) {
+          hz._o = hs;
+          hz.style.opacity = hs;
+          hz.style.display = hs === '0' ? 'none' : '';
+        }
       }
 
       // the assembly centre line, through every sheet's pierce point
       var ax = band(10, 26, pose.rx) * stageOp;
-      if (ax > 0.002) {
-        var top = project(M, PIERCE[0], PIERCE[1], G * pose.ex * 0.9);
-        var bot = project(M, PIERCE[0], PIERCE[1], -(NS - 1) * G * pose.ex - G * pose.ex * 0.9);
-        axisLine.setAttribute('d', 'M' + top[0].toFixed(1) + ' ' + top[1].toFixed(1) + 'L' + bot[0].toFixed(1) + ' ' + bot[1].toFixed(1));
-      }
-      axisLine.style.opacity = ax.toFixed(3);
+      var seg = ax > 0.002 ? axisPath(M, pose.ex) : null;
+      var axd = seg ? seg.d : 'M0 0', axo = seg ? seg.off : '0';
+      if (axd !== axisD) { axisLine.setAttribute('d', axd); axisD = axd; }
+      if (axo !== axisO) { axisLine.style.strokeDashoffset = axo; axisO = axo; }
+      axisLine.style.opacity = seg ? ax.toFixed(3) : '0';
 
-      // paper drifts a little slower than the drawing: the desk under the sheets
+      // paper drifts a little slower than the drawing: the desk under the
+      // sheets. Whole device pixels, so its hairlines stay crisp.
       var gx = -pose.ox * 0.04 + (fine ? ptr.x * 6 : 0);
-      var gy = -pose.oy * 0.04 + (fine ? ptr.y * 6 : 0) - yv * 6;
-      paper.style.transform = 'translate3d(' + gx.toFixed(1) + 'px,' + (gy % 120).toFixed(1) + 'px,0)';
+      var gy = (-pose.oy * 0.04 + (fine ? ptr.y * 6 : 0) - yv * 6) % 120;
+      var dpr = devicePixelRatio || 1;
+      paper.style.transform = 'translate3d(' + (Math.round(gx * dpr) / dpr).toFixed(2) + 'px,' +
+        (Math.round(gy * dpr) / dpr).toFixed(2) + 'px,0)';
       render._done = true;
     }
 
@@ -488,10 +549,11 @@
 
     // ---- routes sheet: classifier bars, the chosen route, the receipt
     if (decided) {
+      cleared = false;
       bars.forEach(function (b, j) {
-        var x1 = parseFloat(b.getAttribute('x1'));
+        var x1 = b._x1 != null ? b._x1 : (b._x1 = parseFloat(b.getAttribute('x1')));
         var len = Math.max(4, 120 * barNorm[j] * easeOut(barFill));
-        b.setAttribute('x2', (x1 + len).toFixed(1));
+        setX2(b, (x1 + len).toFixed(1));
       });
       routePaths[pick].style.setProperty('--draw', routeDraw.toFixed(3));
       portRings[pick].classList.toggle('is-on', routeDraw > 0.98);
@@ -500,12 +562,13 @@
       for (var r = 0; r < vis.length; r++) vis[r].classList.toggle('is-on', r < nOn);
       var shown = nOn ? rowBottoms[nOn - 1] + (nOn === vis.length ? 16 : 6) : 0;
       paperEl.style.setProperty('--feed', Math.max(0, paperH - shown).toFixed(0) + 'px');
-    } else if (paperEl) {
+    } else if (paperEl && !cleared) {
+      cleared = true;
       (rows._vis || rows).forEach(function (r) { r.classList.remove('is-on'); });
       paperEl.style.setProperty('--feed', (paperH + 20) + 'px');
       routePaths.forEach(function (p) { p.style.setProperty('--draw', 0); });
       portRings.forEach(function (r) { r.classList.remove('is-on'); });
-      bars.forEach(function (b) { b.setAttribute('x2', b.getAttribute('x1')); });
+      bars.forEach(function (b) { setX2(b, b.getAttribute('x1')); });
     }
 
     // ---- copy
@@ -542,11 +605,14 @@
       }
     }
 
-    // ---- counters (real figures only)
+    // ---- counters (real figures only). Each counts up once, over about a
+    // second, when its sheet's copy appears. They used to follow the scroll,
+    // which left a reader who stopped mid-sheet looking at a half-counted
+    // figure (33+ workflows instead of 40+).
     counters.forEach(function (c) {
       var uk = u[c.k];
-      var want = reduce ? (uk > 0.04 ? 1 : 0) : clamp01((uk - 0.12) / 0.4);
-      if (want > c.p) c.p = want;
+      if (!c.go && uk > 0.1 && uk < 1.2) c.go = true;
+      if (c.go && c.p < 1) c.p = reduce ? 1 : Math.min(1, c.p + dt / 1100);
       var txt = c.fmt(c.target * easeOut(c.p));
       if (txt !== c.txt) { c.el.textContent = txt; c.txt = txt; }
     });

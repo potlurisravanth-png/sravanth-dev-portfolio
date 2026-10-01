@@ -30,7 +30,7 @@
     --tab-bg: #F5F7F9;
   }
   body.secure { background: var(--sc-canvas); }
-  .secure .sc-grain { opacity: 0.03; mix-blend-mode: multiply; }
+  .secure .sc-grain { opacity: 0.03; }   /* no blend mode: it made every frame copy the page behind the grain */
 
   /* ----------------------------------------------------------------- hero */
   .hero { --open: clamp(0, calc((var(--sc-p, 0) - 0.08) / 0.5), 1); }

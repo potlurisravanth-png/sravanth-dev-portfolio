@@ -29,7 +29,7 @@
     --tab-bg: #FFFFFF;
   }
   body.medicare { background: var(--sc-canvas); }
-  .medicare .sc-grain { opacity: 0.025; mix-blend-mode: multiply; }
+  .medicare .sc-grain { opacity: 0.025; }   /* no blend mode: it made every frame copy the page behind the grain */
   .medicare .btn--solid { --btn-bg: var(--sc-ink); --btn-fg: #FFFFFF; --btn-line: var(--sc-ink); }
   .medicare .tab--cta { background: var(--sc-ink); border-color: var(--sc-ink); color: #FFFFFF; }
   @media (hover: hover) and (pointer: fine) {

@@ -116,3 +116,8 @@ body { font-feature-settings: "ss01" 0; }
   transition: transform 160ms var(--sc-ease-out);
 }
 .skip:focus-visible { transform: none; }
+
+/* The engine's grain tile is drawn on a pseudo-element four times the size of
+   the screen (inset: -50%), and it never moves. A layer that size is memory the
+   GPU then evicts and redraws while the pages animate; the screen is enough. */
+.sc-grain::before { inset: 0; }
