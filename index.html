@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Sravanth Potluri &mdash; data and BI analyst. M.S. Data Science, three years building Power BI dashboards and process automation for a Fortune 500 life-sciences client. Also builds agentic LLM systems and multi-modal ML.">
-    <title>Sravanth Potluri &mdash; Data &amp; BI Analyst</title>
+        content="Sravanth Potluri &mdash; data analyst and data architect. M.S. Data Science; designs PostgreSQL data models for an IoT platform at Local Grown Salads after three years of Power BI reporting and process automation for a Fortune 500 life-sciences client. Also builds and evaluates LLM systems.">
+    <title>Sravanth Potluri &mdash; Data Analyst &amp; Data Architect</title>
     <link rel="stylesheet" href="styles.css">
     <!-- Vanta.js Dependencies -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
@@ -27,8 +27,8 @@
         <ul class="nav-links">
             <li><a href="#about" class="nav-link">About</a></li>
             <li><a href="#experience" class="nav-link">Experience</a></li>
-            <li><a href="#education" class="nav-link">Education</a></li>
             <li><a href="#projects" class="nav-link">Projects</a></li>
+            <li><a href="#education" class="nav-link">Education</a></li>
             <li><a href="#certifications" class="nav-link">Certifications</a></li>
             <li><a href="#contact" class="nav-link">Contact</a></li>
         </ul>
@@ -39,13 +39,20 @@
         <canvas id="hero-canvas"></canvas>
 
         <div class="hero-content">
+            <p class="hero-eyebrow">Data&nbsp;Analyst &middot; Data&nbsp;Architect &middot; LLM&nbsp;Systems</p>
             <h1 class="typewriter" id="heroName">Sravanth Potluri</h1>
-            <p class="hero-description">I build the path from raw data to a decision someone acts on &mdash; SQL and Power BI for the reporting layer, Python and LLM orchestration when a dashboard isn't enough.</p>
-            <p class="tagline">M.S. Data Science, UAB &middot; 3 years enterprise BI &amp; automation at Cognizant &middot; Power BI &middot; SQL &middot; Python</p>
+            <p class="hero-description">I build the path from raw data to a decision someone acts on &mdash; the data model underneath, SQL and Power BI for the reporting layer, and LLM systems when a dashboard isn't enough.</p>
+            <ul class="hero-meta" aria-label="At a glance">
+                <li>Data Architect, Local Grown Salads</li>
+                <li>M.S. Data Science, UAB</li>
+                <li>3 years enterprise BI, Cognizant</li>
+            </ul>
             <div class="hero-links">
+                <a href="#projects" class="btn-primary">View projects</a>
                 <a href="https://www.linkedin.com/in/sravanth-potluri-001522193/" target="_blank"
-                    class="btn-primary">LinkedIn</a>
-                <a href="https://github.com/potlurisravanth-png" target="_blank" class="btn-outline">GitHub</a>
+                    rel="noopener noreferrer" class="btn-outline">LinkedIn</a>
+                <a href="https://github.com/potlurisravanth-png" target="_blank" rel="noopener noreferrer"
+                    class="btn-outline">GitHub</a>
                 <a href="mailto:potlurisravanth@gmail.com" class="btn-outline">Email</a>
             </div>
         </div>
@@ -61,13 +68,50 @@
         <section id="about">
             <div class="container">
                 <h2 class="section-title">About</h2>
-                <p class="about-content">
-                    Data analyst with an M.S. in Data Science and three years at Cognizant building the reporting and
-                    automation layer for a Fortune 500 life-sciences client &mdash; 10+ SharePoint dashboards, 2 Power BI
-                    reports, and 40+ automated workflows that cut manual effort by roughly 80%. Recent work is in SQL and
-                    Power BI over public healthcare claims data. Alongside that I build AI systems: a cost-aware
-                    multi-tier LLM router, and a multi-modal deepfake detector trained on LAV-DF.
-                </p>
+                <div class="about-grid">
+                    <div class="about-prose">
+                        <p class="about-content about-lead">
+                            Data analyst and data architect with an M.S. in Data Science. At Local Grown Salads I design
+                            the data model for an IoT indoor-farming platform &mdash; PostgreSQL schemas, device and
+                            location history, and data contracts shared across teams.
+                        </p>
+                        <p class="about-content">
+                            Before that, three years at Cognizant building the reporting and automation layer for a
+                            Fortune 500 life-sciences client: 10+ SharePoint dashboards, 2 Power BI reports, and 40+
+                            automated workflows that cut manual effort by roughly 80%. Recent analysis work is on public
+                            Medicare Part D claims data.
+                        </p>
+                        <p class="about-content">
+                            On the AI side I build and evaluate LLM systems &mdash; a cross-provider router that sends
+                            each prompt to the cheapest model that still passes, with an agent mode that plugs into
+                            Claude Code &mdash; and trained a multi-modal deepfake detector on LAV-DF.
+                        </p>
+                    </div>
+                    <aside class="about-facts" aria-label="At a glance">
+                        <dl>
+                            <div>
+                                <dt>Now</dt>
+                                <dd>Data Architect, Local Grown Salads</dd>
+                            </div>
+                            <div>
+                                <dt>Before</dt>
+                                <dd>3 years at Cognizant &mdash; BI and automation for a Fortune 500 life-sciences client</dd>
+                            </div>
+                            <div>
+                                <dt>Education</dt>
+                                <dd>M.S. Data Science, UAB &middot; GPA 3.88</dd>
+                            </div>
+                            <div>
+                                <dt>Toolkit</dt>
+                                <dd>SQL &middot; PostgreSQL &middot; Power BI &middot; Python</dd>
+                            </div>
+                            <div>
+                                <dt>AI work</dt>
+                                <dd>LLM routing &middot; evaluation &middot; MCP agents</dd>
+                            </div>
+                        </dl>
+                    </aside>
+                </div>
             </div>
         </section>
 
@@ -76,6 +120,14 @@
             <div class="container">
                 <h2 class="section-title">Experience</h2>
                 <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-date">Sep 2026 &ndash; Present</span>
+                        <h3 class="timeline-title">Data Architect</h3>
+                        <p class="timeline-subtitle">Local Grown Salads</p>
+                        <ul>
+                            <li>Designing the data model for an IoT indoor-farming platform &mdash; PostgreSQL schemas, device and location history, and data contracts shared across teams.</li>
+                        </ul>
+                    </div>
                     <div class="timeline-item">
                         <span class="timeline-date">Oct 2021 &ndash; Aug 2024</span>
                         <h3 class="timeline-title">Associate &mdash; SharePoint &amp; Power Platform Developer</h3>
@@ -91,42 +143,13 @@
             </div>
         </section>
 
-        <!-- EDUCATION -->
-        <section id="education">
-            <div class="container">
-                <h2 class="section-title">Education</h2>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <span class="timeline-date">2024 &ndash; 2026</span>
-                        <h3 class="timeline-title">Masters in Data Science</h3>
-                        <p class="timeline-subtitle">University of Alabama at Birmingham &middot; GPA: 3.9</p>
-                        <ul>
-                            <li>Coursework: machine learning, deep learning, computer vision, natural language processing, statistical analysis, and cloud computing across AWS and Azure.</li>
-                            <li>Architected the <em>Deepfake Defender</em> (a multi-modal detection system using PyTorch and OpenCV), the <em>Agentic Router SDK</em>, and a <em>Secure File-Sharing Web App</em> on AWS.</li>
-                            <li>Bridging academic theory with practical application by building high-throughput data pipelines, training complex neural networks, and deploying cloud architecture.</li>
-                        </ul>
-                    </div>
-                    <div class="timeline-item">
-                        <span class="timeline-date">2017 &ndash; 2021</span>
-                        <h3 class="timeline-title">B.Tech in Electronics and Communication Engineering</h3>
-                        <p class="timeline-subtitle">B.V.Raju Institute of Technology &middot; CGPA: 8.20</p>
-                        <ul>
-                            <li>Gained a strong foundation in hardware-software integration through coursework in Embedded Systems, VLSI Design, and Microprocessors.</li>
-                            <li>Studied advanced analytical subjects including Digital Signal Processing and Communication Systems, developing rigorous mathematical problem-solving skills.</li>
-                            <li>Built foundational programming and technical skills that enabled a seamless transition into enterprise software development and artificial intelligence.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- PROJECTS -->
         <section id="projects">
             <div class="container">
                 <h2 class="section-title">Projects</h2>
                 <div class="projects-grid">
 
-                    <article class="project-card featured">
+                    <article class="project-card featured" data-badge="New">
                         <div class="project-tags">
                             <span class="project-tag">SQL</span>
                             <span class="project-tag">CMS Open Data</span>
@@ -138,31 +161,36 @@
                             prescribers, $5.35B in drug spend, 32.5M claims &mdash; pulled through the CMS public data
                             API, with suppression counts cross-validated by two independent methods.</p>
                         <ul class="project-impact">
-                            <li>Found a 15&times; gap between mean ($291,946) and median ($19,141) prescriber spend &mdash; enough to invalidate average-based benchmarking and force median-and-percentile peer comparison instead.</li>
-                            <li>Quantified CMS claim-count suppression affecting 41.7% of prescribers (7,635) before analysis, rather than defaulting suppressed values to zero.</li>
-                            <li>Surfaced an 85.3% brand share of branded-plus-generic spend, with Nurse Practitioners the largest prescribing group at $1.03B &mdash; 19.3% of state spend.</li>
+                            <li>Found a <strong>15&times;</strong> gap between mean ($291,946) and median ($19,141) prescriber spend &mdash; enough to invalidate average-based benchmarking and force median-and-percentile peer comparison instead.</li>
+                            <li>Quantified CMS claim-count suppression affecting <strong>41.7%</strong> of prescribers (7,635) before analysis, rather than defaulting suppressed values to zero.</li>
+                            <li>Surfaced an <strong>85.3%</strong> brand share of branded-plus-generic spend, with Nurse Practitioners the largest prescribing group at $1.03B &mdash; 19.3% of state spend.</li>
                         </ul>
                         <div class="project-links">
                             <span class="project-status">Repository and Power BI model in progress</span>
                         </div>
                     </article>
 
-                    <article class="project-card"
+                    <article class="project-card badge-outline" data-badge="Active"
                         data-href="stories/agentic-router.html">
                         <div class="project-tags">
                             <span class="project-tag">Python</span>
-                            <span class="project-tag">OpenAI</span>
-                            <span class="project-tag">LangGraph</span>
-                            <span class="project-tag">Map-Reduce</span>
+                            <span class="project-tag">LLM Routing</span>
+                            <span class="project-tag">MCP</span>
+                            <span class="project-tag">Evaluation</span>
                         </div>
-                        <h3>Agentic Router SDK</h3>
-                        <p>Multi-tier LLM router with dynamic complexity scoring, dual-ranking model selection, and a
-                            Map-Reduce agentic pattern that decomposes complex prompts into parallel worker tasks.</p>
+                        <h3>Agentic Router</h3>
+                        <p>A cross-provider LLM router that picks the cheapest model that still passes &mdash; and
+                            proves it. Every routed call returns a receipt (tier, models used, real cost), and in-process
+                            cost is reconciled against the provider's billing API, failing loudly on drift.</p>
                         <ul class="project-impact">
-                            <li>Demonstrated 80&ndash;85% cost reduction versus a single-model GPT-4 baseline in benchmark runs.</li>
+                            <li><strong>Verifier-bounded routing</strong> &mdash; a cheap model's answer is checked before it is trusted; a failure climbs within the low-cost pool, and anything beyond it is flagged for a frontier model. On 1,095 public benchmark questions the learned route map matched the best single model's accuracy at 54&ndash;68% of its cost.</li>
+                            <li><strong>Pre-registered evaluation</strong> &mdash; experiments are reported whether they pass or fail, and new behavior ships switched off until the evidence is in. A methodology paper is in preparation.</li>
+                            <li><strong>Agent mode (experimental)</strong> &mdash; runs as an MCP server for Claude Code, handing repository tasks to cheaper worker models while Claude reviews the result: 25% cheaper than Claude Opus at low effort on eight real tasks, with every hidden test still passing.</li>
                         </ul>
                         <div class="project-links">
                             <a href="stories/agentic-router.html" target="_blank" class="project-link">Case Study</a>
+                            <a href="https://github.com/potlurisravanth-png/agentic-router" target="_blank"
+                                rel="noopener noreferrer" class="project-link">GitHub</a>
                         </div>
                     </article>
 
@@ -178,7 +206,7 @@
                             with a ResNet-18 audio branch operating on Mel-spectrograms &mdash; trained against LAV-DF,
                             the content-driven deepfake dataset.</p>
                         <ul class="project-impact">
-                            <li>99.81% validation accuracy in 3 epochs after a 50&times; data-pipeline throughput optimization (FFmpeg pre-caching, threaded OpenCV).</li>
+                            <li><strong>99.81%</strong> validation accuracy in 3 epochs after a <strong>50&times;</strong> data-pipeline throughput optimization (FFmpeg pre-caching, threaded OpenCV).</li>
                         </ul>
                         <div class="project-links">
                             <a href="stories/deepfake-defender.html" target="_blank" class="project-link">Case Study</a>
@@ -213,6 +241,35 @@
                     <button id="moreProjectsBtn" class="btn-toggle" aria-expanded="false">
                         More Projects <span class="arrow-down-small"></span>
                     </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- EDUCATION -->
+        <section id="education">
+            <div class="container">
+                <h2 class="section-title">Education</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="timeline-date">2024 &ndash; 2026</span>
+                        <h3 class="timeline-title">M.S. in Data Science</h3>
+                        <p class="timeline-subtitle">University of Alabama at Birmingham &middot; GPA: 3.88</p>
+                        <ul>
+                            <li>Coursework: machine learning, deep learning, computer vision, natural language processing, statistical analysis, and cloud computing across AWS and Azure.</li>
+                            <li>Architected the <em>Deepfake Defender</em> (a multi-modal detection system using PyTorch and OpenCV), the <em>Agentic Router</em>, and a <em>Secure File-Sharing Web App</em> on AWS.</li>
+                            <li>Bridging academic theory with practical application by building high-throughput data pipelines, training complex neural networks, and deploying cloud architecture.</li>
+                        </ul>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-date">2017 &ndash; 2021</span>
+                        <h3 class="timeline-title">B.Tech in Electronics and Communication Engineering</h3>
+                        <p class="timeline-subtitle">B.V.Raju Institute of Technology &middot; CGPA: 8.20</p>
+                        <ul>
+                            <li>Gained a strong foundation in hardware-software integration through coursework in Embedded Systems, VLSI Design, and Microprocessors.</li>
+                            <li>Studied advanced analytical subjects including Digital Signal Processing and Communication Systems, developing rigorous mathematical problem-solving skills.</li>
+                            <li>Built foundational programming and technical skills that enabled a seamless transition into enterprise software development and artificial intelligence.</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>
@@ -262,14 +319,14 @@
             <div class="container">
                 <h2 class="section-title">Get in touch</h2>
                 <p class="contact-intro">
-                    Hiring for a data or BI analyst role, curious about the Medicare Part D work, or want to dig into one of the case studies above? Pick whichever channel is easiest &mdash; they all reach me.
+                    Hiring for a data analyst, BI or data architecture role, curious about the Medicare Part D or router work, or want to dig into one of the case studies above? Pick whichever channel is easiest &mdash; they all reach me.
                 </p>
                 <div class="contact-grid">
                     <a href="mailto:potlurisravanth@gmail.com" class="contact-card">
                         <span class="channel-icon" data-icon="mail"></span>
                         <div class="channel-meta">
                             <div class="channel-label">Email</div>
-                            <div class="channel-value">potlurisravanth@gmail.com</div>
+                            <div class="channel-value">Send an email</div>
                         </div>
                     </a>
                     <a href="https://www.linkedin.com/in/sravanth-potluri-001522193/" target="_blank" rel="noopener noreferrer" class="contact-card">

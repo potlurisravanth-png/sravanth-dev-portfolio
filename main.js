@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (isExpanded) {
                     project.style.display = 'none';
                 } else {
-                    project.style.display = 'block';
+                    project.style.display = 'flex';
                     project.classList.remove('animate-in');
                     setTimeout(() => project.classList.add('animate-in'), 50);
                 }
