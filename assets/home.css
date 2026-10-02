@@ -103,8 +103,7 @@ body.home { min-height: 100%; }
   background: var(--sc-canvas);
   opacity: 0;
   pointer-events: none;
-  /* its own layer, so fading it does not redraw the drawing under it;
-     home.js removes it whenever it is fully clear */
+  /* its own layer, so fading it does not redraw the drawing under it */
   will-change: opacity;
 }
 
@@ -149,6 +148,19 @@ body.home { min-height: 100%; }
 .sheet-svg .track { stroke-dasharray: 2 3; }
 .sheet-svg .port-ring { fill: none; stroke: var(--sc-accent); stroke-width: calc(1.6px * var(--k, 1)); opacity: 0; }
 .sheet-svg .port-ring.is-on { opacity: 1; }
+
+/* The stack's heavier ink: a copy of the drawing that home.js lays over it and
+   fades with the camera (see "line weight" there). It is its own layer, so
+   fading it redraws nothing. It keeps its own --draw, so the redline drawing
+   on the sheet underneath does not redraw this one too. */
+.sheet-svg--bold {
+  --draw: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  will-change: opacity;
+}
 
 /* Sheet labels are HTML laid over the drawing, in the drawing's own
    coordinates (build.py labels()): x is where the text starts, or its centre
@@ -741,6 +753,7 @@ body.home { min-height: 100%; }
   :root { --inset: 6px; --strip-h: 54px; --pad: 16px; }
 
   .sheet-lbls { display: none; }
+  .sheet-svg--bold { display: none; }
 
   .strip__mark { padding: 0 12px; }
   .strip__role { display: none; }

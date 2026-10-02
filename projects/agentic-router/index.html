@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Agentic Router · Sravanth Potluri</title>
 <meta name="description" content="Agentic Router sends each request to the cheapest model that still gets it right, and shows its work: which model answered, why it was chosen, and what the answer really cost.">
-<meta name="theme-color" content="#101213">
+<meta name="theme-color" content="#0B0D17">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='26' height='26' rx='2' fill='%23F9FAFA' stroke='%2314181D' stroke-width='2'/%3E%3Ccircle cx='11' cy='11' r='3.5' fill='none' stroke='%23D2381C' stroke-width='2'/%3E%3Cpath d='M11 14.5V27' stroke='%23D2381C' stroke-width='2'/%3E%3C/svg%3E">
 <link rel="preload" href="../../assets/fonts/archivo-wdth.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
@@ -13,229 +13,359 @@
 <link rel="stylesheet" href="../../assets/site.css">
 <link rel="stylesheet" href="../../assets/project.css">
 <style>
-  /* A thermal receipt on a dark counter. Green is the one accent: it is the
-     colour of a pass, and it marks every figure that was measured. */
+  /* The router's own word for what it learns is a "route map", so this page is
+     one: a night transit map in the colours of the Agentic Router mark. Model
+     tiers are lines, checks are stations, and one request is the only thing
+     that moves. Lilac is the accent; cyan and amber appear only as lines. */
   :root {
-    --sc-canvas: #101213;
-    --sc-surface: #1A1D1F;
-    --sc-ink: #EDEEEA;
-    --sc-ink-soft: #A3A9A5;
-    --sc-accent: #2FA36B;
-    --sc-accent-ink: #06140D;
-    --sc-shadow-color: 200 30% 2%;
-    --paper: #F2F1EB;
-    --paper-ink: #1D1F1C;
-    --paper-soft: #5C605B;
+    --sc-canvas: #0B0D17;
+    --sc-surface: #131729;
+    --sc-ink: #EEF0F7;
+    --sc-ink-soft: #A4AAC0;
+    --sc-accent: #C4A7FF;
+    --sc-accent-ink: #1A1033;
+    --sc-shadow-color: 232 50% 3%;
+    --ln-cheap: #5CD6DF;
+    --ln-strong: #C4A7FF;
+    --ln-top: #EDB84C;
+    --tube: #8B92AB;
     --sc-gutter: clamp(1.25rem, 5vw, 5rem);
   }
-  body.router { background: var(--sc-canvas); }
-  .router .sc-grain { opacity: 0.05; }
+  /* Everything that follows the scroll here is moved by the script at the foot
+     of the page, so the engine's progress value has no need to inherit: left
+     inheriting, it restyles every element in a section on every frame. */
+  @property --sc-p { syntax: '*'; inherits: false; }
 
-  /* ---------------------------------------------------------------- hero */
-  .hero { --feed: clamp(0, calc((var(--sc-p, 0) - 0.03) / 0.8), 1); }
+  /* Each section paints its own ground. (The engine's drift would do it by
+     rewriting --sc-canvas on the root every frame, and every element on the
+     page is restyled when that changes.) */
+  body.router { background: var(--sc-canvas); }
+  .results { --ground: #0D1020; background: var(--ground); }
+  .inside { --ground: #0F1326; background: var(--ground); }
+  .router .sc-grain { opacity: 0.05; }
+  .router .p-body { line-height: 1.66; letter-spacing: 0.003em; }   /* light type on dark gets a touch more air */
+
+  /* ----------------------------------------------------------------- hero */
   .hero__stage {
     height: 100svh;
     overflow: clip;
     display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
     align-items: center;
-    gap: var(--sc-7);
-    padding: 0 var(--sc-gutter);
-    background:
-      radial-gradient(ellipse 46% 52% at 72% 86%, rgb(255 250 235 / 0.07), transparent 70%),
-      radial-gradient(ellipse 80% 60% at 10% 0%, rgb(255 255 255 / 0.025), transparent 60%);
+    gap: clamp(28px, 4vw, 72px);
+    /* on a very wide screen the copy and the map stay within reach of each other */
+    padding: 66px max(var(--sc-gutter), calc((100vw - 1560px) / 2)) 22px;
+    background: radial-gradient(ellipse 52% 58% at 72% 52%, rgb(112 132 214 / 0.1), transparent 72%);
   }
-  .hero__copy { max-width: 620px; }
-  .hero__copy .p-lede { max-width: 24ch; }
-  .hero__copy .p-meta { margin-bottom: var(--sc-6); }
-  .hero__copy .p-link { color: var(--sc-ink); }
-
-  .counter {
-    position: relative;
-    justify-self: center;
-    align-self: end;
-    width: min(430px, 100%);
-    height: 100svh;
+  .hero__copy { max-width: 600px; }
+  .swap { display: grid; }
+  .swap > * { grid-area: 1 / 1; align-self: start; }
+  .intro .p-lede { max-width: 24ch; }
+  .intro .p-meta { margin-bottom: var(--sc-5); }
+  .step__name {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding-bottom: clamp(48px, 9vh, 96px);
-  }
-  .feed {
-    position: relative;
-    overflow: hidden;
-    padding: 12px 22px 0;
-    margin: 0 4px;
-  }
-  .paper {
-    position: relative;
-    padding: 22px 22px 18px;
-    background: var(--paper);
-    color: var(--paper-ink);
-    box-shadow: 0 2px 2px hsl(var(--sc-shadow-color) / 0.5), 0 22px 40px -18px hsl(var(--sc-shadow-color) / 0.9);
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 var(--sc-3);
     font-family: var(--sc-font-display);
-    font-stretch: 74%;
-    font-weight: 540;
-    font-size: 13px;
-    line-height: 1.45;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    transform: translate3d(0, calc((1 - var(--feed)) * 100%), 0);
-    will-change: transform;   /* moved as it feeds, never redrawn */
+    font-stretch: 84%;
+    font-weight: 660;
+    font-size: clamp(1.5rem, 1.1rem + 1.1vw, 2.15rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
   }
-  .paper::before {
-    content: "";
-    position: absolute;
-    left: 0; right: 0; top: -6px; height: 6px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 6L5 0.5L10 6Z' fill='%23F2F1EB'/%3E%3C/svg%3E") repeat-x 0 0 / 10px 6px;
-  }
-  .paper__title { margin: 0; text-align: center; font-weight: 760; font-size: 15px; letter-spacing: 0.18em; }
-  .paper__sub { margin: 2px 0 14px; text-align: center; color: var(--paper-soft); letter-spacing: 0.12em; }
-  .paper ol { list-style: none; margin: 0; padding: 12px 0 0; border-top: 1px dashed #A2A49E; display: grid; gap: 12px; }
-  .paper li { display: grid; grid-template-columns: 26px 1fr; column-gap: 6px; }
-  .paper li b { grid-row: span 2; font-weight: 760; font-variant-numeric: tabular-nums; }
-  .paper li strong { font-weight: 740; }
-  .paper li span {
-    font-family: var(--sc-font-text);
-    font-stretch: 100%;
-    font-size: 14px;
-    line-height: 1.42;
-    font-weight: 450;
-    letter-spacing: 0;
-    text-transform: none;
-    color: #3A3D39;
-  }
-  .paper__total { display: flex; justify-content: space-between; gap: 12px; margin-top: 14px; padding-top: 10px; border-top: 1px dashed #A2A49E; font-weight: 700; }
-  .paper__total em { font-style: normal; color: #1E6A45; }
-  .paper__end { margin: 14px 0 0; padding-top: 10px; border-top: 3px double #A2A49E; text-align: center; letter-spacing: 0.2em; color: var(--paper-soft); }
+  .step__txt { margin: 0; max-width: 40ch; color: var(--sc-ink-soft); line-height: 1.62; text-wrap: pretty; }
+  .pip { flex: none; width: 17px; height: 17px; border-radius: 50%; border: 3.5px solid var(--pip, var(--sc-ink)); }
+  .pip--cheap { --pip: var(--ln-cheap); }
+  .pip--strong { --pip: var(--ln-strong); }
+  .pip--end { background: var(--sc-ink); }
 
-  .printer {
+  /* the map: a still drawing, a thin live layer over it, and the request */
+  .hero__map { display: grid; justify-items: center; min-width: 0; container: mapwrap / inline-size; }
+  .map {
     position: relative;
-    z-index: 2;
-    height: 66px;
-    border-radius: 10px 10px 14px 14px;
-    background: linear-gradient(#24292B, #1A1E20);
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.09), 0 18px 34px -16px hsl(var(--sc-shadow-color) / 0.9), 0 2px 4px hsl(var(--sc-shadow-color) / 0.6);
+    width: min(100%, calc((100svh - 104px) * 780 / 572));
+    aspect-ratio: 780 / 572;
+    container-type: inline-size;   /* its labels are sized from its own width */
   }
-  .printer__slot { position: absolute; left: 18px; right: 18px; top: 9px; height: 5px; border-radius: 3px; background: #050606; box-shadow: inset 0 1px 2px #000; }
-  .printer__label {
-    position: absolute; left: 20px; bottom: 15px;
-    font-family: var(--sc-font-display); font-stretch: 76%; font-weight: 600; font-size: 11px;
-    letter-spacing: 0.14em; text-transform: uppercase; color: #8C938F;
+  /* A small map cannot carry every name: under about 560px the lines are named
+     in a legend below it instead, and the small station labels are left off. */
+  .legend {
+    display: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 16px;
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    font-family: var(--sc-font-display);
+    font-stretch: 76%;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--sc-ink-soft);
   }
-  .printer__led { position: absolute; right: 22px; bottom: 19px; width: 8px; height: 8px; border-radius: 50%; background: var(--sc-accent); }
+  .legend li { display: inline-flex; align-items: center; gap: 7px; }
+  .legend li::before { content: ""; width: 18px; height: 4px; border-radius: 2px; background: var(--lg); }
+  .lg--cheap { --lg: var(--ln-cheap); }
+  .lg--strong { --lg: var(--ln-strong); }
+  .lg--top { --lg: var(--ln-top); }
+  .legend .lg--frontier::before { background: repeating-linear-gradient(90deg, var(--sc-ink) 0 3px, transparent 3px 7px); height: 3px; }
+  .map svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .zone { fill: color-mix(in oklab, var(--sc-surface) 72%, transparent); stroke: var(--sc-hairline-strong); stroke-width: 1.2; }
+  .ln { fill: none; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; transition: opacity 260ms var(--sc-ease-out); }
+  .ln--cheap { stroke: var(--ln-cheap); }
+  .ln--strong { stroke: var(--ln-strong); }
+  .ln--top { stroke: var(--ln-top); }
+  .ln--trunk { stroke: #5B6280; }
+  .ln--frontier { stroke: var(--sc-ink); stroke-width: 4.5; stroke-dasharray: 0.1 11; opacity: 0.62; }
+  .xfer { fill: none; stroke: var(--tube); stroke-width: 7.5; stroke-linecap: round; }
+  .xfer-in { fill: none; stroke: var(--sc-canvas); stroke-width: 3.2; stroke-linecap: round; }
+  .stn { fill: var(--sc-canvas); stroke: var(--sc-ink); stroke-width: 3.2; }
+  .stn--sm { stroke-width: 2.8; }
+  /* once the map has chosen, the lines it did not take step back */
+  .map.is-routed .ln--top, .map.is-routed .ln--strong { opacity: 0.36; }
+  .map.is-climbed .ln--strong { opacity: 1; }
+
+  .trail { fill: none; stroke: #FFFFFF; stroke-width: 3.4; stroke-linejoin: round; stroke-dasharray: 1 1; stroke-dashoffset: 1; }
+  .mk { opacity: 0; transition: opacity 180ms var(--sc-ease-out); }
+  .mk circle, rect.mk { stroke: var(--sc-ink); stroke-width: 3.2; }
+  .mk path { fill: none; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
+  .mk--fail circle { fill: var(--sc-canvas); }
+  .mk--fail path { stroke: var(--sc-ink); }
+  .mk--pass circle { fill: var(--ln-strong); stroke: var(--ln-strong); }
+  .mk--pass path { stroke: var(--sc-accent-ink); }
+  rect.mk { fill: var(--sc-ink); }
+  .map.is-failed .mk--fail, .map.is-passed .mk--pass, .map.is-done rect.mk { opacity: 1; }
+
+  .map__lbls { position: absolute; inset: 0; pointer-events: none; }
+  .ml {
+    position: absolute;
+    left: calc(var(--x) / 780 * 100%);
+    top: calc(var(--y) / 572 * 100%);
+    translate: 0 -50%;
+    white-space: nowrap;
+    font-family: var(--sc-font-display);
+    font-stretch: 76%;
+    font-weight: 620;
+    font-size: 12px;
+    font-size: clamp(10px, 1.62cqw, 15px);
+    line-height: 1;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sc-ink);
+  }
+  .ml--c { translate: -50% -50%; }
+  .ml--e { translate: -100% -50%; }
+  .ml--soft { color: var(--sc-ink-soft); font-weight: 560; }
+  .ml--cheap { color: var(--ln-cheap); }
+  .ml--strong { color: var(--ln-strong); }
+  .ml--top { color: var(--ln-top); }
+  .ml--state { opacity: 0; transition: opacity 180ms var(--sc-ease-out); }
+  .map.is-failed .ml--fails, .map.is-passed .ml--passes { opacity: 1; }
+
+  .req {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    margin: -9px 0 0 -9px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    box-shadow: 0 0 0 4px var(--sc-canvas), 0 8px 14px -2px hsl(var(--sc-shadow-color) / 0.9);
+    will-change: transform;   /* moved along the line, never redrawn */
+    visibility: hidden;       /* until the script has put it on the map */
+  }
+  .map.is-live .req { visibility: visible; }
+  @container mapwrap (max-width: 559px) {
+    .ml { letter-spacing: 0.08em; }
+    .ml--minor, .ml--name { display: none; }
+    .legend { display: flex; }
+    .trail { stroke-width: 4.2; }
+    .req { width: 14px; height: 14px; margin: -7px 0 0 -7px; box-shadow: 0 0 0 3px var(--sc-canvas), 0 6px 10px -2px hsl(var(--sc-shadow-color) / 0.9); }
+  }
 
   /* ------------------------------------------------------------- results */
   .results .sc-stage, .results [data-sc-stage] { height: 100svh; display: flex; align-items: center; }
-  .rail { align-items: stretch; gap: clamp(20px, 3vw, 44px); padding: 0 var(--sc-gutter); }
-  .rail__lead { flex: 0 0 min(460px, 82vw); align-self: center; }
+  .rail { align-items: stretch; padding: 0 var(--sc-gutter); }
+  .rail__lead { flex: 0 0 min(440px, 82vw); align-self: center; padding-right: clamp(28px, 4vw, 64px); }
   .rail__lead .p-body { max-width: 34ch; }
-  .slip {
-    position: relative;
-    flex: 0 0 clamp(250px, 24vw, 320px);
-    align-self: center;
-    padding: 24px 22px 20px;
-    background: var(--paper);
-    color: var(--paper-ink);
-    box-shadow: 0 2px 2px hsl(var(--sc-shadow-color) / 0.5), 0 26px 46px -22px hsl(var(--sc-shadow-color) / 0.95);
-    rotate: var(--tilt, 0deg);
-    translate: 0 var(--drop, 0px);
+  .res {
+    flex: 0 0 clamp(280px, 26vw, 380px);
+    display: flex;
+    padding: 6px clamp(20px, 2.3vw, 36px);
+    border-left: 1px solid var(--sc-hairline-strong);
   }
-  .slip::before, .slip::after {
-    content: ""; position: absolute; left: 0; right: 0; height: 6px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 6L5 0.5L10 6Z' fill='%23F2F1EB'/%3E%3C/svg%3E") repeat-x 0 0 / 10px 6px;
+  .res__in { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .res__name {
+    margin: 0 0 var(--sc-4);
+    min-height: 2.5em;
+    font-family: var(--sc-font-display);
+    font-stretch: 76%;
+    font-weight: 600;
+    font-size: 12.5px;
+    line-height: 1.25;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sc-ink-soft);
+    text-wrap: balance;
   }
-  .slip::before { top: -6px; }
-  .slip::after { bottom: -6px; transform: scaleY(-1); }
-  .slip__fig {
-    display: block;
+  .res__fig {
+    margin: 0;
     font-family: var(--sc-font-display);
     font-stretch: 78%;
     font-weight: 760;
-    font-size: clamp(2.8rem, 2rem + 2vw, 3.8rem);
+    font-size: clamp(3rem, 2.1rem + 2.3vw, 4.5rem);
     line-height: 0.9;
     letter-spacing: -0.04em;
     font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
-  .slip__unit {
+  .res__unit {
+    margin: 10px 0 var(--sc-5);
+    font-family: var(--sc-font-display);
+    font-stretch: 84%;
+    font-weight: 600;
+    font-size: 1.05rem;
+    line-height: 1.2;
+    color: var(--sc-ink);
+  }
+  .bars { list-style: none; margin: 0 0 var(--sc-5); padding: 0; display: grid; gap: 12px; }
+  .bars li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 12px;
+    row-gap: 7px;
+    align-items: baseline;
+    font-family: var(--sc-font-display);
+    font-stretch: 78%;
+    font-weight: 560;
+    font-size: 12px;
+    line-height: 1.1;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--sc-ink-soft);
+  }
+  .bars b { font-weight: 660; color: var(--sc-ink); font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+  .bars i {
+    grid-column: 1 / -1;
+    position: relative;
+    height: 8px;
+    border-radius: var(--r-1);
+    background: color-mix(in oklab, var(--sc-ink) 11%, transparent);
+    overflow: hidden;
+  }
+  .bars i::before, .bars i::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: calc(var(--w) * 1%);
+    background: var(--c, #7C849E);
+    transform-origin: 0 50%;
+  }
+  .bars i::after { display: none; }
+  .bars .is-router { --c: var(--sc-accent); }
+  .bars .is-frontier { --c: var(--sc-ink); }
+  .bars .is-miss { --c: var(--ln-top); }
+  /* a range: solid up to its low end, hatched from there to its high end */
+  .bars .is-range::after {
     display: block;
-    margin: 8px 0 14px;
-    padding-bottom: 12px;
-    border-bottom: 1px dashed #A2A49E;
+    left: calc(var(--w) * 1%);
+    width: calc((var(--w2) - var(--w)) * 1%);
+    background: repeating-linear-gradient(115deg, var(--sc-accent) 0 2px, transparent 2px 5px);
+  }
+  .res__txt { margin: 0; font-size: 0.95rem; line-height: 1.58; color: var(--sc-ink-soft); text-wrap: pretty; }
+  .res__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: auto 0 0;
+    padding-top: var(--sc-5);
     font-family: var(--sc-font-display);
     font-stretch: 76%;
-    font-weight: 640;
-    font-size: 12px;
+    font-weight: 620;
+    font-size: 11.5px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
+    color: var(--sc-ink);
   }
-  .slip p { margin: 0; font-size: 14.5px; line-height: 1.5; color: #353834; text-wrap: pretty; }
-  .slip__stamp {
-    display: inline-block;
-    margin-top: 16px;
-    padding: 4px 8px;
-    border: 1.5px solid #1E6A45;
-    border-radius: 3px;
-    color: #1E6A45;
-    font-family: var(--sc-font-display);
-    font-stretch: 76%;
-    font-weight: 700;
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    rotate: -3deg;
-  }
-  .slip--miss .slip__stamp { border-color: #8A3B12; color: #8A3B12; }
-  .rail__end { flex: 0 0 min(340px, 80vw); align-self: center; }
+  .res__tag::before { content: ""; width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--sc-accent); }
+  .res--miss .res__tag::before { border-color: var(--ln-top); }
+  .rail__end { flex: 0 0 min(340px, 80vw); align-self: center; padding-left: clamp(20px, 2.3vw, 36px); border-left: 1px solid var(--sc-hairline-strong); }
   .rail__end .p-body { max-width: 30ch; }
+  /* each measurement settles as it arrives, and its bars draw once */
+  @media (prefers-reduced-motion: no-preference) {
+    /* moved as layers (will-change), so settling in redraws nothing */
+    .js-rail .res__in { opacity: 0.5; transform: translate3d(0, 12px, 0); transition: opacity 520ms var(--sc-ease-out), transform 520ms var(--sc-ease-out); will-change: opacity, transform; }
+    .js-rail .res.is-on .res__in { opacity: 1; transform: none; }
+    .js-rail .bars i::before, .js-rail .bars i::after { transform: scaleX(0); transition: transform 760ms var(--sc-ease-out) var(--dl, 120ms); will-change: transform; }
+    .js-rail .res.is-on .bars i::before, .js-rail .res.is-on .bars i::after { transform: none; }
+    .js-rail .bars li:nth-child(2) i { --dl: 220ms; }
+    .js-rail .bars li:nth-child(3) i { --dl: 320ms; }
+  }
 
   /* -------------------------------------------------------------- inside */
   .inside { padding: var(--sc-section) var(--sc-gutter); }
   .inside__wrap { max-width: var(--sc-maxw); margin: 0 auto; }
   .inside__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--sc-7); align-items: end; margin-bottom: var(--sc-8); }
-  .handoff { width: 100%; height: auto; margin: 0 0 var(--sc-8); }
-  .handoff .ln { fill: none; stroke: #C9CEC9; stroke-width: 1.4; }
-  .handoff .ln-soft { fill: none; stroke: #6E7571; stroke-width: 1.2; stroke-dasharray: 5 5; }
-  .handoff .ac { fill: none; stroke: var(--sc-accent); stroke-width: 2; }
-  .handoff .box { fill: #171A1C; stroke: #C9CEC9; stroke-width: 1.3; }
-  .handoff .box--ac { stroke: var(--sc-accent); }
-  .handoff text { font-family: var(--sc-font-display); font-stretch: 80%; font-weight: 620; font-size: 15px; letter-spacing: 0.06em; fill: var(--sc-ink); }
-  .handoff .t-soft { fill: var(--sc-ink-soft); font-weight: 540; font-size: 13px; }
-  .steps { list-style: none; margin: 0 0 var(--sc-8); padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--sc-hairline-strong); }
-  .steps li { padding: var(--sc-5) var(--sc-5) 0 0; }
-  .steps li + li { padding-left: var(--sc-5); border-left: 1px solid var(--sc-hairline); }
+  .loop { width: 100%; height: auto; margin: 0 0 var(--sc-8); overflow: visible; }
+  .loop .lp { fill: none; stroke: var(--sc-accent); stroke-width: 8; }
+  .loop .chev { fill: none; stroke: var(--ground); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .loop .st { fill: var(--ground); stroke: var(--sc-ink); stroke-width: 3.4; }
+  .loop .seal { fill: none; stroke: var(--sc-ink-soft); stroke-width: 1.6; stroke-dasharray: 4 5; }
+  .loop text { font-family: var(--sc-font-display); font-stretch: 80%; font-weight: 640; font-size: 16px; letter-spacing: 0.08em; fill: var(--sc-ink); }
+  .loop .t-soft { fill: var(--sc-ink-soft); font-stretch: 88%; font-weight: 520; font-size: 14px; letter-spacing: 0.01em; }
+  .steps { list-style: none; margin: 0 0 var(--sc-8); padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 3px solid var(--tube); }
+  .steps li { position: relative; padding: var(--sc-5) var(--sc-5) 0 0; }
+  .steps li::before { content: ""; position: absolute; left: 0; top: -9.5px; width: 16px; height: 16px; border-radius: 50%; background: var(--ground); border: 3px solid var(--sc-ink); }
   .steps b { display: block; font-family: var(--sc-font-display); font-stretch: 80%; font-weight: 700; font-size: clamp(1.6rem, 1.2rem + 1vw, 2.2rem); letter-spacing: -0.02em; }
   .steps span { color: var(--sc-ink-soft); }
   .pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--sc-7); }
-  .handoff-list { display: none; }
+  .loop-list { display: none; }
 
   /* --------------------------------------------------------------- close */
-  .close { background: radial-gradient(ellipse 60% 50% at 20% 30%, rgb(47 163 107 / 0.06), transparent 70%); }
+  .close { background: radial-gradient(ellipse 60% 50% at 20% 30%, rgb(112 132 214 / 0.09), transparent 70%); }
   .close__state { margin: 0 0 var(--sc-5); }
   .close .p-h2 { max-width: 16ch; }
 
   @media (max-width: 860px) {
-    .hero__stage { grid-template-columns: minmax(0, 1fr); align-items: start; gap: 0; padding-top: 84px; }
-    .hero__copy .p-meta { margin-bottom: var(--sc-4); }
-    .counter { position: absolute; left: 50%; bottom: 0; height: auto; width: min(340px, calc(100vw - 40px)); translate: -50% 0; padding-bottom: 28px; }
-    .paper { font-size: 11.5px; padding: 18px 18px 14px; }
-    .paper li span { font-size: 12.5px; }
-    .paper ol { gap: 9px; }
+    .hero__stage { grid-template-columns: minmax(0, 1fr); align-content: center; align-items: start; gap: 26px; padding: 78px var(--sc-gutter) 20px; }
+    .hero__copy .p-h1 { font-size: clamp(2.5rem, 1rem + 8vw, 3.4rem); margin-bottom: var(--sc-4); }
+    .intro .p-meta { margin-bottom: var(--sc-4); }
+    .step__txt { font-size: 1rem; line-height: 1.55; }
+    .map { width: min(100%, calc((100svh - 424px) * 780 / 572)); }
     .inside__head, .pair { grid-template-columns: minmax(0, 1fr); gap: var(--sc-5); }
-    .steps { grid-template-columns: 1fr; }
-    .handoff { display: none; }
-    .handoff-list { display: grid; gap: 0; list-style: none; margin: 0 0 var(--sc-7); padding: 0; }
-    .handoff-list li { position: relative; padding: 0 0 var(--sc-5) 28px; }
-    .handoff-list li::before { content: ""; position: absolute; left: 6px; top: 6px; width: 9px; height: 9px; border: 2px solid var(--sc-accent); border-radius: 50%; }
-    .handoff-list li::after { content: ""; position: absolute; left: 11px; top: 21px; bottom: 2px; width: 1.5px; background: color-mix(in oklab, var(--sc-ink) 30%, transparent); }
-    .handoff-list li:last-child::after { display: none; }
-    .handoff-list b { display: block; font-family: var(--sc-font-display); font-stretch: 84%; font-weight: 680; font-size: 1.15rem; }
-    .handoff-list span { color: var(--sc-ink-soft); }
-    .steps li, .steps li + li { padding: var(--sc-4) 0; border-left: 0; border-bottom: 1px solid var(--sc-hairline); }
+    .loop { display: none; }
+    .loop-list { display: grid; gap: 0; list-style: none; margin: 0 0 var(--sc-7); padding: 0; }
+    .loop-list li { position: relative; padding: 0 0 var(--sc-5) 30px; }
+    .loop-list li::before { content: ""; position: absolute; left: 3px; top: 5px; width: 15px; height: 15px; border: 3px solid var(--sc-ink); border-radius: 50%; background: var(--ground); z-index: 1; }
+    .loop-list li::after { content: ""; position: absolute; left: 8px; top: 12px; bottom: -8px; width: 5px; background: var(--sc-accent); }
+    .loop-list li:last-child::after { display: none; }
+    .loop-list b { display: block; font-family: var(--sc-font-display); font-stretch: 84%; font-weight: 680; font-size: 1.15rem; }
+    .loop-list span { color: var(--sc-ink-soft); }
+    .steps { grid-template-columns: 1fr; border-top: 0; border-left: 3px solid var(--tube); }
+    .steps li { padding: 0 0 var(--sc-5) var(--sc-5); }
+    .steps li:last-child { padding-bottom: 0; }
+    .steps li::before { left: -9.5px; top: 8px; }
   }
-  @media (max-width: 860px) and (max-height: 760px) {
-    .hero__copy .p-h1 { font-size: 2.8rem; margin-bottom: var(--sc-3); }
-    .hero__copy .p-lede { font-size: 1.15rem; }
+  /* a phone on its side, or any short window: copy and map share the row */
+  @media (max-width: 860px) and (max-height: 560px) {
+    .hero__stage { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); grid-template-rows: none; align-items: center; gap: 20px; padding-top: 64px; }
+    .hero__copy .p-h1 { font-size: 2.1rem; margin-bottom: var(--sc-3); }
+    .intro .p-lede { font-size: 1.05rem; }
+    .step__name { font-size: 1.3rem; }
+    .step__txt { font-size: 0.92rem; line-height: 1.45; }
+    .map { width: min(100%, calc((100svh - 84px) * 780 / 572)); }
+    .hero__map { align-self: center; }
+    .legend { display: none; }
+  }
+  /* a tablet held upright has room for a larger map */
+  @media (min-width: 600px) and (max-width: 860px) and (min-height: 561px) {
+    .map { width: min(100%, calc((100svh - 470px) * 780 / 572)); }
   }
 </style>
 </head>
@@ -246,106 +376,190 @@
 <a class="tab tab--cta" href="../../index.html#contact">Get in touch</a>
 
 <main>
-  <!-- 1. the receipt prints as you read -->
-  <section class="hero" data-sc-act="pin" data-sc-span="2.4" data-sc-drift="#101213" aria-labelledby="router-h">
+  <!-- 1. one request rides the route map as you scroll -->
+  <section class="hero" data-sc-act="pin" data-sc-span="3" aria-labelledby="router-h">
     <div class="hero__stage" data-sc-stage>
-      <div class="hero__copy" data-sc-cue="0 0.97 0 0.1">
-        <h1 class="p-h1" id="router-h">Agentic Router</h1>
-        <p class="p-lede">Sends each request to the cheapest model that still gets it right, and shows its work.</p>
-        <p class="p-meta">Python SDK · OpenAI-compatible endpoint · Claude Code plug-in</p>
-        <a class="p-link" href="https://github.com/potlurisravanth-png/agentic-router" target="_blank" rel="noopener noreferrer">Public overview on GitHub <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
-      </div>
-      <div class="counter" data-sc-tilt="2.5">
-        <div class="feed">
-          <div class="paper" role="group" aria-label="One request, itemised">
-            <p class="paper__title">Agentic Router</p>
-            <p class="paper__sub">One request, itemised</p>
-            <ol>
-              <li><b>1</b><strong>Route</strong><span>A learned route map, built from thousands of graded answers, picks the cheapest model expected to pass this kind of question.</span></li>
-              <li><b>2</b><strong>Check</strong><span>The answer is checked before it is trusted.</span></li>
-              <li><b>3</b><strong>Climb, or flag</strong><span>If the check fails, a stronger model from the low-cost pool answers. Past the top of the pool, the request is flagged for a frontier model.</span></li>
-              <li><b>4</b><strong>Receipt</strong><span>The model, the reason and the real cost.</span></li>
-            </ol>
-            <p class="paper__total"><span>Spend</span><em>Reconciled with billing</em></p>
-            <p class="paper__end">Keep this receipt</p>
+      <div class="hero__copy">
+        <h1 class="p-h1" id="router-h" data-sc-cue="0 1 0 0.03">Agentic Router</h1>
+        <div class="swap">
+          <div class="intro" data-sc-cue="0 0.125 0 0.4">
+            <p class="p-lede">Sends each request to the cheapest model that still gets it right, and shows its work.</p>
+            <p class="p-meta">Python SDK · OpenAI-compatible endpoint · Claude Code plug-in</p>
+            <a class="p-link" href="https://github.com/potlurisravanth-png/agentic-router" target="_blank" rel="noopener noreferrer">Public overview on GitHub <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
+          </div>
+          <div class="step" data-sc-cue="0.105 0.305 0.2 0.2">
+            <h2 class="step__name"><i class="pip" aria-hidden="true"></i>Route</h2>
+            <p class="step__txt">A learned route map, built from thousands of graded answers, picks the cheapest model expected to pass this kind of question.</p>
+          </div>
+          <div class="step" data-sc-cue="0.285 0.555 0.15 0.15">
+            <h2 class="step__name"><i class="pip pip--cheap" aria-hidden="true"></i>Check</h2>
+            <p class="step__txt">The answer is checked before it is trusted.</p>
+          </div>
+          <div class="step" data-sc-cue="0.535 0.765 0.17 0.17">
+            <h2 class="step__name"><i class="pip pip--strong" aria-hidden="true"></i>Climb, or flag</h2>
+            <p class="step__txt">If the check fails, a stronger model from the low-cost pool answers. Past the top of the pool, the request is flagged for a frontier model on top, such as Claude Code, instead of a cheap guess.</p>
+          </div>
+          <div class="step" data-sc-cue="0.745 1 0.15 0.1">
+            <h2 class="step__name"><i class="pip pip--end" aria-hidden="true"></i>Receipt</h2>
+            <p class="step__txt">Every route comes back with the model, the reason and the real cost, and spend is reconciled against the provider’s own billing.</p>
           </div>
         </div>
-        <div class="printer" aria-hidden="true"><span class="printer__slot"></span><span class="printer__label">Route · check · receipt</span><span class="printer__led"></span></div>
+      </div>
+
+      <div class="hero__map">
+      <div class="map" data-sc-tilt="2" role="img" aria-label="A route map. A request reaches the router, which sends it down the cheapest of three low-cost lines. Its check fails, it climbs to the stronger line, passes that check, and arrives at the receipt. A dotted line above the pool leads to a frontier model.">
+        <svg class="map__base" viewBox="0 0 780 572" aria-hidden="true" focusable="false">
+          <rect class="zone" x="236" y="150" width="522" height="392" rx="18"/>
+          <path class="ln ln--frontier" d="M316 78H716"/>
+          <path class="ln ln--trunk" d="M60 338H150"/>
+          <path class="ln ln--top" d="M150 338L271.6 216.4Q290 198 316 198H662"/>
+          <path class="ln ln--cheap" d="M150 338L271.6 459.6Q290 478 316 478H662"/>
+          <path class="ln ln--strong" d="M150 338H662"/>
+          <path class="xfer" d="M430 478V338"/><path class="xfer-in" d="M430 478V338"/>
+          <path class="xfer" d="M530 338V198"/><path class="xfer-in" d="M530 338V198"/>
+          <path class="xfer" d="M630 198V78"/><path class="xfer-in" d="M630 198V78"/>
+          <rect class="stn" x="660" y="184" width="24" height="308" rx="12"/>
+          <circle class="stn" cx="430" cy="478" r="10.5"/>
+          <circle class="stn" cx="530" cy="338" r="10.5"/>
+          <circle class="stn" cx="630" cy="198" r="10.5"/>
+          <circle class="stn stn--sm" cx="430" cy="338" r="7.5"/>
+          <circle class="stn stn--sm" cx="530" cy="198" r="7.5"/>
+          <circle class="stn stn--sm" cx="630" cy="78" r="7.5"/>
+          <circle class="stn stn--sm" cx="716" cy="78" r="7.5"/>
+          <circle class="stn" cx="150" cy="338" r="13"/>
+          <circle class="stn" cx="60" cy="338" r="11"/>
+        </svg>
+        <svg class="map__live" viewBox="0 0 780 572" aria-hidden="true" focusable="false">
+          <rect class="mk" x="660" y="184" width="24" height="308" rx="12"/>
+          <path class="trail" pathLength="1" d="M60 338H150L271.6 459.6Q290 478 316 478H430V338H530H672"/>
+          <g class="mk mk--fail"><circle cx="430" cy="478" r="10.5"/><path d="M425.6 473.6l8.8 8.8M434.4 473.6l-8.8 8.8"/></g>
+          <g class="mk mk--pass"><circle cx="530" cy="338" r="10.5"/><path d="M524.8 338.4l3.6 3.8l6.8-8"/></g>
+        </svg>
+        <div class="map__lbls" aria-hidden="true">
+          <span class="ml ml--c" style="--x:60;--y:368">Request</span>
+          <span class="ml ml--c" style="--x:142;--y:300">Route</span>
+          <span class="ml ml--soft ml--name" style="--x:316;--y:56">Frontier model</span>
+          <span class="ml ml--top ml--name" style="--x:304;--y:176">Top of pool</span>
+          <span class="ml ml--strong ml--name" style="--x:252;--y:316">Stronger</span>
+          <span class="ml ml--cheap ml--name" style="--x:304;--y:456">Cheapest</span>
+          <span class="ml ml--e ml--soft ml--minor" style="--x:416;--y:501">Check</span>
+          <span class="ml ml--e ml--soft ml--minor" style="--x:516;--y:361">Check</span>
+          <span class="ml ml--e ml--soft ml--minor" style="--x:616;--y:221">Check</span>
+          <span class="ml ml--e ml--state ml--fails ml--minor" style="--x:416;--y:518">Fails</span>
+          <span class="ml ml--e ml--state ml--passes ml--minor" style="--x:516;--y:378">Passes</span>
+          <span class="ml ml--soft ml--minor" style="--x:444;--y:410">Climb</span>
+          <span class="ml ml--soft ml--minor" style="--x:544;--y:270">Climb</span>
+          <span class="ml ml--soft ml--minor" style="--x:644;--y:128">Flag</span>
+          <span class="ml" style="--x:694;--y:338">Receipt</span>
+          <span class="ml ml--e ml--soft ml--minor" style="--x:744;--y:524">Low-cost pool</span>
+        </div>
+        <i class="req" aria-hidden="true"></i>
+      </div>
+      <ul class="legend" aria-hidden="true">
+        <li class="lg--cheap">Cheapest</li>
+        <li class="lg--strong">Stronger</li>
+        <li class="lg--top">Top of pool</li>
+        <li class="lg--frontier">Frontier</li>
+      </ul>
       </div>
     </div>
   </section>
 
-  <!-- 2. what was measured, laid out along the counter -->
-  <section class="results" data-sc-act="pan" data-sc-span="3.6" data-sc-drift="#121415" aria-labelledby="results-h">
+  <!-- 2. what was measured, laid side by side -->
+  <section class="results" data-sc-act="pan" data-sc-span="3.8" aria-labelledby="results-h">
     <div data-sc-stage>
       <div class="rail" data-sc-pan="0.04">
         <div class="rail__lead">
           <h2 class="p-h2" id="results-h">Measured, pass or fail.</h2>
-          <p class="p-body">Every figure here comes from the public overview, worded the way it is worded there. The last slip is the one where cheap loses, and it is printed anyway.</p>
+          <p class="p-body">Every figure here comes from the public overview, worded the way it is worded there. The last one is where cheap loses, and it is on the page anyway.</p>
         </div>
-        <article class="slip" style="--tilt:-2deg">
-          <span class="slip__fig">54–68%</span>
-          <span class="slip__unit">of the best model’s cost</span>
-          <p>The route map matched the best single model’s accuracy at 54–68% of its cost, on 1,095 public benchmark questions (MMLU-Pro, GPQA, MATH-500, HumanEval+, Bamboogle).</p>
-          <span class="slip__stamp">Pre-registered</span>
-        </article>
-        <article class="slip" style="--tilt:1.5deg;--drop:18px">
-          <span class="slip__fig">25%</span>
-          <span class="slip__unit">cheaper, agent mode</span>
-          <p>Against Claude Opus at low effort, on eight real tasks, with every hidden test still passing.</p>
-          <span class="slip__stamp">Pre-registered</span>
-        </article>
-        <article class="slip" style="--tilt:-1deg;--drop:-10px">
-          <span class="slip__fig">45%</span>
-          <span class="slip__unit">cheaper, model per step</span>
-          <p>Picking Claude’s model for each hand-off, against Opus at low effort on the same tasks. Sonnet at low effort on its own was cheaper still, at 54%.</p>
-          <span class="slip__stamp">Pre-registered</span>
-        </article>
-        <article class="slip" style="--tilt:2.2deg;--drop:12px">
-          <span class="slip__fig">0.5%</span>
-          <span class="slip__unit">gap to the provider’s bill</span>
-          <p>Every live run is reconciled against the provider’s billing, and the latest matched within 0.5%. An in-process tracker once recorded $0.14 against $2.16 actually billed.</p>
-          <span class="slip__stamp">Pre-registered</span>
-        </article>
-        <article class="slip slip--miss" style="--tilt:-1.6deg;--drop:-6px">
-          <span class="slip__fig">27 pts</span>
-          <span class="slip__unit">the frontier’s lead</span>
-          <p>On hard questions no checker can verify (GPQA), a frontier model kept a 27-point lead: 67.8% against 40.9%, n = 149. Where a checker exists, the gap was 4 to 10 points.</p>
-          <span class="slip__stamp">Reported anyway</span>
-        </article>
+        <article class="res"><div class="res__in">
+          <h3 class="res__name">Route map against the best single model</h3>
+          <p class="res__fig">54–68%</p>
+          <p class="res__unit">of its cost, at the same accuracy</p>
+          <ul class="bars">
+            <li>Best single model <b>its cost</b><i style="--w:100"></i></li>
+            <li>Route map <b>54–68%</b><i class="is-router is-range" style="--w:54;--w2:68"></i></li>
+          </ul>
+          <p class="res__txt">Measured on 1,095 public benchmark questions (MMLU-Pro, GPQA, MATH-500, HumanEval+, Bamboogle).</p>
+          <p class="res__tag">Pre-registered</p>
+        </div></article>
+        <article class="res"><div class="res__in">
+          <h3 class="res__name">Agent mode against Claude Opus at low effort</h3>
+          <p class="res__fig">25%</p>
+          <p class="res__unit">cheaper</p>
+          <ul class="bars">
+            <li>Opus, low effort <b>its cost</b><i style="--w:100"></i></li>
+            <li>Agent mode <b>25% cheaper</b><i class="is-router" style="--w:75"></i></li>
+          </ul>
+          <p class="res__txt">On eight real tasks, with every hidden test still passing.</p>
+          <p class="res__tag">Pre-registered</p>
+        </div></article>
+        <article class="res"><div class="res__in">
+          <h3 class="res__name">Picking Claude’s model for each hand-off</h3>
+          <p class="res__fig">45%</p>
+          <p class="res__unit">cheaper</p>
+          <ul class="bars">
+            <li>Opus, low effort <b>its cost</b><i style="--w:100"></i></li>
+            <li>A model per hand-off <b>45% cheaper</b><i class="is-router" style="--w:55"></i></li>
+            <li>Sonnet, low effort, alone <b>54% cheaper</b><i style="--w:46"></i></li>
+          </ul>
+          <p class="res__txt">Against Opus at low effort on the same tasks. Sonnet at low effort on its own was cheaper still.</p>
+          <p class="res__tag">Pre-registered</p>
+        </div></article>
+        <article class="res"><div class="res__in">
+          <h3 class="res__name">The meter</h3>
+          <p class="res__fig">0.5%</p>
+          <p class="res__unit">from the provider’s bill</p>
+          <ul class="bars">
+            <li>Billed by the provider <b>$2.16</b><i style="--w:100"></i></li>
+            <li>In-process tracker, once <b>$0.14</b><i class="is-miss" style="--w:6.5"></i></li>
+          </ul>
+          <p class="res__txt">An in-process tracker once recorded $0.14 against $2.16 actually billed. Every live run is now reconciled against the provider’s billing; the latest matched within 0.5%.</p>
+          <p class="res__tag">Pre-registered</p>
+        </div></article>
+        <article class="res res--miss"><div class="res__in">
+          <h3 class="res__name">The frontier’s edge</h3>
+          <p class="res__fig">27 pts</p>
+          <p class="res__unit">the frontier model’s lead</p>
+          <ul class="bars">
+            <li>Frontier model <b>67.8%</b><i class="is-frontier" style="--w:67.8"></i></li>
+            <li>Low-cost pool <b>40.9%</b><i class="is-router" style="--w:40.9"></i></li>
+          </ul>
+          <p class="res__txt">On hard questions that no checker can verify (GPQA), n = 149. Where a checker exists, the gap was 4 to 10 points.</p>
+          <p class="res__tag">Reported anyway</p>
+        </div></article>
         <div class="rail__end">
-          <p class="p-body">That last slip is why the router flags hard requests for a frontier model instead of guessing cheap.</p>
+          <p class="p-body">That last result is why the router flags hard requests for a frontier model instead of guessing cheap.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- 3. agent mode -->
-  <section class="inside" data-sc-act="flow" data-sc-drift="#15181A" aria-labelledby="inside-h">
+  <section class="inside" data-sc-act="flow" aria-labelledby="inside-h">
     <div class="inside__wrap">
       <div class="inside__head" data-sc-in data-sc-stagger="70">
         <h2 class="p-h2" id="inside-h">Inside Claude Code</h2>
         <p class="p-body">In agent mode, Claude hands mechanical repository work to a cheap worker through MCP. The worker edits a copy and runs the tests in a sealed container. Claude reads the change and accepts it, or sends it back with a comment.</p>
       </div>
-      <svg class="handoff" viewBox="0 0 1200 300" role="img" aria-label="Claude hands work to a cheap worker over MCP; the worker edits a copy and runs tests in a sealed container; Claude reviews and either accepts the change or sends it back with a comment." data-sc-reveal="left" data-sc-reveal-at="0.15 0.45">
-        <rect class="box box--ac" x="20" y="96" width="210" height="96" rx="10"/>
-        <text x="125" y="140" text-anchor="middle">CLAUDE</text>
-        <text class="t-soft" x="125" y="166" text-anchor="middle">plans and reviews</text>
-        <path class="ac" d="M232 128H452"/><path class="ac" d="M440 120l12 8l-12 8"/>
-        <text class="t-soft" x="342" y="112" text-anchor="middle">hands off over MCP</text>
-        <rect class="box" x="456" y="96" width="250" height="96" rx="10"/>
-        <text x="581" y="140" text-anchor="middle">CHEAP WORKER</text>
-        <text class="t-soft" x="581" y="166" text-anchor="middle">edits a copy</text>
-        <path class="ac" d="M708 144H928"/><path class="ac" d="M916 136l12 8l-12 8"/>
-        <text class="t-soft" x="818" y="128" text-anchor="middle">runs the tests</text>
-        <rect class="box" x="932" y="78" width="248" height="132" rx="10"/>
-        <rect class="ln-soft" x="948" y="94" width="216" height="100" rx="6"/>
-        <text x="1056" y="140" text-anchor="middle">SEALED CONTAINER</text>
-        <text class="t-soft" x="1056" y="166" text-anchor="middle">hidden tests</text>
-        <path class="ln" d="M1056 212V262H125V196"/><path class="ln" d="M117 208l8 -12l8 12"/>
-        <text class="t-soft" x="590" y="252" text-anchor="middle">accepted, or sent back to the same worker with a comment</text>
+      <svg class="loop" viewBox="0 0 1200 300" role="img" aria-label="A loop line with three stations. Claude hands work to a cheap worker over MCP; the worker edits a copy and runs the tests in a sealed container; the change comes back to Claude, who accepts it or sends it back to the same worker with a comment." data-sc-reveal="left" data-sc-reveal-at="0.15 0.45">
+        <path class="lp" d="M150 124H1050Q1110 124 1110 174V190Q1110 240 1050 240H150Q90 240 90 190V174Q90 124 150 124Z"/>
+        <path class="chev" d="M367 116l10 8l-10 8"/><path class="chev" d="M817 116l10 8l-10 8"/><path class="chev" d="M607 232l-10 8l10 8"/>
+        <circle class="st" cx="150" cy="124" r="13"/>
+        <circle class="st" cx="600" cy="124" r="13"/>
+        <circle class="seal" cx="1050" cy="124" r="23"/><circle class="st" cx="1050" cy="124" r="13"/>
+        <text x="150" y="62" text-anchor="middle">CLAUDE</text>
+        <text class="t-soft" x="150" y="86" text-anchor="middle">plans and reviews</text>
+        <text x="600" y="62" text-anchor="middle">CHEAP WORKER</text>
+        <text class="t-soft" x="600" y="86" text-anchor="middle">edits a copy</text>
+        <text x="1050" y="62" text-anchor="middle">SEALED CONTAINER</text>
+        <text class="t-soft" x="1050" y="86" text-anchor="middle">hidden tests</text>
+        <text class="t-soft" x="375" y="158" text-anchor="middle">hands off over MCP</text>
+        <text class="t-soft" x="825" y="158" text-anchor="middle">runs the tests</text>
+        <text class="t-soft" x="600" y="276" text-anchor="middle">accepted, or sent back to the same worker with a comment</text>
       </svg>
-      <ol class="handoff-list">
+      <ol class="loop-list">
         <li><b>Claude</b><span>plans the task and reviews the result</span></li>
         <li><b>Cheap worker</b><span>receives the task over MCP and edits a copy</span></li>
         <li><b>Sealed container</b><span>runs the hidden tests</span></li>
@@ -370,7 +584,7 @@
   </section>
 
   <!-- 4. the close resolves and holds -->
-  <section class="close-act" id="close" data-sc-act="pin" data-sc-span="1.2" data-sc-drift="#101213" aria-labelledby="close-h">
+  <section class="close-act" id="close" data-sc-act="pin" data-sc-span="1.2" aria-labelledby="close-h">
     <div data-sc-stage class="close">
       <div class="close__inner">
         <h2 class="p-h2" id="close-h" data-sc-cue="0 1 0 0" data-sc-kinetic="lines">Every experiment is pre-registered.</h2>
@@ -397,19 +611,123 @@
 
 <script src="../../assets/scrollcraft.js"></script>
 <script>
-  // On a phone the receipt rises through the space the hero copy occupies, so
-  // the copy steps aside earlier there. The engine reads cue windows at mount.
-  if (innerWidth <= 860) document.querySelector('.hero__copy').setAttribute('data-sc-cue', '0 0.45 0 0.4');
   ScrollCraft.mount(document.body);
-  // The receipt's feed is pure CSS off --sc-p. Publish the rendered value so
-  // the verification harness can see the hero move (it cannot read CSS vars).
+
+  // The request rides the map. Scroll sets where it should be; it glides there.
+  // Only three things change per frame: the dot's transform, one dash offset on
+  // the live layer, and (at the stations) a class. The drawing itself is never
+  // redrawn while the request is on a line.
   (function () {
-    var hero = document.querySelector('.hero'), last = '';
-    (function tick() {
-      var p = parseFloat(hero.style.getPropertyValue('--sc-p')) || 0;
-      var feed = Math.min(1, Math.max(0, (p - 0.03) / 0.8)).toFixed(2);
-      if (feed !== last) { hero.setAttribute('data-sc-verify-state', 'feed:' + feed); last = feed; }
+    var hero = document.querySelector('.hero');
+    var map = hero.querySelector('.map');
+    var trail = map.querySelector('.trail');
+    var req = map.querySelector('.req');
+    var reduce = ScrollCraft.reduce;
+    var VW = 780, VH = 572;
+
+    // sample the journey once, so no frame has to ask the path where a point is
+    var L = trail.getTotalLength(), N = 480, pts = [];
+    for (var i = 0; i <= N; i++) { var q = trail.getPointAtLength(L * i / N); pts.push([q.x, q.y]); }
+    function at(d) {
+      var f = Math.max(0, Math.min(1, d / L)) * N, k = Math.min(N - 1, Math.floor(f)), t = f - k;
+      return [pts[k][0] + (pts[k + 1][0] - pts[k][0]) * t, pts[k][1] + (pts[k + 1][1] - pts[k][1]) * t];
+    }
+    function nearest(x, y) {
+      var best = 0, bd = 1e9;
+      for (var i = 0; i <= N; i++) { var dx = pts[i][0] - x, dy = pts[i][1] - y, d2 = dx * dx + dy * dy; if (d2 < bd) { bd = d2; best = i; } }
+      return L * best / N;
+    }
+    var dJ = nearest(150, 338), dA = nearest(430, 478), dB = nearest(530, 338);
+
+    // progress through the act -> distance along the journey: travel, then a
+    // hold at each station while its sentence is read
+    var KEYS = [[0, 0], [0.05, 0], [0.15, dJ], [0.25, dJ], [0.42, dA], [0.52, dA], [0.66, dB], [0.74, dB], [0.86, L], [1, L]];
+    function ease(t) { return t * t * (3 - 2 * t); }
+    function target(p) {
+      if (reduce) return p < 0.1 ? 0 : p < 0.335 ? dJ : p < 0.59 ? dA : p < 0.8 ? dB : L;   // station to station, no travel
+      for (var i = 1; i < KEYS.length; i++) {
+        if (p <= KEYS[i][0]) {
+          var a = KEYS[i - 1], b = KEYS[i];
+          return a[1] + (b[1] - a[1]) * ease((p - a[0]) / (b[0] - a[0]));
+        }
+      }
+      return L;
+    }
+
+    // The GitHub link lives in the opening lines, which give way to the four
+    // steps. Reached by keyboard from further down, it brings the opening back.
+    // (On window, after the engine's own focus handler, so this one decides.)
+    var intro = hero.querySelector('.intro');
+    addEventListener('focusin', function (e) {
+      if (intro.contains(e.target) && parseFloat(getComputedStyle(intro).opacity) < 0.85) {
+        scrollTo({ top: hero.getBoundingClientRect().top + scrollY, behavior: 'instant' });
+      }
+    });
+
+    var w = 0, h = 0, cur = -1, shown = -1, lastT = 0, state = '', verify = '', live = false;
+    var FLAGS = ['is-routed', 'is-failed', 'is-climbed', 'is-passed', 'is-done'];
+    function measure() { w = map.clientWidth; h = map.clientHeight; shown = -1; }
+    addEventListener('resize', measure, { passive: true });
+    measure();
+
+    (function tick(now) {
       requestAnimationFrame(tick);
+      var dt = lastT ? Math.min(100, now - lastT) : 16; lastT = now;
+      var p = parseFloat(hero.style.getPropertyValue('--sc-p')) || 0;
+      var want = target(p);
+      if (cur < 0 || reduce || Math.abs(want - cur) > L * 0.5) cur = want;
+      else cur += (want - cur) * (1 - Math.pow(0.8, dt / 16.7));
+      if (Math.abs(want - cur) < 0.05) cur = want;
+
+      if (cur !== shown) {
+        shown = cur;
+        var pt = at(cur);
+        req.style.transform = 'translate3d(' + (pt[0] / VW * w).toFixed(1) + 'px,' + (pt[1] / VH * h).toFixed(1) + 'px,0)';
+        trail.style.strokeDashoffset = (1 - cur / L).toFixed(4);
+        if (!live) { map.classList.add('is-live'); live = true; }
+      }
+
+      // the stations it has reached (the map makes its choice part-way through
+      // the stop at the junction, so that one also waits for the scroll)
+      var on = [p >= 0.2 && cur >= dJ - 1, cur >= dA - 1, cur > dA + 6, cur >= dB - 1, cur >= L - 1];
+      var s = on.map(function (b) { return b ? 1 : 0; }).join('');
+      if (s !== state) {
+        for (var i = 0; i < FLAGS.length; i++) map.classList.toggle(FLAGS[i], on[i]);
+        state = s;
+      }
+
+      // what actually painted, for the verification harness
+      var v = 'route:' + (cur / L).toFixed(2) + ':' + s;
+      if (v !== verify) { hero.setAttribute('data-sc-verify-state', v); verify = v; }
+    })(0);
+  })();
+
+  // Each measurement settles as it comes into view, once.
+  (function () {
+    var sec = document.querySelector('.results');
+    var rail = sec.querySelector('.rail');
+    var res = [].slice.call(rail.querySelectorAll('.res'));
+    if (ScrollCraft.reduce) return;
+    rail.classList.add('js-rail');
+    var lefts = [], travel = 0, vw = 0, left = res.length;
+    function measure() {
+      vw = innerWidth;
+      var over = rail.scrollWidth - vw;
+      travel = over > 0 ? over * (1 + (parseFloat(rail.getAttribute('data-sc-pan')) || 0)) : 0;
+      var r0 = rail.getBoundingClientRect().left;
+      lefts = res.map(function (r) { return r.getBoundingClientRect().left - r0; });
+    }
+    addEventListener('resize', measure, { passive: true });
+    measure();
+    (function tick() {
+      if (!left) return;
+      requestAnimationFrame(tick);
+      var p = parseFloat(sec.style.getPropertyValue('--sc-p')) || 0;
+      for (var i = 0; i < res.length; i++) {
+        if (res[i]._on || lefts[i] - travel * p > vw * 0.8) continue;
+        res[i]._on = true; left--;
+        res[i].classList.add('is-on');
+      }
     })();
   })();
 </script>

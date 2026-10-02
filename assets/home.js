@@ -35,6 +35,7 @@
   var scene = stage.querySelector('.scene');
   var sheets = [].slice.call(scene.querySelectorAll('.sheet'));
   var hazes = sheets.map(function (s) { return s.querySelector('.sheet__haze'); });
+  var inks = sheets.map(function (s) { return s.querySelector('.sheet-svg'); });
   var axisLine = document.querySelector('.overlay .axis-line');
   var paper = document.querySelector('.paper');
   var wps = [].slice.call(document.querySelectorAll('.waypoint'));
@@ -44,6 +45,10 @@
     var a = document.querySelector('.strip__list a[data-goto="' + w.id + '"]');
     return a ? a.textContent.trim() : w.id;
   });
+
+  // The sheets' labels are part of the drawing, not text to find or select, and
+  // a sheet that is not showing stays in the page (clear, not removed).
+  stage.inert = true;
 
   var G = 900;                 // spacing between sheets along the stack, px
   var PIERCE = [140 - 480, 140 - 320];
@@ -120,6 +125,7 @@
 
     buildKnots();
     computePoses();
+    setWeights();
     layoutReceipt();
     cleared = false;   // the hidden receipt's offset depends on its new height
   }
@@ -157,6 +163,45 @@
     var h = K[i + 1][0] - K[i][0], u = (yv - K[i][0]) / h, u2 = u * u, u3 = u2 * u;
     return (2 * u3 - 3 * u2 + 1) * K[i][1] + (u3 - 2 * u2 + u) * h * K.tan[i] +
            (-2 * u3 + 3 * u2) * K[i + 1][1] + (u3 - u2) * h * K.tan[i + 1];
+  }
+
+  // ---- line weight ----------------------------------------------------------
+  // A far-off sheet needs heavier lines than a landed one to read at all. The
+  // weight used to follow the camera in steps, and every step made the browser
+  // redraw the sheet; on the way from the stack to the first sheet that was six
+  // sheets redrawn several times inside a quarter of a second, which is the
+  // stutter. Now each drawing is set once, at the weight it needs when landed,
+  // and a second copy of it at the stack's weight lies over it and fades with
+  // the camera. Fading a layer redraws nothing.
+  //
+  // (The small per-sheet offset is left over from the stepped version. It stays
+  // so every sheet keeps exactly the weight it had.)
+  var bolds = [], boldOn = [], boldOp = [], boldK = [], boldDraw = [];
+  var kLand = [], kStack = [[], []];
+  function weightFor(sc, i) {
+    return clamp(Math.round((clamp(0.95 / sc, 1, 2.8) + (i - 2.5) * 0.04) * 4) / 4, 1, 2.75);
+  }
+  function setWeights() {
+    // A phone shows the landed sheet about as small as the stacked one, so one
+    // weight serves both and there is no second copy to hold in memory.
+    if (!mobile && !bolds.length) {
+      bolds = sheets.map(function (sh, i) {
+        var b = inks[i].cloneNode(true);
+        b.classList.add('sheet-svg--bold');
+        // the marks the routing drives live on the drawing itself, once
+        [].slice.call(b.querySelectorAll('.dwell-bar, .port-ring, .r--route')).forEach(function (n) {
+          n.parentNode.removeChild(n);
+        });
+        sh.insertBefore(b, hazes[i]);
+        return b;
+      });
+    }
+    for (var i = 0; i < NS; i++) {
+      var kl = weightFor(poses[i + 1].sc, i);
+      if (kl !== kLand[i]) { inks[i].style.setProperty('--k', kl); kLand[i] = kl; }
+      kStack[0][i] = weightFor(poses[0].sc * 0.8, i);        // the overview stack
+      kStack[1][i] = weightFor(poses[N - 1].sc * 0.8, i);    // the contact stack
+    }
   }
 
   // ---- camera ---------------------------------------------------------------
@@ -416,7 +461,7 @@
   }
 
   // ---- render ---------------------------------------------------------------
-  var lastVerify = '', lastCopyState = '', kSet = [0, 0, 0, 0, 0, 0], axisD = null, axisO = null, cleared = false;
+  var lastVerify = '', lastCopyState = '', sheetOp = [0, 0, 0, 0, 0, 0], lastBo = 0, axisD = null, axisO = null, cleared = false;
   // only write an SVG attribute when its value changes: every write, even of
   // the same value, makes the browser lay the drawing out and redraw it
   function setX2(b, v) { if (b._x2 !== v) { b.setAttribute('x2', v); b._x2 = v; } }
@@ -430,6 +475,7 @@
     var target = sAt(yv);
     // the camera eases after the scroll, by elapsed time rather than by frame,
     // so a slow or dropped frame never leaves it trailing further behind
+    var jumped = s < 0 || reduce || Math.abs(target - s) > 0.35 || !render._done;
     if (s < 0 || reduce || Math.abs(target - s) > 0.35) s = target;
     else s += (target - s) * (1 - Math.pow(0.76, dt / 16.7));
     if (Math.abs(target - s) < 0.0004) s = target;
@@ -480,14 +526,6 @@
     var M = matrixFor(pose);
     if (moved || !render._done) {
       scene.style.transform = M.toString();
-      // Line weight follows the camera so a far-off sheet still reads, in
-      // quarter steps. Each step redraws a sheet, so the sheets take their steps
-      // at slightly different moments rather than all six on the same frame.
-      var kBase = clamp(0.95 / (pose.sc * lerp(0.8, 1, ease(pose.m))), 1, 2.8);
-      for (var ki = 0; ki < NS; ki++) {
-        var kq = clamp(Math.round((kBase + (ki - 2.5) * 0.04) * 4) / 4, 1, 2.75);
-        if (kq !== kSet[ki]) { sheets[ki].style.setProperty('--k', kq); kSet[ki] = kq; }
-      }
       stage.style.opacity = stageOp.toFixed(3);
 
       // the authored silence: the Decisions sheet empties to bare paper before the peak
@@ -510,14 +548,10 @@
         var el = sheets[i];
         el.style.transform = 'translate3d(0,0,' + z.toFixed(1) + 'px)';
         el.style.opacity = op.toFixed(3);
-        el.style.visibility = op < 0.003 ? 'hidden' : '';
-        // the haze is its own layer while it shows, and gone when it is clear
+        sheetOp[i] = op;
+        // the haze is its own layer, so fading it redraws nothing
         var hz = hazes[i], hs = haze > 0.002 ? haze.toFixed(3) : '0';
-        if (hz._o !== hs) {
-          hz._o = hs;
-          hz.style.opacity = hs;
-          hz.style.display = hs === '0' ? 'none' : '';
-        }
+        if (hz._o !== hs) { hz.style.opacity = hs; hz._o = hs; }
       }
 
       // the assembly centre line, through every sheet's pierce point
@@ -545,6 +579,32 @@
       if (want > draws[i]) draws[i] = want;
       var dv = Math.round(draws[i] * 1000) / 1000;
       if (dv !== drawSet[i]) { sheets[i].style.setProperty('--draw', dv); drawSet[i] = dv; }
+    }
+
+    // ---- line weight: the stack's heavier ink, faded over each drawing. A copy
+    // is brought up to date (the stack's weight, the redline drawn so far) when
+    // it starts to show or the camera turns back toward a stack, one sheet per
+    // frame, so the redraws never land together. On the way down to a sheet it
+    // is left alone: it is fading out, and the sheet under it is busy drawing
+    // its own redline.
+    if (bolds.length) {
+      var bo = mobile ? 0 : 1 - pose.m;
+      if (bo < 0.02) bo = 0;
+      var bos = bo.toFixed(3), ks = kStack[s < 3.5 ? 0 : 1], rising = bo > lastBo, caught = false;
+      lastBo = bo;
+      for (i = 0; i < NS; i++) {
+        var bd = bolds[i];
+        if (boldOp[i] !== bos) { bd.style.opacity = bos; boldOp[i] = bos; }
+        if (!bo || sheetOp[i] < 0.003) { boldOn[i] = false; continue; }
+        var stale = boldK[i] !== ks[i] || (boldDraw[i] !== drawSet[i] && (rising || !boldOn[i]));
+        if (stale && caught && !jumped) { boldOn[i] = false; continue; }   // its turn is the next frame
+        boldOn[i] = true;
+        if (stale) {
+          caught = true;
+          if (boldK[i] !== ks[i]) { bd.style.setProperty('--k', ks[i]); boldK[i] = ks[i]; }
+          if (boldDraw[i] !== drawSet[i]) { bd.style.setProperty('--draw', drawSet[i]); boldDraw[i] = drawSet[i]; }
+        }
+      }
     }
 
     // ---- routes sheet: classifier bars, the chosen route, the receipt
