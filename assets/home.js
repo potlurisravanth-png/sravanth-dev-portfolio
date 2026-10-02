@@ -794,7 +794,10 @@
   // resize: keep the reader at the same place in the drawing
   var lastW = 0;
   function onResize() {
-    if (innerWidth === lastW && mobile) { return; }   // phone URL bar, not a resize
+    // A phone's URL bar changes the height all the time, and laying the page out
+    // again for that makes it jump under the reader's thumb. A desktop window
+    // dragged narrow is not a phone: follow its height too.
+    if (innerWidth === lastW && mobile && !fineMQ.matches) { return; }
     var keep = scrollY / (vh || 1);
     lastW = innerWidth;
     portsList.classList.toggle('ports--pinned', innerWidth > 860);

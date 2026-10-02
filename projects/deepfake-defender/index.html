@@ -261,7 +261,17 @@
 
 <script src="../../assets/scrollcraft.js"></script>
 <script>
-  ScrollCraft.mount(document.body);
+  var sc = ScrollCraft.mount(document.body);
+  // The engine ignores a resize that changes only the height at phone widths,
+  // because a phone's URL bar does that all the time. A desktop window dragged
+  // narrow is not a phone: follow its height too.
+  (function () {
+    var w = innerWidth, mouse = matchMedia('(hover: hover) and (pointer: fine)');
+    addEventListener('resize', function () {
+      if (innerWidth === w && w <= 860 && mouse.matches) { sc.layout(); sc.read(); }
+      w = innerWidth;
+    });
+  })();
   // The sample windows move in pure CSS off --sc-p. Publish the rendered
   // phase so the verification harness can see the stage change.
   (function () {
