@@ -54,9 +54,15 @@
   var PIERCE = [140 - 480, 140 - 320];
   var PORT_X = 700 - 480;
 
+  // Pace. A sheet's span is how much scroll it owns, in screens, and its hold is
+  // the part of that span where the camera rests on it. The camera needs about
+  // 0.6 of a screen to travel from one sheet to the next; whatever is left over
+  // is scroll that moves nothing but the redline. Keep that part short (it was
+  // about a screen per sheet, and it read as a page that would not move):
+  // trim a span or a hold, not the travel.
   wps.forEach(function (w) {
     w._span = parseFloat(w.getAttribute('data-span')) || 1;
-    w._hold = (w.getAttribute('data-hold') || '0.18 0.72').split(/\s+/).map(parseFloat);
+    w._hold = (w.getAttribute('data-hold') || '0.22 0.6').split(/\s+/).map(parseFloat);
   });
 
   var copies = [];
@@ -64,7 +70,8 @@
     [].slice.call(w.querySelectorAll('[data-sc-copy]')).forEach(function (el) {
       copies.push({
         el: el, k: k,
-        win: (el.getAttribute('data-win') || '0.07 0.18 0.74 0.86').split(/\s+/).map(parseFloat),
+        // in by the time the sheet lands, out as it starts to lift (see the hold above)
+        win: (el.getAttribute('data-win') || '0.08 0.22 0.62 0.76').split(/\s+/).map(parseFloat),
         fixedPos: el.classList.contains('copy--routes'),
         quiet: el.classList.contains('copy--quiet'),
         op: -1, tf: ''
@@ -474,9 +481,13 @@
     var yv = y / vh;
     var target = sAt(yv);
     // the camera eases after the scroll, by elapsed time rather than by frame,
-    // so a slow or dropped frame never leaves it trailing further behind
-    var jumped = s < 0 || reduce || Math.abs(target - s) > 0.35 || !render._done;
-    if (s < 0 || reduce || Math.abs(target - s) > 0.35) s = target;
+    // so a slow or dropped frame never leaves it trailing further behind. A
+    // jump of more than CUT of a sheet (a link, a restored position) is cut to,
+    // not flown; one notch of a mouse wheel is always less than that, so it
+    // glides even in a browser that does not smooth its own scrolling.
+    var CUT = 0.6;
+    var jumped = s < 0 || reduce || Math.abs(target - s) > CUT || !render._done;
+    if (s < 0 || reduce || Math.abs(target - s) > CUT) s = target;
     else s += (target - s) * (1 - Math.pow(0.76, dt / 16.7));
     if (Math.abs(target - s) < 0.0004) s = target;
 
@@ -528,8 +539,9 @@
       scene.style.transform = M.toString();
       stage.style.opacity = stageOp.toFixed(3);
 
-      // the authored silence: the Decisions sheet empties to bare paper before the peak
-      var quiet = band(0.56, 0.64, u[5]) * (1 - band(5.7, 6.2, s));
+      // the authored silence: the Decisions sheet empties to bare paper before the
+      // peak, and its one line then holds for about a quarter of a screen
+      var quiet = band(0.5, 0.58, u[5]) * (1 - band(5.7, 6.2, s));
       // sheets returning to the stack arrive as bare paper, then their drawings
       var blank = (!reduce && s > N - 2 && s < N - 1) ? 1 - band(0.75, 0.97, s - (N - 2)) : 0;
       for (var i = 0; i < NS; i++) {
@@ -575,7 +587,8 @@
     // ---- red layers draw once per visit and stay drawn
     for (i = 0; i < NS; i++) {
       var uk = u[i + 1];
-      var want = reduce ? (uk > 0.04 && uk < 1.2 ? 1 : 0) : clamp01((uk - 0.08) / 0.5);
+      // starts as the sheet comes in and is finished a little before it lifts
+      var want = reduce ? (uk > 0.04 && uk < 1.2 ? 1 : 0) : clamp01((uk - 0.11) / 0.42);
       if (want > draws[i]) draws[i] = want;
       var dv = Math.round(draws[i] * 1000) / 1000;
       if (dv !== drawSet[i]) { sheets[i].style.setProperty('--draw', dv); drawSet[i] = dv; }
@@ -671,7 +684,7 @@
     // figure (33+ workflows instead of 40+).
     counters.forEach(function (c) {
       var uk = u[c.k];
-      if (!c.go && uk > 0.1 && uk < 1.2) c.go = true;
+      if (!c.go && uk > 0.12 && uk < 1.2) c.go = true;
       if (c.go && c.p < 1) c.p = reduce ? 1 : Math.min(1, c.p + dt / 1100);
       var txt = c.fmt(c.target * easeOut(c.p));
       if (txt !== c.txt) { c.el.textContent = txt; c.txt = txt; }
